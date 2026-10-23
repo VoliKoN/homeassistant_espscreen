@@ -1,0 +1,4147 @@
+{
+  "_meta": {
+    "name": "עברית",
+    "english": "Hebrew",
+    "script": "hebrew",
+    "plural": "one_other",
+    "clock": "24",
+    "checked": false
+  },
+  "screen": {
+    "number": {
+      "decimal": ".",
+      "group": ",",
+      "group_min": "1",
+      "percent": "%"
+    },
+    "time": {
+      "just_now": "עכשיו",
+      "minutes_ago": "לפני {n} דק׳",
+      "hours_ago": "לפני שעה | לפני {n} שעות",
+      "yesterday": "אתמול",
+      "days_ago": "לפני יום | לפני {n} ימים",
+      "weeks_ago": "לפני שבוע | לפני {n} שבועות",
+      "months_ago": "לפני חודש | לפני {n} חודשים",
+      "years_ago": "לפני שנה | לפני {n} שנים",
+      "in_minutes": "בעוד {n} דק׳",
+      "in_hours": "בעוד שעה | בעוד {n} שעות",
+      "tomorrow": "מחר",
+      "in_days": "בעוד יום | בעוד {n} ימים",
+      "am": "לפנה״צ",
+      "pm": "אחה״צ"
+    },
+    "date": {
+      "weekdays": [
+        "יום ראשון",
+        "יום שני",
+        "יום שלישי",
+        "יום רביעי",
+        "יום חמישי",
+        "יום שישי",
+        "שבת"
+      ],
+      "weekdays_short": [
+        "יום א׳",
+        "יום ב׳",
+        "יום ג׳",
+        "יום ד׳",
+        "יום ה׳",
+        "יום ו׳",
+        "שבת"
+      ],
+      "weekdays_min": [
+        "א׳",
+        "ב׳",
+        "ג׳",
+        "ד׳",
+        "ה׳",
+        "ו׳",
+        "ש׳"
+      ],
+      "months": [
+        "ינואר",
+        "פברואר",
+        "מרץ",
+        "אפריל",
+        "מאי",
+        "יוני",
+        "יולי",
+        "אוגוסט",
+        "ספטמבר",
+        "אוקטובר",
+        "נובמבר",
+        "דצמבר"
+      ],
+      "months_short": [
+        "ינו׳",
+        "פבר׳",
+        "מרץ",
+        "אפר׳",
+        "מאי",
+        "יוני",
+        "יולי",
+        "אוג׳",
+        "ספט׳",
+        "אוק׳",
+        "נוב׳",
+        "דצמ׳"
+      ],
+      "top_bar": "{weekday_min} {day} {month}",
+      "full": "{weekday} {day} {month}",
+      "day_month": "{day} {month}",
+      "weekday_time": "{weekday} {time}"
+    },
+    "duration": {
+      "seconds": "{n} שנ׳",
+      "minutes": "{n} דק׳",
+      "hours": "{n} שע׳",
+      "hours_minutes": "{h} שע׳ {m} דק׳",
+      "days": "{n} ימ׳",
+      "days_hours": "{d} ימ׳ {h} שע׳"
+    },
+    "status": {
+      "connecting": "ממתין ל-Home Assistant",
+      "waiting": "ממתין ל-Tessera",
+      "loading_tiles": "טוען אריחים...",
+      "preparing_pages": "מכין עמודים {n}/{total}",
+      "ha_not_connected": "HA לא מחובר",
+      "manager_not_active": "Tessera לא פעיל",
+      "choose_tiles": "בחרו אריחים ב-HA",
+      "home": "בית",
+      "no_network": "אין רשת",
+      "configuration_problem": "בעיה בהגדרות.\nעדכנו את התוסף.",
+      "configuration_version": "בעיה בהגדרות.\nבדקו את גרסאות המסך והתוסף.",
+      "wifi_problem": "בעיה בחיבור ל-Wi-Fi",
+      "wifi_hotspot": "התחברו לנקודה החמה {name} כדי לתקן.\nסיסמה: {password}",
+      "wifi_usb": "בדקו את שם ה-Wi-Fi והסיסמה, ואז התקינו את המסך שוב דרך USB.",
+      "wifi_connecting": "מתחבר ל-Wi-Fi",
+      "wifi_address": "מקבל כתובת",
+      "wifi_not_found": "הרשת לא נמצאה",
+      "wifi_password": "הסיסמה לא התקבלה",
+      "wifi_weak": "האות חלש מדי ({dbm} dBm)",
+      "wifi_failed": "החיבור נכשל, מנסה שוב",
+      "loading_tiles_count": "טוען אריחים {n}/{total}",
+      "hint_home_assistant": "Tessera יוסיף את המסך ברגע ש-Home Assistant יגיע אליו בכתובת הזו.",
+      "hint_tessera": "האם האפליקציה Tessera Screen Manager פועלת ב-Home Assistant?",
+      "first_tiles": "בחרו את האריחים שלכם",
+      "first_tiles_open": "פתחו את Tessera ב-Home Assistant",
+      "first_tiles_pick": "בחרו אריחים עבור {name}",
+      "first_tiles_save": "לחצו על שמירה ושליחה",
+      "updating": "מעדכן קושחה {percent}",
+      "update_restart": "העדכון הושלם, מפעיל מחדש",
+      "update_failed": "העדכון נכשל",
+      "hint_key": "חיבור מ-{address} נדחה: המפתח שלו אינו של המסך הזה. הזינו את מפתח המסך באינטגרציית ESPHome של Home Assistant.",
+      "no_answer_title": "אין תשובה מ-Home Assistant",
+      "no_answer_text": "לרוב המסך עדיין לא מורשה לבצע פעולות. הפעילו זאת ב-Home Assistant: ESPHome > המסך הזה > הגדרה."
+    },
+    "preparing": {
+      "default": "מסדר את האריחים",
+      "light": "מציץ על האורות",
+      "media": "מנקה אבק מעטיפות האלבומים",
+      "camera": "מלטש את עדשות המצלמה",
+      "climate": "בודק את התרמוסטט",
+      "weather": "מסתכל מהחלון",
+      "cover": "מציץ מאחורי הווילונות",
+      "vacuum": "מחפש את שואב האבק הרובוטי",
+      "sensor": "קורא את כל החיישנים",
+      "sun": "עוקב אחרי השמש",
+      "clock": "מכוון את השעונים",
+      "scene": "מתאמן על הסצנות",
+      "switch": "סופר את המתגים"
+    },
+    "settings": {
+      "title": "הגדרות",
+      "brightness": "בהירות",
+      "night": "לילה",
+      "screen": "מסך",
+      "this_screen": "המסך הזה",
+      "extras": "תוספות",
+      "microphone": "מיקרופון",
+      "media_player": "עוצמה",
+      "wake_when_moved": "התעוררות בתנועה",
+      "doorbell": "פעמון דלת",
+      "dark_mode": "מצב כהה",
+      "auto_standby": "המתנה אוטומטית",
+      "standby_after": "המתנה אחרי",
+      "standby_brightness": "בהירות בהמתנה",
+      "standby_lit": "מסך דולק בהמתנה",
+      "night_mode": "מצב לילה",
+      "starts": "מתחיל",
+      "ends": "נגמר",
+      "night_brightness": "בהירות לילה",
+      "night_lit": "מסך דולק בלילה",
+      "back_to_page_1": "חזרה לבית",
+      "after": "אחרי",
+      "also_on_standby": "גם בהמתנה",
+      "swipe_between_pages": "החלקה בין עמודים",
+      "page_buttons": "כפתורי עמודים",
+      "home_button": "הצגת כפתור בית",
+      "rotation": "סיבוב",
+      "address": "כתובת",
+      "firmware": "קושחה",
+      "home_assistant": "Home Assistant",
+      "restart": "הפעלה מחדש",
+      "calibrate_touch": "כיול מגע",
+      "connected": "מחובר",
+      "not_connected": "לא מחובר",
+      "tap_again_to_restart": "הקישו שוב להפעלה מחדש",
+      "tap_again_to_calibrate": "הקישו שוב לכיול",
+      "seconds": "{n} שנ׳",
+      "minutes": "{n} דק׳",
+      "hours": "{n} שע׳",
+      "hours_minutes": "{h} שע׳ {m}",
+      "wifi": "Wi-Fi",
+      "tessera": "Tessera",
+      "plugins": "תוספים",
+      "microphone_gain": "הגבר מיקרופון",
+      "automatic_gain": "הגבר אוטומטי",
+      "echo_cancellation": "ביטול הד"
+    },
+    "doorbell": {
+      "sound_on": "צליל פעיל",
+      "sound_off": "צליל כבוי"
+    },
+    "tile": {
+      "tap_to_open": "הקישו לפתיחה",
+      "page": "עמוד {n}",
+      "refused": "נדחה",
+      "command_sent": "הפקודה נשלחה...",
+      "updating": "מתעדכן...",
+      "confirmed": "אושר על ידי Home Assistant",
+      "no_answer": "אין תשובה"
+    },
+    "alert": {
+      "notification": "התראה",
+      "ok": "אישור"
+    },
+    "light": {
+      "color": "צבע",
+      "color_temperature": "גוון לבן",
+      "brightness": "בהירות",
+      "waiting": "ממתין..."
+    },
+    "effects": {
+      "effect": "אפקט",
+      "nothing": "אין מה לבחור",
+      "loading": "טוען...",
+      "not_connected": "לא מחובר"
+    },
+    "climate": {
+      "target": "יעד",
+      "mode": "מצב",
+      "fan": "מאוורר",
+      "swing": "תנודה",
+      "now": "כעת {value}"
+    },
+    "vacuum": {
+      "check_robot": "בדקו את הרובוט ב-HA",
+      "auto_suction": "עוצמת יניקה אוטומטית",
+      "robot_chooses": "הרובוט בוחר יניקה ומים",
+      "per_room": "יניקה ומים לפי הגדרת כל חדר",
+      "speed_quiet": "שקט",
+      "speed_balanced": "רגיל",
+      "speed_turbo": "טורבו",
+      "speed_max": "מקסימום",
+      "pause_cleaning": "השהיית ניקוי",
+      "pause": "השהיה",
+      "resume": "המשך",
+      "start_cleaning": "התחלת ניקוי",
+      "clean": "ניקוי",
+      "dock": "לעגינה",
+      "stop": "עצירה",
+      "by_room": "לפי אזור",
+      "routines": "שגרות",
+      "suction_water": "יניקה ושטיפה",
+      "pick_rooms": "בחרו אזור אחד או יותר",
+      "order_hint": "לא כל רובוט שומר על הסדר הזה",
+      "no_rooms": "לא מופו אזורים",
+      "no_rooms_how": "שייכו את מקטעי הרובוט לאזורים ב-Home Assistant, בהגדרות השואב.",
+      "routines_note": "נוצרו באפליקציה של הרובוט"
+    },
+    "cover": {
+      "position": "מיקום",
+      "tilt": "הטיה",
+      "tilt_value": "הטיה {n}%"
+    },
+    "weather": {
+      "feels_like": "מורגש כמו {n}°",
+      "no_forecast": "אין תחזית יומית מ-Home Assistant",
+      "coming_days": "הימים הקרובים"
+    },
+    "history": {
+      "no_data": "אין נתונים",
+      "average": "ממוצע",
+      "average_of": "ממוצע של {duration}",
+      "now": "כעת",
+      "range_hour": "שעה",
+      "range_day": "24 שעות",
+      "range_week": "שבוע",
+      "high": "שיא {value}",
+      "low": "שפל {value}",
+      "times": "פעם אחת | {n} פעמים",
+      "loading": "טוען היסטוריה...",
+      "empty": "אין היסטוריה בתקופה הזו",
+      "unavailable": "אין היסטוריה זמינה"
+    },
+    "media": {
+      "muted": "מושתק",
+      "not_playing": "לא מנגן",
+      "loading": "טוען",
+      "library": "ספרייה",
+      "choose_speaker": "בחרו רמקול",
+      "library_hint": "הקישו על עטיפה בספרייה לניגון",
+      "library_failed": "הספרייה לא ענתה",
+      "library_empty": "אין כאן כלום",
+      "starting_on": "מתחיל ב-{speaker}"
+    },
+    "timer": {
+      "running": "פועל",
+      "paused": "מושהה",
+      "stopped": "עצור",
+      "pause": "השהיה",
+      "start": "התחלה",
+      "cancel": "ביטול",
+      "paused_left": "מושהה {time}"
+    },
+    "sun": {
+      "name": "שמש",
+      "sunrise": "זריחה {time}",
+      "sunset": "שקיעה {time}",
+      "rise": "זריחה {time}",
+      "set": "שקיעה {time}"
+    },
+    "script": {
+      "running": "פועל...",
+      "never_run": "לא הופעל",
+      "last_time": "אחרון {time}",
+      "yesterday_time": "אתמול {time}",
+      "yesterday_time_short": "אתמול {time}",
+      "last_date": "אחרון {date}"
+    },
+    "camera": {
+      "no_image": "אין תמונה מהמצלמה הזו",
+      "loading": "טוען תמונה",
+      "live": "חי",
+      "recording": "מקליט",
+      "tap_to_view": "הקישו לצפייה",
+      "no_image_yet": "אין תמונה עדיין"
+    },
+    "calibration": {
+      "title": "עקבו אחרי אשף הכיול",
+      "touch_check": "בדיקת מגע GT911",
+      "hold": "החזיקו כל הקשה לרגע",
+      "crosshair": "הקישו על הצלב\nנקודה {point}/5 - הקשה {tap}/3",
+      "gently": "הקישו בעדינות, קצת יותר זמן",
+      "same": "הקישו על אותו צלב 3 פעמים",
+      "rejected": "המדידה נדחתה; נסו שוב",
+      "save_failed": "השמירה נכשלה; נסו שוב"
+    },
+    "alarm": {
+      "wrong_code": "קוד שגוי",
+      "nothing_changed": "שום דבר לא השתנה. בדקו את הקוד.",
+      "try_again": "נסו שוב בעוד {time}",
+      "too_many": "יותר מדי קודים שגויים",
+      "letters": "בקוד הזה יש אותיות. הזינו אותו ב-Home Assistant."
+    },
+    "lock": {
+      "confirm": "אישור",
+      "really_unlock": "לפתוח באמת?",
+      "lock_only": "במסך הזה אפשר רק לנעול",
+      "lock_only_short": "נעילה בלבד"
+    },
+    "ha": {
+      "on": "פועל",
+      "off": "כבוי",
+      "unavailable": "לא זמין",
+      "climate": {
+        "off": "כבוי",
+        "heat": "חימום",
+        "cool": "קירור",
+        "heat_cool": "חימום/קירור",
+        "auto": "אוטומטי",
+        "dry": "ייבוש",
+        "fan_only": "מאוורר בלבד"
+      },
+      "hvac_action": {
+        "heating": "מחמם",
+        "cooling": "מקרר",
+        "idle": "במנוחה",
+        "off": "כבוי",
+        "drying": "מייבש",
+        "fan": "מאוורר",
+        "preheating": "חימום מוקדם",
+        "defrosting": "הפשרה"
+      },
+      "cover": {
+        "open": "פתוח",
+        "closed": "סגור",
+        "opening": "נפתח",
+        "closing": "נסגר"
+      },
+      "media": {
+        "playing": "מנגן",
+        "paused": "מושהה",
+        "idle": "במנוחה",
+        "standby": "המתנה"
+      },
+      "person": {
+        "home": "בבית",
+        "not_home": "לא בבית"
+      },
+      "sun": {
+        "above_horizon": "מעל האופק",
+        "below_horizon": "מתחת לאופק"
+      },
+      "vacuum": {
+        "docked": "בעגינה",
+        "cleaning": "מנקה",
+        "paused": "מושהה",
+        "returning": "חוזר לעגינה",
+        "idle": "במנוחה",
+        "error": "שגיאה"
+      },
+      "weather": {
+        "sunny": "שמשי",
+        "clear_night": "בהיר, לילה",
+        "cloudy": "מעונן",
+        "partlycloudy": "מעונן חלקית",
+        "rainy": "גשום",
+        "pouring": "גשם שוטף",
+        "snowy": "מושלג",
+        "snowy_rainy": "שלג וגשם",
+        "fog": "ערפל",
+        "hail": "ברד",
+        "lightning": "ברקים",
+        "lightning_rainy": "ברקים וגשם",
+        "windy": "סוער",
+        "exceptional": "חריג"
+      },
+      "binary": {
+        "battery_on": "נמוכה",
+        "battery_off": "תקינה",
+        "battery_charging_on": "בטעינה",
+        "battery_charging_off": "לא בטעינה",
+        "carbon_monoxide_on": "זוהה",
+        "carbon_monoxide_off": "תקין",
+        "cold_on": "קר",
+        "cold_off": "רגיל",
+        "connectivity_on": "מחובר",
+        "connectivity_off": "מנותק",
+        "door_on": "פתוחה",
+        "door_off": "סגורה",
+        "garage_door_on": "פתוחה",
+        "garage_door_off": "סגורה",
+        "gas_on": "זוהה",
+        "gas_off": "תקין",
+        "heat_on": "חם",
+        "heat_off": "רגיל",
+        "light_on": "זוהה אור",
+        "light_off": "אין אור",
+        "lock_on": "פתוח",
+        "lock_off": "נעול",
+        "moisture_on": "רטוב",
+        "moisture_off": "יבש",
+        "motion_on": "זוהתה",
+        "motion_off": "אין",
+        "moving_on": "בתנועה",
+        "moving_off": "לא בתנועה",
+        "occupancy_on": "זוהה",
+        "occupancy_off": "פנוי",
+        "opening_on": "פתוח",
+        "opening_off": "סגור",
+        "plug_on": "מחובר לחשמל",
+        "plug_off": "מנותק מחשמל",
+        "power_on": "פועל",
+        "power_off": "כבוי",
+        "presence_on": "בבית",
+        "presence_off": "לא בבית",
+        "problem_on": "בעיה",
+        "problem_off": "תקין",
+        "running_on": "פועל",
+        "running_off": "לא פועל",
+        "safety_on": "לא בטוח",
+        "safety_off": "בטוח",
+        "smoke_on": "זוהה",
+        "smoke_off": "תקין",
+        "sound_on": "זוהה",
+        "sound_off": "שקט",
+        "tamper_on": "זוהתה חבלה",
+        "tamper_off": "תקין",
+        "update_on": "עדכון זמין",
+        "update_off": "מעודכן",
+        "vibration_on": "זוהה",
+        "vibration_off": "תקין",
+        "window_on": "פתוח",
+        "window_off": "סגור"
+      },
+      "button": {
+        "activate": "הפעלה",
+        "run": "הרצה",
+        "press": "לחיצה"
+      },
+      "climate_fan": {
+        "auto": "אוטומטי",
+        "low": "נמוך",
+        "medium": "בינוני",
+        "high": "גבוה",
+        "middle": "אמצע",
+        "focus": "ממוקד",
+        "diffuse": "מפוזר",
+        "top": "עליון",
+        "on": "פועל",
+        "off": "כבוי"
+      },
+      "climate_swing": {
+        "on": "פועל",
+        "off": "כבוי",
+        "both": "שניהם",
+        "vertical": "אנכי",
+        "horizontal": "אופקי"
+      },
+      "alarm": {
+        "disarmed": "מנוטרל",
+        "armed_home": "דרוך בבית",
+        "armed_away": "דרוך בחוץ",
+        "armed_night": "דרוך לילה",
+        "armed_vacation": "דרוך חופשה",
+        "armed_custom_bypass": "דרוך מותאם",
+        "pending": "ממתין",
+        "arming": "נדרך",
+        "disarming": "מנטרל",
+        "triggered": "הופעל"
+      },
+      "lock": {
+        "locked": "נעול",
+        "unlocked": "פתוח",
+        "locking": "ננעל",
+        "unlocking": "נפתח",
+        "open": "פתוח",
+        "opening": "נפתח",
+        "jammed": "תקוע"
+      },
+      "alarm_mode": {
+        "armed_home": "בית",
+        "armed_away": "בחוץ",
+        "armed_night": "לילה",
+        "armed_vacation": "חופשה",
+        "armed_custom_bypass": "מותאם",
+        "disarmed": "מנוטרל"
+      },
+      "alarm_action": {
+        "disarm": "נטרול",
+        "arm_home": "דריכה בבית",
+        "arm_away": "דריכה בחוץ",
+        "arm_night": "דריכת לילה",
+        "arm_vacation": "דריכת חופשה",
+        "arm_custom_bypass": "דריכה מותאמת",
+        "enter_code": "הזינו קוד"
+      },
+      "lock_action": {
+        "lock": "נעילה",
+        "unlock": "פתיחת נעילה",
+        "open": "פתיחה",
+        "open_door": "פתיחת דלת",
+        "open_door_confirm": "לפתוח באמת?"
+      },
+      "humidifier_mode": {
+        "normal": "רגיל",
+        "eco": "חסכוני",
+        "away": "בחוץ",
+        "boost": "מוגבר",
+        "comfort": "נוחות",
+        "home": "בית",
+        "sleep": "שינה",
+        "auto": "אוטומטי",
+        "baby": "תינוק"
+      },
+      "humidifier_action": {
+        "humidifying": "מלחלח",
+        "drying": "מייבש",
+        "idle": "במנוחה",
+        "off": "כבוי"
+      },
+      "today": "היום",
+      "weather_view": {
+        "daily": "יומי",
+        "hourly": "שעתי"
+      },
+      "weather_attribute": {
+        "humidity": "לחות",
+        "wind_speed": "מהירות רוח",
+        "air_pressure": "לחץ אוויר",
+        "visibility": "ראות"
+      },
+      "wind_direction": {
+        "n": "צ",
+        "nne": "צ-צמז",
+        "ne": "צמז",
+        "ene": "מז-צמז",
+        "e": "מז",
+        "ese": "מז-דמז",
+        "se": "דמז",
+        "sse": "ד-דמז",
+        "s": "ד",
+        "ssw": "ד-דמע",
+        "sw": "דמע",
+        "wsw": "מע-דמע",
+        "w": "מע",
+        "wnw": "מע-צמע",
+        "nw": "צמע",
+        "nnw": "צ-צמע"
+      }
+    },
+    "navigation": {
+      "back": "חזרה"
+    },
+    "energy": {
+      "solar": "סולארי",
+      "grid": "רשת",
+      "battery": "סוללה",
+      "home": "בית",
+      "other": "אחר",
+      "untracked": "לא במעקב",
+      "no_power": "אין חיישני הספק בהגדרות האנרגיה של Home Assistant"
+    },
+    "plugin": {
+      "missing": "תוסף חסר"
+    },
+    "calendar": {
+      "free": "פנוי",
+      "busy": "תפוס",
+      "starts_soon": "מתחיל בקרוב",
+      "private": "תפוס",
+      "all_day": "כל היום",
+      "today": "היום",
+      "tomorrow": "מחר",
+      "nothing": "אין שום דבר מתוכנן",
+      "nothing_more": "אין עוד השבוע",
+      "until": "עד {x}",
+      "next": "הבא {x}",
+      "left": "נותרו {x}",
+      "in": "בעוד {x}",
+      "more": "עוד {x}",
+      "earlier": "{x} מוקדם יותר",
+      "later": "{x} מאוחר יותר",
+      "more_week": "עוד {x} השבוע",
+      "days_view": "{x} ימים",
+      "views": [
+        "הבא בתור",
+        "יום",
+        "שבוע",
+        "חודש"
+      ],
+      "view_notes": [
+        "מה שקורה עכשיו, ואז הבאים",
+        "יום אחד, הקשה על הפס בוחרת אותו",
+        "ימים זה לצד זה, שעות כלפי מטה",
+        "מבט על החודש, הקשה פותחת יום"
+      ],
+      "today_key": "היום",
+      "booking": "מזמין…",
+      "calendars": "יומנים",
+      "also": "+{x} עכשיו",
+      "booked": "הוזמן במסך"
+    }
+  },
+  "addon": {
+    "errors": {
+      "language_choice": "בחרו שפה מהרשימה.",
+      "region_choice": "בחרו שעון ותבנית מספרים מהרשימות.",
+      "open_through_ha": "פתחו את הדף הזה דרך Home Assistant.",
+      "refresh_page": "רעננו את הדף ונסו שוב.",
+      "ha_refused": "Home Assistant לא קיבל את זה: {reason}.",
+      "ha_refused_change": "Home Assistant לא קיבל את השינוי: {reason}.",
+      "no_reason": "לא ניתנה סיבה",
+      "ha_unreachable": "Home Assistant לא זמין כרגע. נסו שוב בעוד רגע.",
+      "too_large": "הבקשה גדולה מדי.",
+      "invalid_input": "קלט לא תקין. בדקו את השם, הלוח והאריחים שנבחרו.",
+      "unknown_screen": "מסך לא מוכר.",
+      "not_paired": "זה אינו מסך ESP מצומד. רעננו את הסקירה.",
+      "choose_icon": "בחרו סמל מהרשימה.",
+      "skill_not_written": "לא ניתן היה לכתוב את המיומנות אל {folder} ({reason}).",
+      "settings": {
+        "unknown": "הגדרות מסך לא מוכרות; רעננו את דף הניהול.",
+        "invalid_value": "ערך לא תקין עבור {setting}.",
+        "dim_above_normal": "בהירות ההמתנה והלילה לא יכולה להיות גבוהה מהרגילה.",
+        "offline": "המסך הזה לא מקוון. אפשר יהיה לשנות את הגדרותיו כשיחזור.",
+        "unavailable": "אי אפשר לשנות את {names} כרגע: הישות כבויה ב-Home Assistant, או שהמסך מופעל מחדש.",
+        "rotation": "סיבוב המסך הזה דורש קושחה {version} ומעלה.",
+        "rotation_quarter": "רק מסך מרובע יכול להסתובב ברבע; המסך הזה מתהפך (180°)."
+      },
+      "layout": {
+        "invalid": "פריסה לא תקינה.",
+        "title": "תנו למסך כותרת של 96 בתים לכל היותר.",
+        "page_title": "תנו לעמוד כותרת של 96 בתים לכל היותר.",
+        "page_titles": "למסך יש עמוד אחד לכל היותר. | למסך יש {n} עמודים לכל היותר.",
+        "tiles_max": "בחרו אריח אחד לכל היותר. | בחרו {n} אריחים לכל היותר.",
+        "unsupported": "הישות הזו אינה נתמכת.",
+        "once": "שעון המיטה יכול להופיע במסך פעם אחת בלבד.",
+        "tile_name": "שם אריח יכול להכיל 80 בתים לכל היותר.",
+        "unknown_settings": "הגדרות אריח לא מוכרות.",
+        "navigation_size": "אריח ניווט הוא ברוחב יחיד או כפול.",
+        "background": "בחרו צבע רקע פסטלי מהלוח.",
+        "invalid_setting": "הגדרת אריח לא תקינה: {setting}",
+        "no_toggle": "הישות הזו אינה תומכת בפעולת הפעלה/כיבוי.",
+        "builtin_action": "כרטיס מובנה אינו יכול לבצע פעולה.",
+        "no_mini_slider": "הישות הזו אינה תומכת במחוון קטן.",
+        "history_hours": "היסטוריה: בחרו 1, 6 או 24 שעות.",
+        "refresh": "תמונה חיה: רענון כל 5, 10, 15 או 30 שניות.",
+        "watch_or_slider": "בחרו ערך גדול או מחוון קטן.",
+        "no_direct_control": "הישות הזו אינה תומכת בשליטה הישירה הזו.",
+        "position": "מיקום אריח לא תקין; רעננו את דף הניהול.",
+        "full_page_top": "אריח עמוד מלא מתחיל בראש העמוד שלו.",
+        "wide_left": "אריח ברוחב כפול מתחיל בעמודה השמאלית.",
+        "same_spot": "שני אריחים נמצאים באותו מקום.",
+        "pages": "למסך יש עמוד אחד. | למסך יש בין 1 ל-{n} עמודים.",
+        "eight_pages": "האריחים האלה לא נכנסים בעמודי המסך הזה; הסירו אריח או הקטינו אחד.",
+        "camera_unsupported": "המסך הזה אינו יכול להציג תמונות מצלמה.",
+        "map_unsupported": "המסך הזה אינו יכול להציג מפה.",
+        "map_entities": "מפה מציגה {n} אנשים ומכשירי מעקב לכל היותר, כל אחד פעם אחת, לצד האדם של האריח עצמו.",
+        "firmware_first": "התקינו קודם קושחת מסך {version} ומעלה עבור האריחים האלה.",
+        "entity_gone": "ישות שנבחרה כבר לא קיימת. חפשו את הישות החדשה.",
+        "ids_too_long": "מזהי הישויות של האריחים האלה ארוכים מדי יחד להודעה אחת למסך; הסירו כמה אריחים.",
+        "favorite_play": "בחרו מה המועדף הזה מנגן."
+      },
+      "top_bar": {
+        "invalid": "סרגל עליון לא תקין; רעננו את דף הניהול.",
+        "full": "בסרגל העליון יש מקום לפריט אחד לכל היותר. | בסרגל העליון יש מקום ל-{n} פריטים לכל היותר.",
+        "invalid_setting": "הגדרה לא תקינה בסרגל העליון.",
+        "unknown_setting": "הגדרה לא מוכרת בסרגל העליון; רעננו את דף הניהול.",
+        "entity": "הישות הזו לא יכולה להופיע בסרגל העליון.",
+        "unknown_item": "פריט לא מוכר בסרגל העליון; רעננו את דף הניהול.",
+        "twice": "הפריט הזה כבר נמצא בסרגל העליון.",
+        "entity_gone": "ישות בסרגל העליון כבר לא קיימת. בחרו ישות אחרת."
+      },
+      "tap_action": {
+        "choose": "בחרו פעולה מהרשימה.",
+        "fields_max": "פעולה בהקשה מגדירה שדה אחד לכל היותר. | פעולה בהקשה מגדירה {n} שדות לכל היותר.",
+        "field_not_allowed": "{field} אינו שדה שפעולה בהקשה יכולה להגדיר.",
+        "unsendable": "ערך של הפעולה הוא משהו שהמסך אינו יכול לשלוח.",
+        "too_long": "ערכי הפעולה ארוכים מדי עבור המסך."
+      },
+      "events": {
+        "none_paired": "אין עדיין",
+        "name_the_screen": "ציינו את שם המסך. מצומדים: {screens}.",
+        "no_such_screen": "אין מסך בשם \"{name}\". מצומדים: {screens}.",
+        "several_screens": "\"{name}\" מתאים ליותר ממסך אחד: {screens}.",
+        "name_the_entity": "ציינו את הישות.",
+        "not_for_a_screen": "{entity} לא יכולה להופיע במסך.",
+        "not_on_screen": "{entity} אינה במסך הזה.",
+        "add_it_first": "{entity} אינה במסך הזה; הוסיפו אותה קודם.",
+        "key_stays": "{entity} נמצאת מתחת לשעון המיטה; הזיזו אותה שם בעורך.",
+        "not_on_spot": "{entity} אינה במקום {slot}.",
+        "not_on_page": "{entity} אינה בעמוד {page}.",
+        "move_where": "ציינו את העמוד או המקום שאליו להזיז.",
+        "spot_taken": "המקום הזה תפוס על ידי {entity}; תנו מקום אחר או הזיזו את זו קודם.",
+        "page_not_empty": "עמוד {page} אינו ריק; אריח עמוד מלא צריך עמוד משלו.",
+        "no_empty_page": "אין עמוד ריק; אריח עמוד מלא צריך עמוד משלו.",
+        "page_full": "עמוד {page} מלא.",
+        "no_room": "לא נשאר מקום במסך הזה.",
+        "screen_full": "במסך הזה כבר יש אריח אחד; הסירו אחד קודם. | במסך הזה כבר יש {n} אריחים; הסירו אחד קודם.",
+        "page_range": "בחרו עמוד בין 1 ל-{last}.",
+        "spot_range": "בחרו מקום בין 0 ל-{last}.",
+        "row_needs_page": "ציינו את העמוד עבור השורה או העמודה הזו.",
+        "row_range": "בחרו שורה בין 1 ל-{last}.",
+        "column": "העמודה היא שמאל או ימין.",
+        "column_range": "בחרו עמודה בין 1 ל-{last}; שמאל וימין הם הראשונה והאחרונה.",
+        "full_page_alone": "אריח עמוד מלא תופס את כל עמוד {page}; שום דבר אחר לא נכנס שם.",
+        "does_not_fit": "זה לא נכנס בעמוד {page}; אריח ברוחב כפול תופס שני מקומות.",
+        "size": "במסך הזה אין אריח בגודל {size}. הוא מקבל: {sizes}.",
+        "order_needed": "תנו את הישויות בסדר הרצוי.",
+        "order_not_on_screen": "לא במסך הזה: {entities}.",
+        "order_not_on_page": "לא בעמוד {page}: {entities}. הזיזו לשם קודם.",
+        "named_too_often": "צוינו יותר פעמים ממה שהן במסך הזה: {entities}.",
+        "named_too_often_page": "צוינו יותר פעמים ממה שהן בעמוד {page}: {entities}."
+      },
+      "home_assistant": {
+        "action_not_offered": "Home Assistant אינו מציע את {action} עבור {name}. בחרו פעולה מהרשימה.",
+        "action_answers_only": "{action} רק עונה בנתונים, שמסך אינו יכול להציג.",
+        "no_such_field": "ל-Home Assistant אין שדה {field} ב-{action} עבור {name}.",
+        "field_needed": "{action} צריך ערך עבור {field}.",
+        "no_on_off": "Home Assistant לא יכול להפעיל ולכבות את {name}, כך שהפעלה/כיבוי לא יעשו דבר. בחרו פעולת הקשה אחרת.",
+        "no_small_slider": "ל-{name} אין שום דבר שמחוון קטן יכול לשנות ב-Home Assistant.",
+        "no_graph": "ל-{name} אין מספרים לשרטט מהם גרף.",
+        "no_forecast": "ל-{name} אין תחזית יומית ב-Home Assistant.",
+        "no_meter": "ל-{name} אין מספרים להצגה במד.",
+        "no_control": "Home Assistant אינו מציע את השליטה הישירה הזו עבור {name}."
+      },
+      "alerts": {
+        "invalid": "התראה לא תקינה.",
+        "cannot_show": "{name} לא יכול להציג התראה: {reason}.",
+        "no_device_name": "שם המכשיר לא ידוע",
+        "offline": "לא מקוון",
+        "firmware": "קושחה {version}",
+        "unknown_version": "לא ידוע",
+        "not_ready": "לא מוכן"
+      },
+      "firmware": {
+        "board_and_name": "בחרו לוח ושם ייחודי (אותיות לטיניות קטנות, ספרות ומקפים; עד 30 תווים).",
+        "choice": "בחרו אחת מהאפשרויות שהלוח הזה מציע.",
+        "friendly_name": "תנו למסך שם מזוהה (עד 60 תווים).",
+        "choose_profile": "בחרו פרופיל YAML קיים.",
+        "profile_missing": "הפרופיל לא קיים בתיקיית ESPHome.",
+        "secrets_invalid": "secrets.yaml בתיקיית ESPHome אינו YAML תקין. תקנו את הקובץ קודם; הוא לא יידרס.",
+        "wifi_needed": "מלאו את שם ה-Wi-Fi והסיסמה; הם יישמרו ב-secrets.yaml של ESPHome.",
+        "wifi_not_set": "לא ניתן היה להגדיר Wi-Fi ב-secrets.yaml. מלאו שם בעצמכם את wifi_ssid ו-wifi_password.",
+        "name_exists": "השם הזה כבר קיים. השתמשו בפרופיל הקיים לעדכונים.",
+        "name_taken": "למסך אחר כבר יש את שם המכשיר {name}. Home Assistant לא יכול להבחין בין שני מכשירים באותו שם, ולכן המסך הזה צריך שם משלו.",
+        "friendly_taken": "מסך אחר כבר נקרא {name}. Home Assistant ימספר את שמות הישויות של המסך הזה, ואוטומציות יצביעו על המסך הלא נכון. תנו לו שם משלו.",
+        "override_exists": "לשם הזה כבר יש דריסה מקומית. שחזרו או הסירו אותה לפני יצירת מסך חדש בשם הזה.",
+        "override_symlink": "הדריסה המקומית היא קישור סימבולי; החליפו אותה קודם בקובץ רגיל.",
+        "other_include": "לפרופיל הזה כבר יש הכללת local_overrides אחרת.",
+        "profile_invalid": "פרופיל המסך אינו YAML תקין; תקנו אותו לפני הוספת דריסה.",
+        "no_packages": "לפרופיל הזה אין מקטע packages ש-Tessera יכול להרחיב.",
+        "override_invalid": "נתוני דריסה לא תקינים.",
+        "yaml_needed": "הזינו טקסט YAML קודם.",
+        "override_too_large": "הדריסה גדולה מדי. שמרו אותה מתחת ל-12 KB.",
+        "yaml_error_line": "שגיאת YAML בשורה {line}: {problem}.",
+        "yaml_error": "שגיאת YAML: {problem}.",
+        "invalid_yaml": "YAML לא תקין",
+        "override_object": "הדריסה חייבת להכיל אובייקט YAML, למשל display: או substitutions:.",
+        "sections_managed": "המקטעים האלה נשארים בניהול Tessera: {names}.",
+        "substitutions_managed": "ההחלפות האלה נשארות בניהול Tessera: {names}.",
+        "substitutions_in_profile": "{names} מוגדר ב-YAML של המסך עצמו (נבחר תחת מסך חדש), שגובר על הדריסה. שנו אותו שם במקום.",
+        "orientation": "בחרו אם המסך תלוי לרוחב או לאורך.",
+        "orientation_managed": "כיוון תליית המסך נבחר בעורך, תחת רשת לצד העמודים, או בזמן הבנייה, תחת מסך חדש, ולכן LVGL_ROTATION נשאר בניהול Tessera.",
+        "usb_port": "בחרו את יציאת ה-USB המחוברת מהרשימה.",
+        "busy_wait": "בנייה או התקנה כבר פועלת. המתינו לסיומה.",
+        "busy": "בנייה או התקנה כבר פועלת.",
+        "no_esphome": "ה-CLI של ESPHome חסר בהתקנה הזו.",
+        "still_building": "הקושחה עדיין נבנית. הורידו אותה כשהבנייה תסתיים.",
+        "build_first": "בנו את הקושחה קודם; ההורדה תופיע כשהבנייה תסתיים.",
+        "unknown_action": "פעולת קושחה לא מוכרת.",
+        "host": "הזינו את כתובת ה-IP או שם המארח של המסך המיועד.",
+        "grid": "בחרו רשת שהמסך הזה מקבל.",
+        "build_gone": "הבנייה הזו כבר לא מוכרת. הבניות החדשות ביותר נמצאות תחת קושחה ו-USB."
+      },
+      "updates": {
+        "automatic": "בחרו הפעלה או כיבוי לעדכונים אוטומטיים.",
+        "busy": "עדכון כבר פועל. המתינו לסיומו.",
+        "unknown_screen": "מסך לא מוכר. רעננו את הסקירה.",
+        "offline": "המסך הזה לא מקוון; אפשר יהיה לעדכן כשיחזור.",
+        "latest": "במסך הזה כבר מותקנת הקושחה העדכנית ביותר.",
+        "enter_ip": "הזינו את כתובת ה-IP של המסך הזה.",
+        "no_profile": "לא נמצא פרופיל ESPHome למסך הזה. בדקו את השם בתיקיית ESPHome.",
+        "ip_unknown": "כתובת ה-IP לא ידועה. הזינו אותה פעם אחת; קושחה חדשה מדווחת עליה בעצמה מאז.",
+        "all_updated": "כל המסכים הזמינים כבר מעודכנים.",
+        "reinstall_dev": "התקנה מחדש של אותה קושחה מיועדת לערוץ הפיתוח בלבד.",
+        "all_on_the_way": "כל מסך שיש לו עדכון כבר מקבל אותו.",
+        "nothing_to_reinstall": "אין מסך שאפשר להתקין מחדש כרגע: כל אחד לא מקוון, כבר בתהליך, או בלי פרופיל באפליקציה הזו."
+      },
+      "remove": {
+        "not_allowed": "לאפליקציה הזו אסור להסיר אינטגרציה מ-Home Assistant. הסירו את המסך ב-Home Assistant עצמו, תחת הגדרות ← מכשירים ושירותים.",
+        "gone": "המסך הזה כבר לא קיים ב-Home Assistant.",
+        "no_entry": "המסך הזה אינו רשום ב-Home Assistant כמכשיר ESPHome, ולכן אפשר להסיר אותו רק ב-Home Assistant עצמו."
+      },
+      "calibrate": {
+        "no_wizard": "ל-{name} אין כיול: לוח המגע שלו מדווח היכן נגעתם, כך שאין מה למדוד.",
+        "offline": "{name} לא מקוון. הכיול יוכל להתחיל כשיחזור."
+      },
+      "editor_reload": "טענו מחדש את העורך לפני השמירה. הלשונית הזו משתמשת בתבנית פריסה ישנה.",
+      "pages": {
+        "footprint": "גודל האריח הזה דורש יכולת מסך עתידית",
+        "pages_full": "אין במסך הזה מקום לעמוד נוסף",
+        "page_missing": "העמוד כבר לא קיים",
+        "tile_missing": "האריח כבר לא קיים",
+        "home_invalid": "דף הבית חייב להיות עמוד קיים",
+        "identity": "מזהה מופע לא תקין או כפול",
+        "navigation": "הגדרת ניווט עמודים לא תקינה",
+        "arrangement": "סידור אריחים חייב לשמור כל אריח קיים",
+        "order": "סדר עמודים לא תקין",
+        "delete": "אי אפשר למחוק את העמוד הזה",
+        "size": "גודל אריח לא נתמך",
+        "adapt_pages": "בפריסה הזו יש יותר עמודים ממה שמסך היעד תומך בו",
+        "adapt_full": "בעמוד יש יותר אריחים ממה שרשת היעד מכילה. שום אריח לא הוסר.",
+        "select_link": "בחרו אריח ניווט עמודים כדי לשנות את היעד שלו",
+        "import_grid": "הייצוא הישן הזה לא שומר את הרשת שלו. לייבא אותו כ-{columns} × {rows} תאים לעמוד?",
+        "source_grid": "רשת המקור לא ידועה; חברו את המסך הזה קודם",
+        "migration_pending": "פתרו את ההעברה הממתינה של המסך הזה לפני עריכה או עדכון",
+        "migration_unreadable": "לא ניתן היה לקרוא את הפריסה הישנה. שחזרו את הגיבוי שלה או התחילו מחדש במסך הזה.",
+        "storage_json": "JSON אחסון לא תקין; הנתונים נשארים ללא שינוי",
+        "storage_duplicate": "מפתחות כפולים ב-JSON השמור",
+        "storage_nonfinite": "ערך לא סופי ב-JSON השמור",
+        "backup_conflict": "גיבוי העברה סותר; הנתונים נשארים ללא שינוי",
+        "storage_version": "גרסת אחסון לא מוכרת; הנתונים נשארים ללא שינוי",
+        "storage_record": "רשומת מסך שמורה לא תקינה",
+        "storage_metadata": "מטא-נתוני שחזור העברה לא תקינים",
+        "fields": "שדות תצורת עמוד לא תקינים או לא נתמכים",
+        "workspace_refs": "הפניות סביבת עבודה לא תקינות",
+        "workspace_position": "מיקום סביבת עבודה לא תקין",
+        "workspace_conflict": "סביבת העבודה השתנתה בעורך אחר",
+        "layout_conflict": "הפריסה השתנתה בעורך אחר; טענו מחדש ויישבו את הטיוטה",
+        "adaptation": "רשת המסך השתנתה; נדרשת התאמת פריסה מפורשת",
+        "normalization": "אפשרויות האריח צריכות נרמול לפני שמירת מסמך העמוד",
+        "ambiguous_tile": "לאירוע האריח יש מקור דו-משמעי; ציינו את העמוד שלו",
+        "save_first": "שמרו מסמך עמוד לפני שמירת הגדרות המסמך",
+        "destination_exists": "למסך היעד כבר יש פריסה שמורה",
+        "update_tall": "עדכנו את המסך כדי להשתמש בגדלי האריחים האלה",
+        "memory": "למסך אין מספיק זיכרון פנוי לפריסה הזו. הפחיתו את מספר האריחים.",
+        "grid_range": "המסך הזה אינו מקבל רשת בגודל הזה. בחרו רשת אחרת לצד ההדמיה."
+      },
+      "feedback": {
+        "invalid": "אי אפשר לשתף את התשובה הזו. בחרו כן או לא בדיוק, ורק את הבעיות שברשימה.",
+        "comment": "שמרו את ההערה מתחת ל-1000 תווים.",
+        "unknown_board": "משוב עדיין לא זמין ללוח הזה.",
+        "deleting": "התשובה ששיתפתם עדיין נמחקת. ענו שוב כשזה יסתיים.",
+        "storage": "המשוב כבוי: הנתונים השמורים שלו נכתבו על ידי גרסה אחרת של Tessera."
+      },
+      "media": {
+        "browse": "{name} לא ענה עם הספרייה שלו.",
+        "link_invalid": "זה לא קישור של Spotify. העתיקו אחד באפליקציית Spotify עם שיתוף > העתקת קישור.",
+        "link_short": "כתובת spotify.link רק מפנה למקום אחר. פתחו אותה בדפדפן והעתיקו את הכתובת הארוכה שאליה היא מובילה.",
+        "link_player": "{name} לא מנגן קישורי Spotify."
+      },
+      "allow_actions": {
+        "not_allowed": "Home Assistant לא מאפשר לאפליקציה הזו לשנות את האינטגרציות שלו. עשו זאת ב-Home Assistant עצמו, תחת הגדרות ← מכשירים ושירותים.",
+        "no_entry": "המסך הזה אינו רשום ב-Home Assistant כמכשיר ESPHome.",
+        "failed": "Home Assistant לא קיבל את זה. ב-Home Assistant פתחו את הגדרות ← מכשירים ושירותים ← ESPHome, בחרו את המסך הזה, אחר כך הגדרה, והפעילו את “לאפשר למכשיר לבצע פעולות Home Assistant”."
+      },
+      "plugins": {
+        "request": "בקשת התוסף הזו אינה שלמה.",
+        "unknown": "אין תוסף {id}.",
+        "misfit_api": "{name} נכתב עבור API תוספים אחר משל האפליקציה הזו.",
+        "misfit_board": "{name} מיועד ללוחות אחרים.",
+        "misfit_psram": "{name} צריך לוח עם PSRAM.",
+        "misfit_blocked": "{name} חסום: הגרסה הזו ידועה כמזיקה או שבורה.",
+        "firmware": "לקושחת המסך הזה עדיין אין תוספים. עדכנו אותה, ואז יופיעו אריחי התוספים.",
+        "file": "קובץ התוספים אינו תקין.",
+        "other_include": "ל-YAML של המסך הזה כבר יש הכללת tessera_plugins אחרת.",
+        "link_invalid": "זה לא קישור למאגר GitHub (https://github.com/owner/repository).",
+        "link_not_found": "לא נמצא שם תוסף: אין גרסה, או אין tessera-plugin.yaml בתיקייה הזו.",
+        "link_rate": "GitHub לא עונה כרגע (יותר מדי שאלות בשעה). נסו שוב מאוחר יותר.",
+        "folder": "התיקייה {folder} ב-tessera-plugins עדיין אינה תוסף: {why}",
+        "manifest": "תיאור התוסף אינו תקין: {why}",
+        "consent": "{name} מבקש הרשאות אחרות מבעבר. בדקו מה מותר לו עכשיו והסכימו, ואז עדכנו.",
+        "requires_unknown": "{name} צריך את התוסף {other}, שאינו ברשימת התוספים.",
+        "requires_misfit": "{name} צריך את {other}, שאינו מתאים למסך הזה.",
+        "feature_missing": "{name} צריך {feature}, ושום דבר שמביא אחד לא מתאים למסך הזה.",
+        "feature_conflict": "למסך יש {feature} אחד, ו-{names} יביאו כל אחד אחד.",
+        "needed_by": "{others} צריך את {name}: הסירו אותם יחד.",
+        "choose": "בחרו איזה תוסף מביא את {feature} עבור {name}.",
+        "other_origin": "המסך הזה מריץ תוסף אחר בשם {name}, מ-{origin}. עברו לזה בפרטים שלו.",
+        "misfit_esphome": "{name} צריך ESPHome {version} ומעלה כדי להיבנות.",
+        "like_consent": "הסכימו קודם שהלייק שלכם ייספר במספר ציבורי.",
+        "like_off": "הלייקים כבויים: גרסה חדשה יותר של האפליקציה שומרת אותם.",
+        "like_failed": "הלייק לא נשלח. נסו שוב בעוד רגע.",
+        "misfit_built_in": "{name} מביא את מה שכבר יש ללוח הזה.",
+        "offline": "האפליקציה עדיין לא יודעת היכן {screen} נמצא ברשת. הפעילו אותו, המתינו עד שיופיע כמקוון, ונסו שוב.",
+        "like_not_listed": "אפשר לסמן לייק רק לתוספים מהקטלוג של Tessera.",
+        "rate_not_installed": "שימו את התוסף באחד המסכים שלכם קודם, ואז תוכלו לדרג אותו.",
+        "rate_failed": "הכוכבים לא נשלחו. נסו שוב בעוד רגע.",
+        "count_failed": "לא ניתן היה לכבות את הספירה: Tessera לא זמין. נסו שוב בעוד רגע.",
+        "forget_running": "מסך עדיין מריץ את התוסף הזה. הסירו אותו מהמסך קודם."
+      },
+      "extras": {
+        "request": "השינוי הזה בתוספת אינו אפשרי במסך הזה."
+      },
+      "display_precision_unregistered": "Home Assistant לא שומר הגדרות לחיישן הזה כי אין לו מזהה ייחודי, ולכן את דיוק התצוגה שלו אפשר להגדיר רק ב-YAML שלו.",
+      "build_server": {
+        "host": "הזינו את כתובת ה-IP או שם המארח של שרת הבנייה.",
+        "port": "הפורט הוא מספר בין 1 ל-65535. שרת בנייה מאזין ב-6055 אלא אם שיניתם זאת.",
+        "unreachable": "אף אחד לא עונה בכתובת הזו. בדקו ששרת הבנייה פועל, שהוא בונה עבור מכשירים אחרים, ושחומת אש מעבירה את פורט 6055.",
+        "protocol": "משהו עונה בכתובת הזו, אבל זה לא שרת בנייה של ESPHome ש-Tessera יכול לדבר איתו.",
+        "preview_first": "חפשו קודם את שרת הבנייה, ואז השוו את טביעת האצבע שלו.",
+        "no_window": "שרת הבנייה לא מקבל מכשירים חדשים כרגע. פתחו בו את בקשות הצימוד, וצמדו שוב.",
+        "no_window_key": "שרת הבנייה לא קיבל את המפתח הזה. בדקו את מפתח הצימוד, או הפעילו את שרת הבנייה מחדש לקבלת מפתח חדש.",
+        "rejected": "שרת הבנייה סירב לצימוד.",
+        "mismatch": "שרת הבנייה הזה ענה עם טביעת אצבע שונה מזו שבדקתם. חפשו אותו שוב.",
+        "not_paired": "צמדו קודם שרת בנייה.",
+        "unknown": "שרת הבנייה כבר לא מכיר את Tessera. צמדו אותו שוב.",
+        "pending": "שרת הבנייה עדיין לא קיבל את Tessera."
+      },
+      "video": {
+        "not_written": "לא ניתן היה לכתוב את Tessera video אל {folder}: {reason}.",
+        "not_installed": "התקינו קודם את Tessera video."
+      },
+      "report": {
+        "depth": "בחרו בדוח הבסיסי או המלא.",
+        "busy": "דוח של המסך הזה עדיין נאסף.",
+        "no_profile": "ה-YAML של המסך הזה אינו בתיקיית ESPHome של התוסף הזה, כך שאין ממה לדווח מכאן.",
+        "not_found": "הדוח הזה נעלם. צרו חדש.",
+        "not_ready": "הדוח עדיין לא הסתיים.",
+        "failed": "איסוף הדוח נעצר ({reason}). נסו שוב.",
+        "consent": "סמנו את התיבה כדי לשלוח את הדוח.",
+        "note": "שמרו את ההערה מתחת ל-2000 תווים.",
+        "email": "זה לא נראה כמו כתובת דוא״ל.",
+        "too_large": "הדוח גדול מדי לשליחה. הורידו אותו וצרפו אותו לבעיה ב-GitHub במקום.",
+        "retry": "Tessera לא קיבל את הדוח הרגע. נסו שוב בעוד דקה, או הורידו אותו.",
+        "offline": "אי אפשר להגיע ל-Tessera מכאן. הורידו את הדוח במקום.",
+        "invalid": "Tessera דחה את הדוח. הורידו אותו וצרפו אותו לבעיה ב-GitHub במקום."
+      }
+    },
+    "status": {
+      "first_tiles": "בחרו את האריחים הראשונים שלכם",
+      "saved": "נשמר; ממתין לסנכרון",
+      "applying": "מחיל פריסה",
+      "applied": "הפריסה הוחלה",
+      "firmware_needed": "הפריסה נשמרה; לאריחים האלה נדרשת קושחה {version}+",
+      "too_large": "הפריסה נשמרה; גדולה מדי להודעה אחת למסך, הסירו כמה אריחים",
+      "sent": "נשלח ל-Home Assistant",
+      "offline": "המסך לא מקוון; השינויים נשמרו",
+      "retrying": "השליחה נכשלה; מנסה שוב אוטומטית",
+      "screen": {
+        "synced": "מסונכרן",
+        "loading_tiles": "טוען אריחים",
+        "layout_received": "הפריסה התקבלה",
+        "resend_needed": "נדרשת שליחה חוזרת",
+        "ready": "מוכן להגדרת אריחים",
+        "error": "שגיאה: {reason}"
+      }
+    },
+    "updates": {
+      "offline": "המסך לא היה מקוון; ננסה שוב בפעם הבאה.",
+      "unknown_target": "הפרופיל או כתובת ה-IP לא ידועים; עדכנו את המסך הזה ידנית.",
+      "build_failed": "הבנייה או ההתקנה נכשלו; ראו את היומן תחת קושחה ו-USB.",
+      "plugin_update_needed": "{name} לא נבנה עם הקושחה הזו. עדכנו את התוסף {name} לגרסה {version} בדף התוספים, ואז עדכנו את המסך שוב.",
+      "plugin_failed": "{name} {version} לא נבנה עם הקושחה הזו, ועדיין אין גרסה חדשה יותר. הסירו את התוסף {name} בדף התוספים כדי לעדכן את המסך בלעדיו; ראו את היומן תחת קושחה ו-USB.",
+      "build_memory": "אין מספיק זיכרון לבניית הקושחה: צריך כ-{need} פנויים ויש {free}. עצרו כמה תוספים לזמן מה או תנו למכונה יותר זיכרון; ראו קושחה ו-USB.",
+      "build_memory_limit": "אין מספיק זיכרון לבניית הקושחה, גם עם מהדר אחד בכל פעם. עצרו כמה תוספים לזמן מה או תנו למכונה יותר זיכרון; ראו קושחה ו-USB.",
+      "no_report": "המסך לא דיווח חזרה עם קושחה {version}; בדקו את המסך.",
+      "dropped_off": "המסך נעלם אחרי העדכון; בדקו את המסך.",
+      "updated": "עודכן לקושחה {version}."
+    },
+    "notify": {
+      "update_stopped": "העדכון האוטומטי נעצר ב-{name}: {reason} שאר המסכים לא נגעו."
+    },
+    "labels": {
+      "built_into_screen": "מובנה במסך",
+      "backgrounds": {
+        "auto": "ברירת מחדל",
+        "none": "ללא",
+        "red": "אדום",
+        "orange": "כתום",
+        "yellow": "צהוב",
+        "green": "ירוק",
+        "mint": "מנטה",
+        "blue": "כחול",
+        "purple": "סגול",
+        "pink": "ורוד",
+        "gray": "אפור"
+      },
+      "controls": {
+        "none": "ללא",
+        "climate": {
+          "setpoint": "טמפרטורה − / +",
+          "mode": "מקשי מצב",
+          "setpoint_mode": "טמפרטורה − / + ומקשי מצב"
+        },
+        "switch": {
+          "toggle": "מתג הפעלה/כיבוי"
+        },
+        "input_boolean": {
+          "toggle": "מתג הפעלה/כיבוי"
+        },
+        "automation": {
+          "toggle": "מתג הפעלה/כיבוי",
+          "run": "כפתור הרצה"
+        },
+        "light": {
+          "toggle": "מתג הפעלה/כיבוי",
+          "brightness": "מחוון בהירות"
+        },
+        "fan": {
+          "toggle": "מתג הפעלה/כיבוי",
+          "speed": "מחוון מהירות"
+        },
+        "vacuum": {
+          "buttons": "התחלה, עצירה, עגינה",
+          "map": "מפה",
+          "rooms": "חדרים לבחירה",
+          "routines": "שגרות",
+          "map_rooms": "מפה וחדרים"
+        },
+        "cover": {
+          "buttons": "פתיחה, עצירה, סגירה",
+          "position": "מחוון מיקום",
+          "tilt": "הטיית שלבים",
+          "buttons_tilt": "פתיחה, עצירה, סגירה והטיית שלבים",
+          "position_tilt": "מיקום והטיית שלבים"
+        },
+        "media_player": {
+          "volume": "עוצמה והשתקה",
+          "playback": "הקודם, ניגון/השהיה, הבא",
+          "volume_playback": "עוצמה והקודם, ניגון/השהיה, הבא"
+        },
+        "number": {
+          "stepper": "ערך − / +",
+          "slider": "מחוון"
+        },
+        "input_number": {
+          "stepper": "ערך − / +",
+          "slider": "מחוון"
+        },
+        "select": {
+          "stepper": "בחירה קודמת / הבאה"
+        },
+        "input_select": {
+          "stepper": "בחירה קודמת / הבאה"
+        },
+        "timer": {
+          "buttons": "התחלה/השהיה וביטול"
+        },
+        "scene": {
+          "run": "כפתור הפעלה"
+        },
+        "script": {
+          "run": "כפתור הרצה"
+        },
+        "button": {
+          "run": "כפתור לחיצה"
+        },
+        "input_button": {
+          "run": "כפתור לחיצה"
+        },
+        "remote": {
+          "toggle": "מתג הפעלה/כיבוי"
+        },
+        "humidifier": {
+          "setpoint": "לחות − / +",
+          "slider": "מחוון לחות",
+          "mode": "מקשי מצב",
+          "setpoint_mode": "לחות − / + ומקשי מצב",
+          "toggle": "מתג הפעלה/כיבוי"
+        }
+      },
+      "top_bar": {
+        "builtin": {
+          "clock": "שעה",
+          "analog": "שעון מחוגים",
+          "date": "תאריך",
+          "wifi": "אות Wi-Fi",
+          "link": "אזהרת חיבור",
+          "battery": "סוללה"
+        },
+        "contents": {
+          "state": "מצב",
+          "last_changed": "שינוי אחרון",
+          "icon": "סמל בלבד"
+        },
+        "shows": {
+          "always": "תמיד",
+          "active": "רק כשפעיל"
+        },
+        "suggestions": {
+          "temperature": "טמפרטורה",
+          "humidity": "לחות",
+          "power": "צריכת חשמל",
+          "motion": "תנועה אחרונה",
+          "weather": "מזג אוויר",
+          "people_home": "אנשים בבית",
+          "sun": "זריחה ושקיעה",
+          "co2": "CO₂"
+        },
+        "wifi_contents": {
+          "icon": "סמל בלבד",
+          "percent": "אחוזים",
+          "dbm": "dBm"
+        },
+        "wifi_shows": {
+          "always": "תמיד",
+          "weak": "רק כשחלש"
+        },
+        "battery_contents": {
+          "icon": "סמל בלבד",
+          "percent": "אחוזים"
+        },
+        "plugin_contents": {
+          "all": "סמל ומילים",
+          "icon": "סמל בלבד"
+        },
+        "battery_shows": {
+          "always": "תמיד",
+          "low": "רק כשנמוכה"
+        }
+      },
+      "extras": {
+        "microphone": {
+          "label": "מיקרופון",
+          "hint": "כבוי משתיק את המיקרופון לכל מה שמאזין. המסך שומר זאת גם אחרי הפעלה מחדש."
+        },
+        "media_player": {
+          "label": "עוצמה",
+          "hint": "כמה חזק המסך מדבר ומנגן: תשובות, הכרזות ומוזיקה. אותה עוצמה כמו נגן המדיה של המסך ב-Home Assistant."
+        },
+        "wake_when_moved": {
+          "label": "התעוררות בתנועה",
+          "hint": "המסך מתעורר מהמתנה כשמישהו מרים אותו, מזיז אותו או דופק עליו. הוא מרגיש את המסך עצמו, לא מישהו שעובר לידו."
+        },
+        "doorbell": {
+          "label": "פעמון דלת",
+          "hint": "כשפעמון דלת ב-Home Assistant מצלצל, המסך הזה מתעורר, מצלצל ופותח את המצלמה שלו בשידור חי עם קול. כבוי משאיר את המסך הזה בשקט, למשל בחדר שינה בלילה."
+        },
+        "microphone_gain": {
+          "label": "הגבר מיקרופון",
+          "hint": "הגבר מיקרופון אנלוגי. מתחיל ב-30 dB; הגבר הייחוס של הניגון נשאר קבוע."
+        },
+        "automatic_gain": {
+          "label": "הגבר אוטומטי",
+          "hint": "מאפשר לקודק המיקרופון לכוונן את רמת ההקלטה. בלתי תלוי בביטול ההד."
+        },
+        "echo_cancellation": {
+          "label": "ביטול הד",
+          "hint": "מפחית את רמקול המסך בקלט המיקרופון. כבוי עוקף את הביטול; זה לא משבית את המיקרופון או את השמע הדו-כיווני. דורש את תעבורת ה-AEC."
+        }
+      }
+    },
+    "alerts": {
+      "fields": {
+        "title": {
+          "label": "כותרת",
+          "help": "שורה אחת בראש הכרטיס; מה שלא נכנס מקבל שלוש נקודות. ריק הופך ל-\"התראה\".",
+          "example": "מישהו בדלת"
+        },
+        "subtitle": {
+          "label": "כותרת משנה",
+          "help": "הסבר מתחת לכותרת, על פני כמה שורות; ירידת שורה בסדר. ריק בסדר.",
+          "example": "דלת 3, אחורית"
+        },
+        "icon": {
+          "label": "סמל",
+          "help": "שם מהרשימה, גם כ-mdi:name או כנקודת קוד הקסדצימלית (F12E6). לא מוכר או ריק נותן את משולש האזהרה."
+        },
+        "color": {
+          "label": "צבע",
+          "help": "אחד מתשעת צבעי הפסטל של האריחים. ריק נותן את הכרטיס הלבן."
+        },
+        "button_text": {
+          "label": "טקסט הכפתור",
+          "help": "הטקסט על הכפתור. ריק הוא \"אישור\".",
+          "example": "בא"
+        },
+        "timeout": {
+          "label": "זמן קצוב",
+          "help": "שניות שאחריהן הכרטיס נעלם מעצמו. 0 ממתין לכפתור, כמה זמן שזה ייקח. הכפתור תמיד סוגר אותו מיד, גם עם זמן קצוב."
+        },
+        "flash": {
+          "label": "הבהוב",
+          "help": "פועל גורם לתאורה האחורית להבהב ארבע פעמים כשההתראה מגיעה; אחר כך המסך פשוט נשאר דולק."
+        },
+        "camera": {
+          "label": "מצלמה",
+          "help": "ישות מצלמה או תמונה. כל מסך מלבד ה-CYD, עם קושחה 0.2.57+, מציג על הכרטיס את התמונה שלה מאותו רגע, בפרופורציות של המצלמה עצמה (מעל המילים, או לצדן במסך רחב ונמוך); הקשה עליה פותחת את המצלמה במסך מלא. ה-CYD מציג את ההתראה בלעדיה. רק דרך האירוע esp_screens_show_alert."
+        },
+        "action": {
+          "label": "פעולה",
+          "help": "פעולת Home Assistant, כמו script.open_gate או light.turn_off, שמבוצעת פעם אחת כשהכפתור נלחץ בכל מסך. `data` נותן את השדות שלה (entity_id, brightness, ...). זמן קצוב או התראה חדשה משאירים אותה לא מבוצעת. רק דרך האירוע esp_screens_show_alert."
+        },
+        "screen": {
+          "label": "מסך",
+          "help": "איזה מסך מקבל את ההתראה: שם המכשיר שלו (כמו kitchen-screen), השם ש-Home Assistant מציג, או חדר, שמגיע לכל מסך בו. רשימה, כמו [kitchen-screen, hallway], מגיעה לכמה. השמיטו כדי להגיע לכל מסך. שם שלא מתאים לאף מסך לא שולח כלום; היומן של Tessera Screen Manager מציין את המסכים שהוא מכיר. רק דרך האירועים esp_screens_show_alert ו-esp_screens_dismiss_alert."
+        },
+        "button_color": {
+          "label": "צבע הכפתור",
+          "help": "הכפתור בצבע משלו: red, orange, yellow, green, mint, blue, purple, pink או gray, כצבע מקש מלא עם מילים לבנות. ריק שומר את הכפתור הכהה."
+        },
+        "button2_text": {
+          "label": "טקסט הכפתור השני",
+          "help": "כפתור שני משמאל לראשון, לבחירה כמו דחייה ואישור. ריק נותן כפתור אחד.",
+          "example": "לא עכשיו"
+        },
+        "button2_color": {
+          "label": "צבע הכפתור השני",
+          "help": "הכפתור השני באחד מאותם צבעים. ריק שומר את הכפתור הבהיר."
+        },
+        "button2_action": {
+          "label": "פעולת הכפתור השני",
+          "help": "פעולת Home Assistant שמבוצעת פעם אחת כשהכפתור השני נלחץ בכל מסך, כמו `action` עבור הראשון. `button2_data` נותן את השדות שלה. רק דרך האירוע esp_screens_show_alert."
+        }
+      },
+      "endings": {
+        "ok": "הכפתור נלחץ",
+        "button2": "הכפתור השני נלחץ",
+        "timeout": "הזמן הקצוב נגמר",
+        "replaced": "התראה חדשה הגיעה מעליה",
+        "remote": "dismiss_alert מ-Home Assistant"
+      }
+    },
+    "icons": {
+      "groups": {
+        "lighting": "תאורה",
+        "rooms": "חדרים",
+        "climate": "אקלים",
+        "weather": "מזג אוויר",
+        "media_and_music": "מדיה ומוזיקה",
+        "security": "אבטחה",
+        "appliances": "מכשירי חשמל",
+        "energy": "אנרגיה",
+        "window_coverings": "כיסויי חלונות",
+        "garden_and_pets": "גינה וחיות מחמד",
+        "people_and_travel": "אנשים ונסיעות",
+        "other": "אחר"
+      },
+      "names": {
+        "lightbulb": "נורה",
+        "lightbulb_group": "אורות",
+        "ceiling_light": "מנורת תקרה",
+        "chandelier": "נברשת",
+        "lamp": "מנורת שולחן",
+        "floor_lamp": "מנורה עומדת",
+        "desk_lamp": "מנורת כתיבה",
+        "wall_sconce_flat": "מנורת קיר",
+        "light_recessed": "ספוט שקוע",
+        "spotlight_beam": "זרקור",
+        "led_strip_variant": "פס לד",
+        "outdoor_lamp": "תאורת חוץ",
+        "home": "בית",
+        "sofa": "סלון",
+        "bed": "חדר שינה",
+        "silverware_fork_knife": "פינת אוכל",
+        "chef_hat": "מטבח",
+        "shower": "מקלחת",
+        "bathtub": "חדר רחצה",
+        "toilet": "שירותים",
+        "desk": "חדר עבודה",
+        "garage": "מוסך",
+        "fireplace": "אח",
+        "thermometer": "טמפרטורה",
+        "thermostat": "תרמוסטט",
+        "air_conditioner": "מזגן",
+        "radiator": "רדיאטור",
+        "heat_pump": "משאבת חום",
+        "fire": "חימום",
+        "snowflake": "קירור",
+        "water_percent": "לחות",
+        "fan": "מאוורר",
+        "ceiling_fan": "מאוורר תקרה",
+        "air_purifier": "מטהר אוויר",
+        "molecule_co2": "CO₂",
+        "weather_sunny": "שמש",
+        "weather_partly_cloudy": "מעונן חלקית",
+        "weather_cloudy": "מעונן",
+        "weather_rainy": "גשם",
+        "weather_snowy": "שלג",
+        "weather_windy": "רוח",
+        "weather_night": "לילה",
+        "weather_sunset_up": "זריחה",
+        "music_note": "מוזיקה",
+        "music": "תווים",
+        "playlist_music": "רשימת השמעה",
+        "album": "אלבום",
+        "record_player": "פטיפון",
+        "spotify": "Spotify",
+        "radio": "רדיו",
+        "podcast": "פודקאסט",
+        "speaker": "רמקול",
+        "speaker_multiple": "רמקולים",
+        "soundbar": "מקרן קול",
+        "headphones": "אוזניות",
+        "microphone": "מיקרופון",
+        "piano": "פסנתר",
+        "guitar_acoustic": "גיטרה",
+        "television": "טלוויזיה",
+        "projector": "מקרן",
+        "movie_open": "סרט",
+        "cast": "שידור",
+        "gamepad_variant": "קונסולת משחקים",
+        "remote_tv": "שלט",
+        "lock": "מנעול",
+        "lock_open_variant": "מנעול פתוח",
+        "shield_home": "אזעקה",
+        "alarm_light": "נורת אזעקה",
+        "bell": "פעמון",
+        "doorbell": "פעמון דלת",
+        "cctv": "מצלמה",
+        "motion_sensor": "חיישן תנועה",
+        "door_closed": "דלת",
+        "door_open": "דלת פתוחה",
+        "window_closed_variant": "חלון",
+        "smoke_detector": "גלאי עשן",
+        "water_alert": "נזילת מים",
+        "washing_machine": "מכונת כביסה",
+        "tumble_dryer": "מייבש כביסה",
+        "dishwasher": "מדיח כלים",
+        "fridge": "מקרר",
+        "stove": "כיריים",
+        "microwave": "מיקרוגל",
+        "toaster_oven": "תנור",
+        "coffee_maker": "קפה",
+        "kettle": "קומקום",
+        "robot_vacuum": "שואב רובוטי",
+        "robot_mower": "מכסחת רובוטית",
+        "printer_3d": "מדפסת תלת-ממד",
+        "power_plug": "תקע",
+        "power_socket_eu": "שקע",
+        "laptop": "מחשב נייד",
+        "router_wireless": "נתב",
+        "flash": "חשמל",
+        "solar_power": "אנרגיה סולארית",
+        "solar_panel": "פאנלים סולאריים",
+        "home_battery": "סוללה ביתית",
+        "battery_high": "סוללה",
+        "ev_station": "עמדת טעינה",
+        "car_electric": "רכב חשמלי",
+        "meter_electric": "מונה חשמל",
+        "meter_gas": "מונה גז",
+        "water": "מים",
+        "water_boiler": "דוד",
+        "gauge": "מד",
+        "window_shutter": "תריס",
+        "window_shutter_open": "תריס פתוח",
+        "blinds": "וילון רפפות",
+        "blinds_open": "רפפות פתוחות",
+        "roller_shade_closed": "וילון גלילה",
+        "curtains": "וילונות",
+        "curtains_closed": "וילונות סגורים",
+        "awning_outline": "סוכך",
+        "flower": "פרח",
+        "tree": "עץ",
+        "sprout": "צמח",
+        "grass": "דשא",
+        "sprinkler": "ממטרה",
+        "pool": "בריכה",
+        "grill": "מנגל",
+        "mailbox": "תיבת דואר",
+        "trash_can": "פח",
+        "recycle": "מיחזור",
+        "dog": "כלב",
+        "cat": "חתול",
+        "account": "אדם",
+        "account_group": "משפחה",
+        "account_child": "ילד",
+        "home_account": "בבית",
+        "sleep": "ישן",
+        "run": "מתאמן",
+        "briefcase": "עבודה",
+        "car": "רכב",
+        "bike": "אופניים",
+        "bus": "אוטובוס",
+        "train": "רכבת",
+        "airplane": "חופשה",
+        "map_marker": "מיקום",
+        "power": "הפעלה/כיבוי",
+        "toggle_switch": "מתג",
+        "gesture_tap_button": "כפתור",
+        "play": "התחלה",
+        "script_text": "סקריפט",
+        "palette": "סצנה",
+        "alarm": "שעון מעורר",
+        "clock_outline": "שעון",
+        "timer_outline": "טיימר",
+        "calendar": "לוח שנה",
+        "bell_ring": "התראה",
+        "heart": "מועדף",
+        "alert_outline": "אזהרה",
+        "cog": "הגדרות",
+        "broom": "ניקיון",
+        "diabetes": "סוכרת"
+      }
+    },
+    "screen": {
+      "builtin": {
+        "clock": "שעון",
+        "nightstand": "שעון מיטה",
+        "page": "מעבר לעמוד {page}",
+        "map": "מפה",
+        "energy": "אנרגיה"
+      },
+      "identify": {
+        "title": "זה {name}",
+        "subtitle": "זיהוי, מ-Tessera"
+      },
+      "script_running": "פועל",
+      "states": {
+        "locking": "ננעל",
+        "unlocking": "נפתח",
+        "jammed": "תקוע",
+        "buffering": "טוען",
+        "returning": "חוזר",
+        "error": "שגיאה",
+        "disarmed": "מנוטרל",
+        "armed_home": "דרוך בבית",
+        "armed_away": "דרוך בחוץ",
+        "armed_night": "דרוך לילה",
+        "armed_vacation": "דרוך חופשה",
+        "armed": "דרוך",
+        "arming": "נדרך",
+        "pending": "ממתין",
+        "triggered": "הופעל",
+        "active": "פעיל",
+        "up": "למעלה",
+        "down": "למטה",
+        "unknown": "לא ידוע"
+      },
+      "history": {
+        "other": "אחר"
+      },
+      "vacuum": {
+        "vacuum": "שאיבה",
+        "vac_and_mop": "שאיבה ושטיפה",
+        "vac_then_mop": "שאיבה ואז שטיפה",
+        "mop": "שטיפה",
+        "custom": "מותאם",
+        "smart": "חכם",
+        "min": "מינימום",
+        "slight": "קל",
+        "low": "נמוך",
+        "mild": "עדין",
+        "medium": "בינוני",
+        "moderate": "מתון",
+        "standard": "רגיל",
+        "high": "גבוה",
+        "intense": "חזק",
+        "extreme": "קיצוני",
+        "ultra_high": "גבוה מאוד",
+        "silent": "שקט",
+        "gentle": "רך",
+        "strong": "עוצמתי",
+        "max_plus": "מקס+",
+        "auto": "אוטומטי"
+      },
+      "map": {
+        "since_time": "מאז {time}",
+        "battery": "סוללה"
+      },
+      "media": {
+        "playlist": "רשימת השמעה",
+        "album": "אלבום",
+        "artist": "אמן",
+        "track": "שיר",
+        "podcast": "פודקאסט",
+        "episode": "פרק",
+        "channel": "ערוץ",
+        "genre": "סוגה",
+        "directory": "תיקייה",
+        "music": "מוזיקה"
+      }
+    }
+  },
+  "editor": {
+    "common": {
+      "undo": "ביטול פעולה",
+      "online": "מקוון",
+      "offline": "לא מקוון",
+      "unknown": "לא ידוע",
+      "unsaved": "שינויים שלא נשמרו",
+      "cancel": "ביטול",
+      "ok": "אישור",
+      "open_integrations": "פתיחת מכשירים ושירותים",
+      "save_send": "שמירה ושליחה",
+      "saving": "שומר…",
+      "read_current_data": "קריאת הנתונים הנוכחיים",
+      "results": "תוצאה אחת. המשיכו להקליד כדי לצמצם. | {n} תוצאות. המשיכו להקליד כדי לצמצם.",
+      "close": "סגירה",
+      "remove": "הסרה",
+      "loading": "טוען…",
+      "back": "→ חזרה",
+      "copy": "העתקה",
+      "done": "סיום"
+    },
+    "nav": {
+      "new_screen": "מסך חדש",
+      "firmware": "קושחה ו-USB",
+      "alerts": "התראות",
+      "settings": "הגדרות",
+      "new_screen_detail": "חיבור והתקנה",
+      "plugins": "תוספים"
+    },
+    "api": {
+      "failed": "זה לא עבד. רעננו את הדף ונסו שוב."
+    },
+    "copy": {
+      "api_key": {
+        "copied": "מפתח ה-API הועתק.",
+        "selected": "מפתח ה-API מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "layout_json": {
+        "copied": "JSON הפריסה הועתק.",
+        "selected": "JSON הפריסה מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "action_name": {
+        "copied": "שם הפעולה הועתק.",
+        "selected": "שם הפעולה מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "yaml": {
+        "copied": "ה-YAML הועתק.",
+        "selected": "ה-YAML מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "icon_name": {
+        "copied": "שם הסמל הועתק.",
+        "selected": "שם הסמל מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "empty_color": {
+        "copied": "צבע ריק הועתק.",
+        "selected": "צבע ריק מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "color_name": {
+        "copied": "שם הצבע הועתק.",
+        "selected": "שם הצבע מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "screen_name": {
+        "copied": "שם המסך הועתק.",
+        "selected": "שם המסך מסומן. העתיקו עם Ctrl+C או Command+C."
+      },
+      "log": {
+        "copied": "היומן הועתק.",
+        "selected": "היומן מסומן. העתיקו עם Ctrl+C או Command+C."
+      }
+    },
+    "sidebar": {
+      "connection": {
+        "reconnecting": "מתחבר מחדש ל-Home Assistant…"
+      },
+      "search": "חיפוש",
+      "fold": "כיווץ סרגל הצד",
+      "unfold": "הרחבת סרגל הצד",
+      "resize": "שינוי גודל סרגל הצד: גררו, או השתמשו במקשי החצים; לחיצה כפולה לאיפוס",
+      "screens": "מסכים",
+      "refresh": "רענון",
+      "update": {
+        "button": "עדכון",
+        "available": "עדכון {version}",
+        "no_profile": "לא נמצא פרופיל ESPHome עם שם המכשיר הזה.",
+        "whats_new": "מה חדש",
+        "full_log": "יומן מלא",
+        "short": "עדכון",
+        "reinstall": "התקנה מחדש מ-dev",
+        "reinstall_why": "בונה את המסך הזה שוב מגרסת ה-dev החדשה ביותר ומתקין אותו דרך Wi-Fi. ב-dev מספר הגרסה נשאר זהה, כך ש-dev חדש לעולם לא מוצע כעדכון.",
+        "in_tessera": "עדכנו קודם ב-Tessera",
+        "in_tessera_why": "עדכנו את המסך הזה כאן ב-Tessera קודם. עדיין יש לו את פריסת הזיכרון שאיתה הותקן לראשונה, והקושחה הנוכחית כבר לא נכנסת בה, ולכן ESPHome Device Builder לא יכול לעדכן אותו. Tessera מעביר אותו לפריסה החדשה בדרך ושומר את ההגדרות שלו. אחרי זה, שתי הדרכים עובדות.",
+        "reinstall_short": "בונה את ה-dev החדש ביותר ומתקין אותו דרך Wi-Fi."
+      },
+      "host": {
+        "hint": "כתובת ה-IP, פעם אחת; קושחה חדשה מדווחת עליה בעצמה.",
+        "placeholder": "כתובת IP, למשל 192.168.1.50",
+        "label": "כתובת IP",
+        "start": "התחלה"
+      },
+      "pending": {
+        "installed": "הותקן. ממתין שיצטרף ל-Wi-Fi שלכם...",
+        "downloaded": "הקושחה הורדה. העלו אותה למסך עם ESPHome Web.",
+        "not_flashed": "עדיין לא הותקן: קושחה ו-USB ← {file}.",
+        "adding": "ב-Wi-Fi שלכם. מכין אותו...",
+        "failed": "Tessera לא יכול להוסיף אותו ל-Home Assistant בעצמו. הוסיפו אותו תחת הגדרות ← מכשירים ושירותים, עם מפתח ה-API שלמטה."
+      },
+      "copy_api_key": "העתקת מפתח API",
+      "files": "הורדת קבצי המסך",
+      "files_hint": "ה-YAML של ESPHome של המסך עם המפתחות שלו, ה-YAML של הדריסה שלו ו-secrets.yaml עם ה-Wi-Fi שלו, כדי לבנות אותו עם ESPHome במחשב שלכם.",
+      "details": {
+        "room": "חדר",
+        "firmware": "קושחה",
+        "board": "לוח",
+        "show": "הצגת פרטי {name}",
+        "hide": "הסתרת פרטי {name}"
+      },
+      "rename": {
+        "button": "שינוי שם",
+        "label": "שם באפליקציה הזו",
+        "save": "שמירה"
+      },
+      "remove": {
+        "button": "הסרת מסך",
+        "title": "להסיר את {name}?",
+        "ha": "מ-Home Assistant: המכשיר עם הישויות שלו, בכל מקום שבו הן בשימוש.",
+        "profile": "מתיקיית ESPHome: {file} ומה שהוא בנה.",
+        "layout": "מהאפליקציה הזו: האריחים שלו, ההגדרות שלו והיסטוריית העדכונים שלו.",
+        "online": "המסך הזה עדיין מחובר. מחקו אותו או נתקו אותו קודם, אחרת Home Assistant ימצא אותו שוב.",
+        "confirm": "הסרה",
+        "done": "{name} הוסר.",
+        "kept": "{name} הוסר. הפרופיל שלו {file} עדיין בתיקיית ESPHome."
+      },
+      "home": "סקירת המסכים שלכם",
+      "dev_chip": "זו גרסת ה-dev של האפליקציה: כל מסך שהיא בונה מגיע מענף ה-dev."
+    },
+    "palette": {
+      "groups": {
+        "screens": "מסכים",
+        "actions": "פעולות",
+        "add": "הוספה למסך הזה"
+      },
+      "alerts_detail": "דף עזר והתראת בדיקה",
+      "settings_detail": "עדכונים, Claude",
+      "nothing_to_save": "אין מה לשמור",
+      "identify": "זיהוי המסך הזה",
+      "identify_detail": "מהבהב את התאורה האחורית ומציג כרטיס",
+      "identify_needs": "דורש קושחה חדשה יותר",
+      "export": "ייצוא פריסה",
+      "export_detail": "הורדה והעתקה כ-JSON",
+      "placeholder": "חיפוש מסכים, ישויות, פעולות…",
+      "empty": "אין התאמה. הקלידו חלק משם של מסך, ישות או פעולה."
+    },
+    "search": {
+      "groups": {
+        "recent": "אחרונים",
+        "settings": "הגדרות מסך",
+        "tiles": "במסכים שלכם",
+        "plugins": "תוספים"
+      },
+      "hint": {
+        "open": "פתיחה",
+        "run": "הרצה",
+        "show": "הצגה",
+        "add": "הוספה"
+      },
+      "keys": {
+        "move": "תזוזה",
+        "choose": "בחירה",
+        "close": "סגירה"
+      },
+      "identify": "זיהוי {name}",
+      "update": "עדכון {name}",
+      "update_detail": "ל-{version}",
+      "update_all": "עדכון כל המסכים",
+      "update_all_detail": "מסך אחד ממתין | {n} מסכים ממתינים",
+      "update_all_confirm": "לעדכן מסך אחד עכשיו? הוא יופעל מחדש כשהעדכון ייכנס. | לעדכן {n} מסכים עכשיו? אחד אחרי השני, כל אחד יופעל מחדש כשהעדכון שלו ייכנס.",
+      "update_all_go": "עדכון עכשיו",
+      "install": "התקנת התוספים שהונחו בצד",
+      "install_detail": "תוסף אחד | {n} תוספים",
+      "add_plugin": "הוספת {plugin} ל-{screen}",
+      "add_plugin_detail": "הונח בצד, מוכן להתקנה",
+      "on": "פועל",
+      "off": "כבוי"
+    },
+    "empty": {
+      "choose": {
+        "title": "בחרו מסך",
+        "text": "בחרו אחד מהמסכים שלכם משמאל כדי לשנות את האריחים, הסרגל העליון וההגדרות שלו."
+      },
+      "start": {
+        "title": "התחילו עם מסך",
+        "text": "חברו את המסך ב-USB למכונת ה-Home Assistant שלכם. פרופיל, קושחה וצריבה ראשונה קורים בבת אחת.",
+        "button": "התקנת מסך חדש"
+      }
+    },
+    "home": {
+      "title": "המסכים שלכם",
+      "summary": "{online} מתוך {count} מקוונים",
+      "open": "פתיחת {name}",
+      "no_layout": "אין עדיין פריסה",
+      "in_tessera": "עדכנו קודם ב-Tessera"
+    },
+    "broken": {
+      "screens": "מסך אחד | {n} מסכים",
+      "summary": {
+        "missing": "אריח אחד ב-{screens} מציג ישות שכבר לא קיימת | {n} אריחים ב-{screens} מציגים ישות שכבר לא קיימת",
+        "unavailable": "אריח אחד ב-{screens} מציג ישות שלא זמינה כבר זמן מה | {n} אריחים ב-{screens} מציגים ישות שלא זמינה כבר זמן מה",
+        "mixed": "אריח אחד ב-{screens} מציג ישות שנעלמה או לא זמינה | {n} אריחים ב-{screens} מציגים ישות שנעלמה או לא זמינה"
+      },
+      "short": "אריח אחד לבדיקה | {n} אריחים לבדיקה",
+      "review": "בדיקה",
+      "hide": "הסתרה",
+      "missing": "כבר לא ב-Home Assistant",
+      "unavailable_minutes": "לא זמין כבר דקה | לא זמין כבר {n} דקות",
+      "unavailable_hours": "לא זמין כבר שעה | לא זמין כבר {n} שעות",
+      "unavailable_days": "לא זמין כבר יום | לא זמין כבר {n} ימים",
+      "change": "הצגת ישות אחרת",
+      "on_screen": "הישות הזו כבר במסך הזה.",
+      "replaced": "מציג עכשיו את {name}",
+      "fix": {
+        "choose": "בחירת ישות אחרת",
+        "missing": "הישות הזו כבר לא קיימת ב-Home Assistant",
+        "missing_hint": "היא הוסרה או ששמה שונה. בחרו מה האריח הזה מציג עכשיו.",
+        "unavailable_hint": "Home Assistant לא שמע ממנה. בחרו ישות אחרת, או המתינו שתחזור.",
+        "search": "חיפוש ישויות"
+      }
+    },
+    "screen_view": {
+      "confirm": {
+        "switch": "יש לכם שינויים שלא נשמרו. לפתוח מסך אחר בכל זאת?",
+        "copy": "להחליף את הפריסה שלא נשמרה בעותק של הפריסה של המסך האחר?",
+        "import": "להחליף את הפריסה שלא נשמרה בזו שיובאה?"
+      },
+      "saved": {
+        "current": "נשמר. המסך שלכם מתעדכן.",
+        "other": "נשמר. {name} מתעדכן.",
+        "newer_edit": "נשמר. השינוי האחרון שלכם עוד לא נשלח: לחצו שוב על שמירה ושליחה."
+      },
+      "identified": "{name} מהבהב ומציג כרטיס למשך כמה שניות.",
+      "offline": "לא מקוון · השינויים נשמרים",
+      "tabs": {
+        "layout": "פריסה",
+        "settings": "הגדרות מסך",
+        "plugins": "תוספים"
+      },
+      "sent": "נשמר · נשלח למסך",
+      "all_saved": "הכול נשמר",
+      "more": "עוד",
+      "menu": {
+        "identify": "זיהוי",
+        "identify_hint": "הבהוב המסך",
+        "identify_needs": "דורש קושחה 0.2.31 ומעלה",
+        "copy": "העתקת פריסה מ…",
+        "copy_screens": "מסך {n} | {n} מסכים",
+        "copy_none": "אין מסך אחר",
+        "copy_tiles": "אריח {n} | {n} אריחים",
+        "export": "ייצוא פריסה",
+        "import": "ייבוא פריסה…",
+        "override": "YAML דריסה",
+        "override_none": "לא נמצא פרופיל ESPHome למסך הזה",
+        "update": "עדכון קושחה",
+        "group_screen": "המסך הזה",
+        "group_layout": "פריסה",
+        "group_advanced": "מתקדם"
+      },
+      "sending": "שולח"
+    },
+    "layout": {
+      "removed": "{name} הוסר",
+      "no_room": "אין מקום לאריח הזה בעמוד {page}.",
+      "no_free_page": "אין עמוד פנוי לאריח עמוד מלא. פנו עמוד קודם.",
+      "page_taken": "במסך הזה כבר יש אריח שמוביל לעמוד {page}.",
+      "copied": "הפריסה של {name} הועתקה. לחצו שמירה ושליחה כשהיא נראית נכון.",
+      "imported": "הפריסה יובאה. לחצו שמירה ושליחה כשהיא נראית נכון.",
+      "not_json": "זה לא JSON. ייצאו פריסה קודם, או הדביקו אחת מ-Tessera אחר.",
+      "count": "עמוד {n} · {tiles} / {limit} אריחים | {n} עמודים · {tiles} / {limit} אריחים",
+      "no_tiles": "הוסיפו את האור, הסצנה או המכשיר הראשונים שלכם מהספרייה.",
+      "page_removed": "עמוד {page} נעלם.",
+      "page_removed_tiles": "עמוד {page} ואריח אחד נעלמו. | עמוד {page} ו-{n} אריחים נעלמו.",
+      "positions_hint": "מקומות ריקים ומיקומים קבועים עובדים מקושחה 0.2.26. המסך הזה (קושחה {firmware}) מזיז את האריחים למקום הפנוי הראשון עד לעדכון הזה.",
+      "aria": "פריסת המסך",
+      "add_page": "הוספת עמוד",
+      "max_pages": "עמוד אחד הוא המקסימום | {n} עמודים הם המקסימום",
+      "help": {
+        "title": "איך זה עובד",
+        "change_label": "שינוי",
+        "change": "לחצו על אריח או על סרגל עליון.",
+        "add_label": "הוספה",
+        "add": "לחצו על מקום ריק, ואז על משהו בספרייה. או גררו אותו לעמוד.",
+        "move_label": "הזזה",
+        "move": "גררו אריח. שחררו אותו בעמוד הבא לעמוד חדש.",
+        "copy_label": "העתקה",
+        "copy": "החזיקו {mod} או Shift ולחצו, או גררו מסגרת לצד האריחים. {copy}, ואז {paste} בעמוד או מסך אחר.",
+        "pages_label": "עמודים",
+        "pages": "גררו עמוד לפי המספר שלו. בתפריט ··· שלו יש את השאר.",
+        "map_label": "מפה",
+        "map": "מראה לאן מוביל כל אריח מעבר לעמוד.",
+        "preview_label": "תצוגה מקדימה",
+        "preview": "נסו החלקה ואת אריחי העמודים. שום דבר בבית לא נדלק."
+      },
+      "copy_needs_migration": "פתחו את מסך המקור פעם אחת כדי שהפריסה שלו תעבור לעמודים, ואז העתיקו אותה.",
+      "removed_several": "אריח אחד הוסר | {n} אריחים הוסרו"
+    },
+    "page": {
+      "label": "עמוד {page}",
+      "remove": "הסרת עמוד",
+      "edit_bar": "עריכת הסרגל העליון",
+      "move_title": "גררו את העמוד הזה למקום אחר בשורה, או השתמשו ב-← וב-→",
+      "move_aria": "הזזת עמוד {page}",
+      "cell": {
+        "title": "מקום ריק. לחצו כדי להוסיף כאן אריח, או גררו אחד לכאן.",
+        "aria": "מקום ריק {slot} בעמוד {page}: הוסיפו כאן את האריח הבא",
+        "next": "האריח הבא יבוא כאן",
+        "empty": "ריק"
+      }
+    },
+    "library": {
+      "title": "ספרייה",
+      "entities": "ישות {n} | {n} ישויות",
+      "search": "חיפוש לפי שם, מכשיר או חדר…",
+      "search_label": "הוספת ישות",
+      "filters": {
+        "all": "הכול",
+        "light": "אורות",
+        "climate": "אקלים",
+        "switch": "מתגים",
+        "binary_sensor": "מצב",
+        "button": "פעולות",
+        "script": "סקריפטים",
+        "automation": "אוטומציות",
+        "remote": "שלטים",
+        "fan": "מאווררים",
+        "cover": "תריסים",
+        "scene": "סצנות",
+        "vacuum": "שואב",
+        "sensor": "חיישנים",
+        "media_player": "מדיה",
+        "weather": "מזג אוויר",
+        "number": "ערכים",
+        "select": "בחירות",
+        "person": "אנשים",
+        "timer": "טיימרים",
+        "screen": "מסך",
+        "alarm_control_panel": "אזעקה",
+        "lock": "מנעולים",
+        "humidifier": "מכשירי לחות",
+        "calendar": "יומנים"
+      },
+      "room": "חדר",
+      "hide_placed": "הסתרת המוצבים",
+      "hide_placed_title": "הסתרת מה שכבר נמצא במסך הזה",
+      "again": "כבר במסך הזה; הוסיפו שוב לאריח נוסף",
+      "all_placed": "כל מה שכאן כבר נמצא במסך הזה.",
+      "none_found": "לא נמצאו ישויות. נסו שם, חדר או מסנן אחר.",
+      "full": "המסך הזה מכיל אריח אחד. | המסך הזה מכיל {n} אריחים.",
+      "full_update": "המסך הזה מכיל אריח אחד; עדכנו את הקושחה שלו ל-48. | המסך הזה מכיל {n} אריחים; עדכנו את הקושחה שלו ל-48.",
+      "hint": "גררו לעמוד, או הקישו + כדי להוסיף למקום הפנוי הראשון. ⌘K מחפש בכל מקום.",
+      "resize": "גררו כדי לשנות את גודל הספרייה",
+      "filter_label": "סינון לפי סוג",
+      "no_room": "אין מקום",
+      "plugins": "תוספים"
+    },
+    "memory": {
+      "label": "זיכרון לאריחים",
+      "share": "{n} %",
+      "title": "האריחים האלה תופסים {need} מתוך {room} KB שיש למסך הזה לאריחים. תחזית, תרמוסטט או נגן מדיה תופסים יותר מאור או מתג.",
+      "over": "זה יותר ממה שהמסך מדד לאריחים. זה עדיין נשמר: אם למסך ייגמר הזיכרון, חלק מהאריחים יציגו פחות, או שהוא ידחה את הפריסה.",
+      "short": "חלק מהאריחים מציגים פחות כרגע: למסך נגמר הזיכרון.",
+      "last_known": "כפי שהמסך דיווח כשהיה מקוון לאחרונה.",
+      "full_library": "הזיכרון של המסך לאריחים כמעט מלא. עדיין אפשר להוסיף אריחים.",
+      "confirm_close": "עם האריח הזה זיכרון המסך לאריחים מלא ב-{n} %. להוסיף בכל זאת?",
+      "confirm_over": "עם האריח הזה הפריסה צריכה יותר זיכרון ממה שהמסך מדד לאריחים ({n} %). אם למסך ייגמר הזיכרון, חלק מהאריחים יציגו פחות, או שהוא ידחה את הפריסה. להוסיף בכל זאת?",
+      "measuring": "מודד",
+      "measuring_title": "המסך מודד את הזיכרון שלו לאריחים אחרי שהאריחים התייצבו, כדקה אחרי שהוא עולה או מקבל פריסה חדשה.",
+      "none": "אין מקום",
+      "none_title": "למסך אין כרגע זיכרון פנוי לאריחים. זה עדיין נשמר: אם למסך ייגמר הזיכרון, חלק מהאריחים יציגו פחות, או שהוא ידחה את הפריסה.",
+      "confirm_none": "למסך אין כרגע זיכרון פנוי לאריחים. אם ייגמר לו, חלק מהאריחים יציגו פחות, או שהוא ידחה את הפריסה. להוסיף את האריח הזה בכל זאת?"
+    },
+    "domains": {
+      "light": "אור",
+      "climate": "אקלים",
+      "vacuum": "שואב",
+      "fan": "מאוורר",
+      "cover": "תריס",
+      "media_player": "מדיה",
+      "sensor": "חיישן",
+      "binary_sensor": "מצב",
+      "switch": "מתג",
+      "input_boolean": "מתג",
+      "automation": "אוטומציה",
+      "remote": "שלט",
+      "scene": "סצנה",
+      "script": "סקריפט",
+      "weather": "מזג אוויר",
+      "number": "ערך",
+      "input_number": "ערך",
+      "select": "בחירה",
+      "input_select": "בחירה",
+      "button": "פעולה",
+      "input_button": "פעולה",
+      "screen": "מסך",
+      "sun": "שמש",
+      "timer": "טיימר",
+      "person": "אדם",
+      "camera": "מצלמה",
+      "image": "תמונה",
+      "entity": "ישות",
+      "alarm_control_panel": "לוח אזעקה",
+      "lock": "מנעול",
+      "humidifier": "מכשיר לחות",
+      "calendar": "יומן"
+    },
+    "displays": {
+      "standard": "רגיל",
+      "watch": "ערך גדול",
+      "forecast": "תחזית מזג אוויר",
+      "graph": "גרף",
+      "meter": "מד",
+      "digital": "שעון דיגיטלי",
+      "analog": "שעון מחוגים",
+      "dial": "חוגה פשוטה",
+      "flip": "שעון מתהפך",
+      "sunpath": "מסלול השמש",
+      "live": "תמונה חיה",
+      "cover": "עטיפת אלבום",
+      "map": "מפה",
+      "favorite": "מועדף"
+    },
+    "sizes": {
+      "single": "רגיל",
+      "wide": "כפול",
+      "full": "עמוד מלא"
+    },
+    "tile": {
+      "name": "שם במסך",
+      "icon": {
+        "auto_ha": "אוטומטי (מ-Home Assistant)",
+        "auto_default": "אוטומטי (ברירת מחדל)",
+        "needs_firmware": "המסך מציג סמל שנבחר מקושחה 0.2.18."
+      },
+      "goes_to": {
+        "label": "מוביל לעמוד",
+        "empty": "{page} (ריק)",
+        "needs_firmware": "אריחי ניווט דורשים קושחה 0.2.62: לחצו קודם על עדכון במסך.",
+        "no_page": "למסך הזה אין עמוד {page}, כך שהקשה פותחת את העמוד האחרון שלו. בחרו עמוד אחר.",
+        "hint": "הקשה על האריח פותחת את העמוד הזה."
+      },
+      "display": {
+        "label": "תצוגה",
+        "digital": "שעון דיגיטלי",
+        "analog": "שעון מחוגים",
+        "dial": "חוגה פשוטה",
+        "flip": "שעון מתהפך",
+        "standard": "שם ומצב",
+        "watch": "ערך גדול",
+        "forecast": "תחזית מזג אוויר",
+        "graph": "גרף",
+        "meter": "מד",
+        "sunpath": "מסלול השמש",
+        "live": "תמונה חיה",
+        "live_needs_firmware": "תמונה חיה דורשת קושחה 0.2.77 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "live_card_hint": "התמונה ממלאת את האריח, ומתרעננת בקצב שלמטה כל עוד העמוד מוצג. הקשה עדיין פותחת אותה במסך מלא.",
+        "live_card_needs_firmware": "תמונה שממלאת את האריח דורשת קושחה 0.3.7 ומעלה: לחצו על עדכון במסך אחרי השמירה. עד אז המסך מציג תמונה קטנה במקום הסמל.",
+        "cover": "עטיפת אלבום",
+        "cover_needs_firmware": "עטיפת האלבום על האריח דורשת קושחה 0.2.78 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "map": "מפה",
+        "map_hint": "היכן האדם הזה והאנשים שתוסיפו נמצאים, על מפה רגועה בצבעי המסך. Home Assistant מספק את הרחובות מ-OpenStreetMap; המסך מקבל רק את התמונה, אף פעם לא מיקום. היא משורטטת מחדש כשמישהו זז. הקשה פותחת אותה על כל המסך.",
+        "map_needs_firmware": "מפה דורשת קושחה 0.20.0 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "no_graph": "ל-Home Assistant אין מספרים לישות הזו, כך שהגרף נשאר ריק. בחרו תצוגה אחרת.",
+        "no_forecast": "לשירות מזג האוויר הזה אין תחזית יומית ב-Home Assistant. בחרו תצוגה אחרת.",
+        "no_meter": "ל-Home Assistant אין מספרים לישות הזו, כך שהמד נשאר ריק. בחרו תצוגה אחרת.",
+        "meter_needs_firmware": "מד דורש קושחה 0.56.0 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "tall_cover_hint": "משתמש בעטיפת האלבום כרקע מעומעם. בלי תמונה האריח הרגיל נשאר גלוי.",
+        "face_needs_firmware": "השעון הזה דורש קושחה 0.3.6 ומעלה: לחצו על עדכון במסך אחרי השמירה. עד אז המסך מציג את השעון הדיגיטלי.",
+        "map_tile_needs_firmware": "אריח המפה דורש קושחה 0.21.0 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "favorite": "מועדף",
+        "favorite_hint": "רשימת השמעה, אלבום או אמן אחד של הנגן הזה, שמתחיל בהקשה על הרמקול שלו; הקשה בזמן ניגון משהה, והחזקה פותחת את הנגן. היכן שהמסך משרטט תמונות, העטיפה ממלאת את האריח.",
+        "favorite_needs_firmware": "מועדף דורש קושחה 0.24.0 ומעלה: לחצו על עדכון במסך אחרי השמירה."
+      },
+      "refresh": {
+        "label": "רענון",
+        "seconds": "כל {n} שנ׳",
+        "live": "חי"
+      },
+      "picture": {
+        "fit": {
+          "label": "תמונה",
+          "fill": "מילוי האריח",
+          "contain": "התמונה כולה"
+        },
+        "overlay": {
+          "label": "על התמונה",
+          "name": "שם",
+          "none": "כלום"
+        }
+      },
+      "map": {
+        "framing": {
+          "label": "הצגה",
+          "everyone": "כולם",
+          "home": "סביב הבית",
+          "person": "סביב האדם הזה"
+        },
+        "distance": {
+          "label": "מרחק",
+          "neighbourhood": "שכונה",
+          "street": "רחוב",
+          "town": "עיר",
+          "region": "אזור"
+        },
+        "with": {
+          "label": "גם על המפה",
+          "hint": "האנשים ומכשירי המעקב שמוצגים לצד זה, כל אחד בצבע משלו. מכשיר מעקב הוא טלפון, רכב או תג ש-Home Assistant יודע את מיקומו.",
+          "add": "הוספת אדם או מכשיר מעקב",
+          "remove": "הסרת {name}"
+        },
+        "follow": {
+          "label": "מעקב",
+          "everyone": "כולם",
+          "chosen": "נבחרים",
+          "everyone_hint": "כל מי ש-Home Assistant יודע את מיקומו: כל אדם, וכל מכשיר מעקב שלא שייך כבר למישהו."
+        },
+        "markers": {
+          "label": "סמנים",
+          "photo": "תמונה",
+          "initials": "ראשי תיבות"
+        },
+        "names": {
+          "label": "שמות",
+          "auto": "היכן שיש מקום",
+          "always": "תמיד",
+          "never": "אף פעם"
+        },
+        "zones": {
+          "label": "אזורים",
+          "show": "הצגה",
+          "hide": "הסתרה"
+        },
+        "streets": {
+          "label": "רחובות",
+          "show": "הצגה",
+          "hide": "פשוט"
+        },
+        "look": {
+          "label": "מראה",
+          "auto": "כמו המסך",
+          "light": "בהיר",
+          "dark": "כהה"
+        },
+        "chosen": {
+          "label": "על המפה",
+          "hint": "אחרי מי המפה הזו עוקבת, כל אחד בצבע משלו. מכשיר מעקב הוא טלפון, רכב או תג ש-Home Assistant יודע את מיקומו."
+        }
+      },
+      "controls": {
+        "label": "שליטה ישירה על האריח",
+        "not_offered": "Home Assistant אינו מציע את השליטה הזו לישות הזו, כך שהיא נשארת ריקה במסך. בחרו אחרת.",
+        "full_hint": "בתחתית אריח העמוד המלא; הקשה בכל מקום אחר פועלת כפי שהוגדר למטה.",
+        "wide_hint": "בצד ימין של האריח ברוחב כפול, כמו השורות ב-Home Assistant. הקשה על השם פועלת כפי שהוגדר למטה.",
+        "needs_firmware": "המסך מציג שליטה ישירה מקושחה 0.2.19; עד אז האריח נשאר כפי שהיה.",
+        "tall_hint": "בחרו את הפקדים שמוצגים בגובה הנוסף. אריח שגדל מציע את הסט העשיר ביותר שנכנס; הבחירה שלכם נשארת כפי שהגדרתם.",
+        "room_hint": "המסך משרטט אותם היכן שיש להם מקום באריח (קושחה 0.57.0 ומעלה): מתחת לשם באריח יחיד, לצדו באריח ברוחב כפול. היכן שהם לא נכנסים, האריח נראה כמו בלעדיהם.",
+        "tilt": "הטיית שלבים",
+        "tilt_hint": "מוסיף את מחוון השלבים או כפתורי ההטיה הנתמכים כשיש מספיק מקום. באריחים קטנים יותר, השתמשו בתצוגת הפרטים. בחירת הפתיחה/סגירה שלכם נשארת ללא שינוי."
+      },
+      "tap": {
+        "label": "בהקשה",
+        "auto": "אוטומטי",
+        "detail": "פתיחת הבקרה",
+        "none": "צפייה בלבד",
+        "toggle": "הפעלה / כיבוי",
+        "run": "הרצת פעולות האוטומציה",
+        "action": "ביצוע פעולה",
+        "no_toggle": "Home Assistant לא יכול להפעיל ולכבות את זה, כך שהקשה לא עושה כלום. בחרו אפשרות אחרת.",
+        "toggle_needs_firmware": "המסך מפעיל ומכבה את זה מקושחה 0.2.58: לחצו על עדכון במסך. עד אז הקשה פותחת את הכרטיס שלו.",
+        "automation_needs_firmware": "אוטומציות דורשות קושחת מסך 0.7.0: לחצו קודם על עדכון במסך.",
+        "hold": "החזיקו את האריח כדי לפתוח את הכרטיס שלו.",
+        "hold_run": "החזיקו את האריח כדי להריץ את הפעולות שלו.",
+        "hold_toggle": "החזיקו את האריח כדי להפעיל או לכבות אותו.",
+        "hold_light": "החזיקו את האריח לבהירות ולצבע, במידה שיש לאור.",
+        "hold_fan": "החזיקו את האריח למהירות שלו, אם יש למאוורר.",
+        "hold_history": "החזיקו את האריח להיסטוריה שלו.",
+        "hold_timer": "החזיקו את האריח כדי לבטל את הטיימר.",
+        "detail_no_toggle": "הקשה פותחת את הכרטיס ולא מפעילה או מכבה יותר. עם {auto}, הקשה מפעילה ומכבה והחזקת האריח פותחת את הכרטיס."
+      },
+      "guard": {
+        "label": "פתיחת נעילה כאן",
+        "confirm": "אחרי אישור",
+        "lock_only": "אף פעם",
+        "confirm_hint": "מנעול נעול נפתח אחרי הקשה שנייה על האריח או על המקש שלו. נעילה תמיד דורשת הקשה אחת.",
+        "lock_only_hint": "המסך הזה יכול לנעול אבל אף פעם לא לפתוח. טוב למסך במרפסת, במוסך או בחדר ילדים."
+      },
+      "tilt_open": {
+        "label": "השלבים פתוחים ב-",
+        "100": "100 %",
+        "50": "50 %",
+        "100_hint": "הכלל של Home Assistant: 0 % סגור, 100 % פתוח לגמרי.",
+        "50_hint": "לתריסים שפתוחים ב-50 % וסגורים ב-0 % וב-100 %, לכיוון אחד ולשני, כמו SwitchBot Blind Tilt."
+      },
+      "sub": {
+        "label": "שורה שנייה",
+        "auto": "אוטומטי",
+        "none": "כלום",
+        "attr": "ערך",
+        "text": "טקסט משלכם",
+        "value_aria": "איזה ערך השורה השנייה מציגה",
+        "text_aria": "מה השורה השנייה אומרת",
+        "text_placeholder": "המילים שלכם",
+        "hint_auto": "מה שהמסך מחשב בעצמו: בהירות, טמפרטורה, מתי סקריפט רץ לאחרונה.",
+        "hint_none": "האריח מציג את השם שלו ושום דבר מתחתיו.",
+        "hint_attr": "ערך של הישות הזו, בשם ובכתיב כמו ב-Home Assistant.",
+        "hint_text": "אותן מילים, לא משנה מה הישות עושה."
+      },
+      "slider": {
+        "label": "מחוון קטן על האריח",
+        "nothing": "ל-Home Assistant אין שום דבר שמחוון יכול לשנות בישות הזו. בחרו לא."
+      },
+      "history": {
+        "label": "היסטוריה",
+        "hours": "שעה {n} | {n} שעות"
+      },
+      "background": {
+        "label": "רקע פסטל",
+        "aria": "רקע: {name}"
+      },
+      "resize": {
+        "columns": "שינוי רוחב (מקשי חץ שמאלה/ימינה)",
+        "rows": "שינוי גובה (מקשי חץ למעלה/למטה)"
+      },
+      "sections": {
+        "look": "מראה",
+        "controls": "פקדים",
+        "style": "סמל וצבע"
+      },
+      "keys": {
+        "hint": "גררו מנורה, טמפרטורה או מנעול למקומות העגולים מתחת לשעה, או הקישו על מקום ובחרו. הם אריחים: הקישו על אחד כדי להגדיר אותו.",
+        "under": "מתחת לשעון המיטה: אריח בצורתו העגולה. הקשה עושה מה שהיא עושה באריח, והחזקה פותחת את הכרטיס שלו.",
+        "name_shown": "שם מתחת למקש",
+        "name_shown_hint": "כבוי מציג את העיגול לבדו."
+      },
+      "favorite": {
+        "plays": "מנגן",
+        "none": "עוד לא נבחר כלום",
+        "choose": "בחירה",
+        "done": "סיום",
+        "back": "חזרה",
+        "loading": "טוען את הספרייה…",
+        "empty": "אין כאן כלום",
+        "open": "פתיחת {name}",
+        "speaker": "רמקול",
+        "speaker_now": "היכן שמנגן",
+        "speaker_hint": "היכן זה מתחיל. \"היכן שמנגן\" מבקש רמקול במסך כשהנגן לא מנגן בשום מקום.",
+        "link": "או הדביקו קישור Spotify",
+        "link_hint": "קישור או URI מאפליקציית Spotify, דרך שיתוף > העתקת קישור: רשימת השמעה, אלבום, אמן, שיר או פודקאסט.",
+        "link_add": "הוספה",
+        "shuffle": "ערבוב",
+        "shuffle_hint": "נקבע כשמתחיל. עם ערבוב פועל הוא מדלג פעם אחת, כך שהשיר הראשון כבר מעורבב. \"כמו שהוא\" שומר על ההגדרה של הנגן.",
+        "shuffle_keep": "כמו שהוא",
+        "shuffle_on": "פועל",
+        "shuffle_off": "כבוי",
+        "repeat": "חזרה",
+        "repeat_hint": "נקבע כשמתחיל. \"כמו שהוא\" שומר על ההגדרה של הנגן.",
+        "repeat_off": "כבוי",
+        "repeat_all": "חזרה על הכול",
+        "repeat_one": "חזרה על אחד",
+        "repeat_keep": "כמו שהוא"
+      },
+      "energy": {
+        "hint": "ההספק של הבית ברגע זה, משורטט כמו בתצוגת האנרגיה של Home Assistant: סולארי, רשת, סוללה והמכשירים שלכם, מהגדרות האנרגיה ב-Home Assistant. הקשה על עיגול פותחת את היסטוריית החיישן.",
+        "needs_firmware": "כרטיס האנרגיה דורש קושחה 0.47.0 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "flow": {
+          "label": "זרימה",
+          "hint": "נקודות נעות לאורך כל קו, מהר יותר ככל שזורם יותר הספק. קווים וחצים רגועים יותר: קו מתעבה עם ההספק וחץ מראה את הכיוון. מסך עם קושחה ישנה יותר שומר על הנקודות.",
+          "dots": "נקודות נעות",
+          "lines": "קווים וחצים"
+        }
+      },
+      "calendar": {
+        "title": "יומן",
+        "needs_firmware": "כרטיס היומן דורש קושחה 0.56.0 ומעלה: לחצו על עדכון במסך אחרי השמירה.",
+        "show": {
+          "label": "הצגה",
+          "events": "אירועים",
+          "events_hint": "כותרות, מה הבא, השבוע והחודש",
+          "busy_free": "פנוי או תפוס",
+          "busy_free_hint": "פנוי, מתחיל בקרוב או תפוס באותיות גדולות, ההזמנה הבאה וכמה זמן היא נמשכת",
+          "room": "מצב והזמנה",
+          "room_hint": "פנוי או תפוס באותיות גדולות בירוק או אדום, עד מתי, ומקשים שמזמינים את החדר עכשיו"
+        },
+        "calendars": {
+          "label": "יומנים",
+          "hint": "עד {n} יומנים בכרטיס אחד, כל אחד בצבע משלו מ-Home Assistant.",
+          "count": "יומן {n} | {n} יומנים",
+          "own": "האריח הזה",
+          "none": "ל-Home Assistant אין יומנים אחרים."
+        },
+        "filter": {
+          "title": "אילו אירועים",
+          "found": "אירוע {n} | {n} אירועים"
+        },
+        "places": {
+          "label": "מקום",
+          "hint": "רק אירועים במקומות האלה, למשל חדר ישיבות אחד. המקומות מגיעים מהאירועים של היומנים עצמם; הקלידו מקום אחר כדי להוסיף אותו.",
+          "add": "הוספת מקום"
+        },
+        "words": {
+          "label": "מילים בכותרת",
+          "hint": "רק אירועים עם אחת מהמילים האלה בכותרת, ואף אחד עם אחת מהמילים להשמטה.",
+          "only": "רק עם",
+          "hide": "השמטה",
+          "add": "הוספת מילה"
+        },
+        "all_day": "אירועים של יום שלם",
+        "tentative": "אירועים לא סופיים",
+        "tentative_hint": "אירועים שעדיין לא אושרו, כפי שהיומן מסמן אותם.",
+        "private": "הסתרת כותרות",
+        "private_hint": "כל אירוע מוצג כתפוס, בלי הכותרת או המקום שלו: למסך במסדרון או בחדר משותף.",
+        "time": {
+          "title": "זמן"
+        },
+        "ahead": "מסתכל קדימה",
+        "ahead_hint": "כמה ימים של אירועים הכרטיס מציג מהיום.",
+        "days": "יום {n} | {n} ימים",
+        "soon": "מתחיל בקרוב",
+        "soon_hint": "כמה זמן לפני אירוע הכרטיס אומר מתחיל בקרוב.",
+        "soon_off": "כבוי",
+        "minutes": "{n} דק׳ | {n} דק׳",
+        "start_view": "מסך מלא נפתח על",
+        "start_view_hint": "הקשה על הכרטיס פותחת את המסך המלא שלו. אוטומטי מציג את השבוע היכן שיש לו מקום במסך, אחרת את היום.",
+        "view": {
+          "auto": "אוטומטי",
+          "up_next": "הבא בתור",
+          "day": "יום",
+          "week": "שבוע",
+          "month": "חודש"
+        },
+        "week_start": "השבוע מתחיל",
+        "week_start_hint": "היום שומר את הימים הקרובים בתצוגה; שני מציג את השבוע הקלנדרי.",
+        "week_start_today": "היום",
+        "week_start_monday": "שני",
+        "hours": "שעות",
+        "hours_hint": "השעות שהשבוע מציג. אוטומטי עוקב אחרי האירועים, לפחות משמונה עד שמונה; מה שנופל מחוץ נספר.",
+        "hours_auto": "אוטומטי",
+        "week_numbers": "מספרי שבועות",
+        "week_numbers_hint": "בחודש, משמאל לכל שבוע.",
+        "book": {
+          "title": "הזמנה",
+          "on": "הזמנה ביומן",
+          "on_hint": "היומן שאליו נכנסת הזמנה מהמסך. רק יומנים שמקבלים אירועים חדשים מ-Home Assistant, כמו Local Calendar, Google ו-CalDAV.",
+          "none": "אף אחד מהיומנים של הכרטיס הזה לא מקבל אירועים חדשים מ-Home Assistant, ולכן הכרטיס לא מציג מקשי הזמנה.",
+          "place": "מקום",
+          "place_hint": "נכתב בהזמנה כמקום שלה, למשל שם החדר.",
+          "place_add": "הוספת מקום",
+          "name": "כותרת",
+          "name_hint": "כותרת ההזמנה ביומן.",
+          "name_placeholder": "הוזמן במסך"
+        }
+      },
+      "meter": {
+        "title": "מד",
+        "look": "מראה",
+        "styles": {
+          "ring": "טבעת",
+          "tape": "סרט",
+          "bar": "פס"
+        },
+        "range": "טווח",
+        "range_hint": "היכן המד מתחיל ונגמר. מ-Home Assistant, חיישן נע בין 0 ל-100, כמו בכרטיס המד שלו; הגדירו טווח משלכם לטמפרטורה, CO2 או הספק.",
+        "range_ha": "מ-Home Assistant",
+        "range_own": "מותאם",
+        "min": "מינ׳",
+        "max": "מקס׳",
+        "outside": "{value} מחוץ ל-{min} – {max}.",
+        "set_own": "הגדירו את הטווח בעצמכם",
+        "range_wrong": "המינימום חייב להיות נמוך מהמקסימום.",
+        "color": "צבע",
+        "segments": "מקטעים",
+        "segments_hint": "צבע אחד לכל המד, או שניים או שלושה שמתחלפים בסף. סף הוא ערך ביחידה של החיישן עצמו.",
+        "whole": "המד כולו",
+        "up_to": "עד",
+        "above": "מעל זה",
+        "swatch_aria": "צבע מקטע {n}: {color}",
+        "own_color": "הצבע של האריח עצמו",
+        "threshold_aria": "סף {n}",
+        "thresholds_wrong": "כל סף חייב להיות גבוה מהקודם לו.",
+        "reset": "איפוס לברירת המחדל",
+        "colors": {
+          "red": "אדום",
+          "pink": "ורוד",
+          "purple": "סגול",
+          "deep-purple": "סגול עמוק",
+          "indigo": "אינדיגו",
+          "blue": "כחול",
+          "light-blue": "תכלת",
+          "cyan": "טורקיז",
+          "teal": "ירוק-כחלחל",
+          "green": "ירוק",
+          "light-green": "ירוק בהיר",
+          "lime": "ליים",
+          "yellow": "צהוב",
+          "amber": "ענבר",
+          "orange": "כתום",
+          "deep-orange": "כתום עמוק",
+          "brown": "חום",
+          "grey": "אפור",
+          "blue-grey": "אפור-כחול"
+        }
+      },
+      "anchor_hint": "לחצו על הסמל כדי לבחור אחר, או על השם כדי לשנות את שם האריח",
+      "grow": {
+        "title": "מקום לעוד פקדים",
+        "applied": "האריח הזה מכיל עוד פקדים ב-{columns} × {rows}. בחרו מה הוא מציג; אפשר לשנות זאת אחר כך תחת פקדים.",
+        "offered": "ב-{columns} × {rows} יש לאריח הזה מקום לאלה. בחרו מה הוא מציג; אפשר לשנות זאת אחר כך תחת פקדים.",
+        "suggested": "מוצע",
+        "none": "ללא פקדים",
+        "never": "לא להציג שוב",
+        "done": "סיום"
+      }
+    },
+    "precision": {
+      "label": "דיוק תצוגה",
+      "default": "ברירת מחדל ({value})",
+      "note": "זו ההגדרה של Home Assistant עצמו לחיישן הזה, כך שהיא משתנה גם שם.",
+      "unregistered": "לחיישן הזה אין מזהה ייחודי, ולכן Home Assistant לא שומר לו הגדרות."
+    },
+    "tile_card": {
+      "label": "{name}, מקום {slot} בעמוד {page}. Enter: הגדרה, מקשי חצים: הזזה",
+      "remove": "הסרת אריח",
+      "remove_named": "הסרת {name}"
+    },
+    "action": {
+      "label": "פעולה",
+      "asking": "שואל את Home Assistant אילו פעולות יש לישות הזו…",
+      "not_answering": "Home Assistant לא עונה כרגע. נסו שוב בעוד רגע.",
+      "choose": "בחרו פעולה",
+      "search": "חיפוש, למשל toggle, position או play",
+      "search_label": "חיפוש פעולה",
+      "none_found": "לא נמצאה פעולה.",
+      "gone": "Home Assistant כבר לא מציע את הפעולה הזו לישות הזו, כך שהקשה לא עושה כלום. בחרו אחרת.",
+      "optional": "{name} (רשות)",
+      "not_set": "לא מוגדר",
+      "on": "פועל",
+      "off": "כבוי",
+      "needs": "Home Assistant צריך {fields}.",
+      "needs_firmware": "המסך מבצע פעולה מקושחה 0.2.58: לחצו על עדכון במסך. עד אז הקשה פועלת כאוטומטי."
+    },
+    "icon": {
+      "label": "סמל",
+      "none": "ללא סמל",
+      "search": "חיפוש, למשל lamp, music או door",
+      "search_label": "חיפוש סמל",
+      "none_text_only": "ללא סמל, טקסט בלבד",
+      "aria": "סמל: {name}",
+      "none_found": "לא נמצא סמל."
+    },
+    "inspect": {
+      "title": "נתונים נוכחיים",
+      "subtitle": "חיבור, מצב ומאפיינים נתמכים",
+      "reading": "קורא…",
+      "fetching": "מביא את מצב HA הנוכחי…",
+      "status": "מצב: {status}",
+      "options": "מחוון קטן: {slider} · תצוגה: {display} · גודל: {size} · שליטה: {control} · רקע: {background}",
+      "yes": "כן",
+      "no": "לא",
+      "control_none": "ללא",
+      "background_default": "ברירת מחדל",
+      "read_again": "קריאה חוזרת"
+    },
+    "topbar": {
+      "removed": "{name} הוסר מהסרגל העליון",
+      "full": "בסרגל העליון יש מקום לפריט אחד. | בסרגל העליון יש מקום ל-{n} פריטים.",
+      "already": "זה כבר בסרגל העליון.",
+      "title": "סרגל עליון",
+      "aria": "סרגל עליון: {name}",
+      "items": "{used} מתוך פריט {n} | {used} מתוך {n} פריטים",
+      "name": "כותרת מעל העמוד",
+      "name_placeholder": "לדוגמה: סלון",
+      "screen_name": "כותרת המסך",
+      "screen_name_hint": "כל עמוד בלי כותרת משלו מציג את זה.",
+      "no_title_hint": "השאירו ריק כדי להציג רק את הלוגו.",
+      "item_label": "{name}, מקום {slot}. Enter: הגדרה, חצים: הזזה",
+      "max": "פריט אחד לכל היותר | {n} פריטים לכל היותר",
+      "add_title": "הוספת השעה, התאריך, שעון מחוגים או ישות",
+      "hint": {
+        "overflow": "לא הכול נכנס ליד השם: המסך משמיט את הפריטים המקווקווים. הסירו אחד או בחרו שם קצר יותר.",
+        "needs_firmware": "חיישנים, התאריך ושעון המחוגים מופיעים מקושחה {version}; עד העדכון הזה, המסך מציג את השם, ואם השעה בסרגל, את השעון."
+      },
+      "detail": {
+        "hidden": "מוסתר: לא פעיל כרגע",
+        "overflow": "לא נכנס ליד השם",
+        "hidden_signal": "מוסתר כל עוד האות טוב",
+        "hidden_link": "מוסתר כל עוד הכול מחובר",
+        "hidden_battery": "מוסתר כל עוד הסוללה מעל 20 %"
+      },
+      "live": {
+        "looks": "איך זה נראה במסך"
+      },
+      "analog_sample": "חוגה קטנה עם השעה",
+      "content": {
+        "label": "מה להציג",
+        "hint": "שינוי אחרון ממשיך לספור במסך עצמו: “עכשיו”, “לפני 5 דק׳”, “אתמול”."
+      },
+      "auto_icon": "אוטומטי (כמו Home Assistant)",
+      "show": {
+        "label": "הצגה",
+        "hint": "רק כשפעיל מסתיר את הפריט כל עוד הוא כבוי, סגור, בחוץ או 0. שימושי לדלת פתוחה, מכונת כביסה שפועלת, או מי בבית."
+      },
+      "clock_24": "שעון 24 שעות · שינוי תחת {settings}",
+      "clock_12": "שעון 12 שעות · שינוי תחת {settings}",
+      "clock_settings": "הגדרות ← שפה ואזור",
+      "date_hint": "היום {date}. התאריך עוקב אחרי השעון של המסך עצמו.",
+      "add": {
+        "title": "הוספה לסרגל העליון",
+        "slots": "{used} מתוך מקום {n} בשימוש | {used} מתוך {n} מקומות בשימוש",
+        "builtin": "מהמסך עצמו",
+        "added": "כבר נוסף",
+        "suggestions": "הצעות מ-Home Assistant",
+        "entity": "ישות",
+        "search": "חיפוש לפי שם, חדר או ישות, למשל טמפרטורה או דלת",
+        "search_label": "חיפוש ישות לסרגל העליון",
+        "none_found": "לא נמצאו ישויות.",
+        "plugins": "מתוספים"
+      },
+      "left_hint": "כותרת וכפתור בית: בהגדרות העמוד",
+      "wifi_sample": "האות של המסך הזה עצמו",
+      "link_sample": "רק כש-Home Assistant או Tessera לא זמינים",
+      "battery_sample": "הסוללה של המסך הזה עצמו",
+      "wifi_hint": "המסך קורא את האות שלו בעצמו, כך שהפריט הזה נשאר בסרגל כש-Home Assistant לא זמין. ארבעה פסים עד אחד, מחוק כשאין רשת.",
+      "wifi_show_hint": "רק כשחלש משאיר את הסרגל נקי עד שהאות יורד לפס אחד או שהרשת נעלמת.",
+      "link_hint": "מופיע רק כש-Home Assistant או Tessera לא זמינים, כדי שתבינו במבט למה חסרים ערכים.",
+      "battery_hint": "המסך קורא את הסוללה שלו בעצמו, כך שהפריט הזה נשאר בסרגל כש-Home Assistant לא זמין. הסמל עוקב אחרי הרמה כמו ש-Home Assistant משרטט אותו, עם ברק בזמן טעינה.",
+      "battery_show_hint": "רק כשנמוכה משאיר את הסרגל נקי עד שהסוללה ב-20 % או פחות.",
+      "status_firmware": "הפריט הזה מוצג מקושחה {version}. עד העדכון הזה, המסך משמיט אותו.",
+      "plugin_item": "מציג מה שהתוסף שלו אומר, רק כשיש לו מה לומר. במסך בלי התוסף הזה הוא לא מופיע.",
+      "left_move": "הזזה שמאלה",
+      "right_move": "הזזה ימינה",
+      "strip": {
+        "left_title": "כותרת וכפתור בית",
+        "left_hint": "צד שמאל · מוגדר בהגדרות של {page}",
+        "place": "פריט {place} מתוך {count}",
+        "hint": "הקישו על פריט בסרגל כדי להגדיר אותו. גררו אותו שמאלה או ימינה כדי להזיז, או אל מחוץ לסרגל כדי להסיר.",
+        "copy": "העתקת הסרגל הזה לעמודים אחרים",
+        "copy_hint": "הפריטים שלו, או כל הסרגל עם הכותרת",
+        "page_settings": "הגדרות {page}"
+      }
+    },
+    "screen_settings": {
+      "groups": {
+        "brightness": "בהירות",
+        "night": "לילה",
+        "screen": "מסך",
+        "this_screen": "המסך הזה"
+      },
+      "rows": {
+        "brightness": "בהירות",
+        "dark_mode": "מצב כהה",
+        "standby_enabled": "המתנה אוטומטית",
+        "standby_seconds": "המתנה אחרי",
+        "standby_brightness": "בהירות בהמתנה",
+        "standby_lit": "מסך דולק בהמתנה",
+        "night_enabled": "מצב לילה",
+        "night_start": "מתחיל",
+        "night_end": "נגמר",
+        "night_brightness": "בהירות לילה",
+        "night_lit": "מסך דולק בלילה",
+        "auto_home": "חזרה לבית",
+        "auto_home_seconds": "אחרי",
+        "home_on_standby": "גם בהמתנה",
+        "swipe_pages": "החלקה בין עמודים",
+        "page_buttons": "כפתורי עמודים",
+        "home_button": "הצגת כפתור בית",
+        "rotation": "סיבוב"
+      },
+      "actions": {
+        "calibrate": {
+          "button": "כיול מגע",
+          "hint": "המסך מציג חמישה צלבים וממתין עליהם. מי שעומד מולו מקיש על כל צלב שלוש פעמים.",
+          "confirm": "להתחיל את הכיול ב-{name}?",
+          "done": "{name} מציג את הצלבים."
+        }
+      },
+      "duration": {
+        "seconds": "{n} שנ׳",
+        "minutes": "{n} דק׳",
+        "hours": "{n} שע׳",
+        "hours_minutes": "{h} שע׳ {m}"
+      },
+      "time": {
+        "am": "{time} לפנה״צ",
+        "pm": "{time} אחה״צ"
+      },
+      "other_screen_busy": "עדיין שומר את ההגדרות של המסך האחר. נסו שוב בעוד רגע.",
+      "reach": {
+        "pages": "עמוד {list} | עמודים {list}"
+      },
+      "status": {
+        "offline": "המסך הזה לא מקוון. אפשר יהיה לשנות את הגדרותיו כשיחזור.",
+        "screen": "השינויים חלים במסך מיד, ומופיעים כאן כשהם משתנים שם.",
+        "app": "השינויים חלים מיד. קושחה 0.2.49 מאפשרת למסך לשמור אותם בעצמו."
+      },
+      "unavailable": "הישות הזו כבויה ב-Home Assistant, או שהמסך מופעל מחדש.",
+      "lower": "{name} נמוך יותר",
+      "higher": "{name} גבוה יותר",
+      "screensaver": {
+        "title": "שומר מסך",
+        "show": "הצגה בהמתנה",
+        "standby_off": "הפעילו המתנה אוטומטית כדי להשתמש בזה.",
+        "needs_firmware": "עדכנו את המסך הזה לקושחה {version} כדי להשתמש בשומר מסך.",
+        "no_pictures": "למסך הזה אין זיכרון לתמונות, ולכן הוא מציג את השעון.",
+        "lead": "מציג את הראשון שזמין",
+        "use": "שימוש ב-{name}",
+        "kinds": {
+          "media": "מוזיקה מתנגנת",
+          "photos": "תמונות",
+          "camera": "מצלמה",
+          "clock": "שעון"
+        },
+        "summary": {
+          "media_none": "אין עדיין נגן",
+          "camera_none": "אין עדיין מצלמה",
+          "temperature": "טמפרטורה בחוץ",
+          "time_date": "שעה ותאריך",
+          "off": "כבוי",
+          "photos_none": "בחרו תיקייה",
+          "plugin_gone": "התוסף שלו אינו במסך הזה",
+          "plugin_entity": "בחרו ישות"
+        },
+        "on": "הצגה בשומר המסך",
+        "place": "{n} מתוך {count}",
+        "earlier": "לנסות קודם",
+        "later": "לנסות אחר כך",
+        "players_title": "נגנים",
+        "players": "נגנים, הראשון למעלה",
+        "players_hint": "הראשון שמנגן מוצג, עם העטיפה שלו.",
+        "player_add": "הוספת נגן",
+        "player_search": "חיפוש נגנים",
+        "player_none": "אין נגן תואם",
+        "remove_player": "הסרת {name}",
+        "keys_hint": "ניגון, השהיה ועוצמה פועלים בשומר המסך. הקשה בכל מקום אחר מעירה את המסך.",
+        "choose_camera": "בחרו מצלמה",
+        "camera_hint": "התמונה שלה, כל 15 שניות",
+        "temperature": "טמפרטורה",
+        "weather_auto": "אוטומטי",
+        "weather_none": "בלי טמפרטורה",
+        "items_add": "הוספת ישות",
+        "items_hint": "מוצג ליד הטמפרטורה, בשורה אחת: חיישן, דלת, מנורה.",
+        "items_full": "בשעון יש מקום ל-{n} ישויות.",
+        "items_already": "זה כבר בשעון.",
+        "items_removed": "{name} הוסר מהשעון",
+        "items_title": "ישויות השעון",
+        "items_slots": "{used} מתוך {n}",
+        "item_text": "טקסט",
+        "item_icon": "סמל",
+        "item_both": "שניהם",
+        "item_look": "מציג",
+        "item_hint": "שחור-לבן בשומר המסך, לא משנה מה צבע הישות.",
+        "items_add_title": "הוספה לשעון",
+        "clock_part": "שעה, תאריך וטמפרטורה",
+        "row_hint": "הקישו על ישות בשורה כדי להגדיר אותה. גררו אותה שמאלה או ימינה כדי להזיז, או אל מחוץ לשורה כדי להסיר.",
+        "face": "פנים",
+        "faces": {
+          "digital": "דיגיטלי",
+          "glass": "זכוכית",
+          "classic": "קלאסי",
+          "bauhaus": "באוהאוס"
+        },
+        "look": "מראה",
+        "look_dark": "כהה",
+        "look_light": "בהיר",
+        "look_auto": "של המסך",
+        "numerals": "ספרות",
+        "numerals_none": "ללא",
+        "seconds": "מחוג שניות",
+        "face_alone_hint": "הפנים האלה מציגות את השעה לבדה. הטמפרטורה והישויות מוצגות בקלאסי ובדיגיטלי.",
+        "face_moves_hint": "הפנים זזות מעט בכל דקה, ובאוהאוס מצייר תמונה חדשה כל עשר דקות, כך ששום דבר לא נשאר על אותם פיקסלים לאורך זמן.",
+        "plugin_add": "הוספה מתוספים",
+        "plugin_steps_full": "מקום ל-{n} שלבי תוספים",
+        "plugin_gone": "התוסף שלו אינו במסך הזה, כך שהשלב הזה לא מציג כלום. הוסיפו את התוסף שוב או הסירו את השלב.",
+        "plugin_entity_search": "חיפוש ישויות",
+        "plugin_entity_none": "אין ישות תואמת",
+        "plugin_entity_choose": "בחרו ישות",
+        "plugin_entity_change": "בחרו ישות אחרת",
+        "face_standard": "רגיל",
+        "photos_folder": "תיקייה",
+        "photos_hint": "תיקייה ממדיית Home Assistant: תיקייה תחת /media, Immich, Synology Photos.",
+        "photos_sources": "מדיה",
+        "photos_untitled": "ללא שם",
+        "photos_loading": "טוען…",
+        "photos_failed": "Home Assistant לא הצליח לפתוח את התיקייה הזו.",
+        "photos_here": "תמונה {n} כאן | {n} תמונות כאן",
+        "photos_none_here": "אין תמונות ישירות בתיקייה הזו. פתחו אחת מתיקיות המשנה שלה.",
+        "photos_empty": "אין כאן כלום.",
+        "photos_choose": "בחירת התיקייה הזו",
+        "photos_change": "שינוי",
+        "photos_show": "מצגת",
+        "photos_every": "כל",
+        "photos_every_30": "30 שנ׳",
+        "photos_every_60": "דקה",
+        "photos_every_300": "5 דק׳",
+        "photos_every_900": "15 דק׳",
+        "photos_every_3600": "שעה",
+        "photos_order": "סדר",
+        "photos_order_shuffle": "מעורבב",
+        "photos_order_in_order": "לפי הסדר",
+        "photos_fit": "התאמה",
+        "photos_fit_auto": "אוטומטי",
+        "photos_fit_fill": "מילוי",
+        "photos_fit_whole": "שלם",
+        "photos_fit_auto_hint": "תמונה בערך בצורת המסך ממלאת אותו. אחרות מוצגות בשלמותן, על צבע משלהן.",
+        "photos_fit_fill_hint": "כל תמונה ממלאת את המסך, חתוכה בקצוות.",
+        "photos_fit_whole_hint": "כל תמונה מוצגת בשלמותה, על צבע משלה.",
+        "photos_motion": "תנועה",
+        "photos_motion_still": "סטטי",
+        "photos_motion_slow": "איטי",
+        "photos_motion_still_hint": "כל תמונה עומדת במקום.",
+        "photos_motion_slow_hint": "תמונה שממלאת את הזכוכית נעה לאט לאורכה, פיקסל בכל פעם. מסכי ה-10 אינץ׳ שומרים את התמונות שלהם סטטיות: תמונה גדולה יותר לא נכנסת בזיכרון שלהם."
+      },
+      "plugins": {
+        "title": "תוספים",
+        "note": "ההגדרות של כל תוסף נמצאות בפרטים שלו בלשונית התוספים."
+      },
+      "extras": {
+        "title": "תוספות",
+        "note": "הגדרות שיש רק למסך הזה, מהלוח שלו. אותם מתגים נמצאים בדף ההגדרות של המסך עצמו וב-Home Assistant."
+      }
+    },
+    "update": {
+      "starting": "מתחיל עדכון…",
+      "building": "בונה את הקושחה…",
+      "writing": "כותב את הקושחה דרך Wi-Fi…",
+      "phases": {
+        "install": "בונה ומתקין…",
+        "verify": "ממתין שהמסך יחזור…",
+        "settle": "בודק שהוא נשאר יציב…"
+      },
+      "new_language": "שפה חדשה: {name}"
+    },
+    "settings": {
+      "updates": {
+        "auto_on": "מעכשיו המסכים יתעדכנו אוטומטית בלילה.",
+        "auto_off": "עדכונים אוטומטיים כבויים.",
+        "title": "עדכוני קושחה",
+        "busy": "מעדכן לקושחה {version}…",
+        "no_screens": "עדיין לא צומד מסך. מסכים חדשים מקבלים קושחה {version}.",
+        "available": "קושחה {version} זמינה למסך {n}. | קושחה {version} זמינה ל-{n} מסכים.",
+        "current": "בכל המסכים קושחה {version}.",
+        "available_mixed": "עדכון זמין למסך {n}. | עדכון זמין ל-{n} מסכים.",
+        "current_mixed": "כל המסכים מעודכנים.",
+        "all": "עדכון מסך אחד | עדכון כל {n} המסכים",
+        "whats_new": "מה חדש בקושחה {version}",
+        "auto_label": "עדכון אוטומטי בכל לילה",
+        "auto_hint": "בין 03:00 ל-06:00, מסך אחד בכל פעם. נעצר בשגיאה ומדווח עליה ב-Home Assistant.",
+        "reinstall_all": "התקנה מחדש של מסך אחד מ-dev | התקנה מחדש של כל {n} המסכים מ-dev",
+        "reinstall_all_hint": "בונה את ה-dev החדש ביותר לכל מסך, אחד אחרי השני, ומתקין אותו דרך Wi-Fi. ב-dev מספר הגרסה נשאר זהה, כך ש-dev חדש לעולם לא מוצע כעדכון.",
+        "reinstall_all_confirm": "להתקין מחדש מסך אחד מה-dev החדש ביותר? הוא יופעל מחדש כשהקושחה תותקן. | להתקין מחדש {n} מסכים מה-dev החדש ביותר? הם נבנים אחד אחרי השני, וכל אחד יופעל מחדש כשהקושחה שלו תותקן.",
+        "reinstall_all_go": "התקנה מחדש"
+      },
+      "video": {
+        "title": "וידאו ב-Home Assistant",
+        "text": "מסך עם החלק Video של Screen camera מציג את המצלמה שלו בשידור חי ב-Home Assistant, עם קול: מצלמת Video במכשיר של המסך, בדפדפן ובאפליקציה. Home Assistant צריך לשם כך את אינטגרציית Tessera video.",
+        "install": "התקנה ב-Home Assistant",
+        "install_again": "התקנה מחדש",
+        "update": "עדכון האינטגרציה",
+        "newer": "מותקן · גרסה חדשה יותר מוכנה",
+        "waits_restart": "מותקן · הפעילו מחדש את Home Assistant כדי לטעון",
+        "running": "● פועל ב-Home Assistant",
+        "restart": "הפעלה מחדש של Home Assistant",
+        "restart_confirm": "להפעיל מחדש את Home Assistant עכשיו? הוא ייעלם לדקה או שתיים, וכך גם לוחות הבקרה והאוטומציות שלו.",
+        "restarting": "Home Assistant מופעל מחדש. הווידאו של המסכים יחזור תוך דקה אחרי שהוא חוזר.",
+        "installed": "Tessera video הותקן. הפעילו מחדש את Home Assistant פעם אחת כדי לטעון אותו.",
+        "screens": "מסכים עם וידאו: {names}",
+        "no_screens": "לאף מסך עדיין אין וידאו: הוסיפו את Screen camera למסך P4 עם מצלמה, עם החלק Video שלו.",
+        "writes": "כותב את התיקייה {path}; התקנה מחדש מחליפה אותה. Tessera מוסיף כל מסך עם וידאו בעצמו."
+      },
+      "claude": {
+        "installed": "המיומנות הותקנה. Claude Code קולט אותה מיד.",
+        "installed_restart": "המיומנות הותקנה. הפעילו מחדש את Claude Code פעם אחת כדי שימצא את תיקיית המיומנויות החדשה.",
+        "text": "למדו את Claude על Tessera, ואז בקשו: \"הצג התראה בכל המסכים שלי כשתיבת הדואר מלאה.\" Claude מכיר את אירועי ההתראה, כל שדה, צבע וסמל.",
+        "install": "התקנה עבור Claude Code",
+        "install_again": "התקנה מחדש",
+        "update": "עדכון המיומנות",
+        "not_installed": "לא מותקן",
+        "installed_chip": "● מותקן",
+        "newer": "מותקן · גרסה חדשה יותר מוכנה",
+        "writes": "עבור Claude Code ב-Home Assistant. כותב קובץ אחד אל {path}; התקנה מחדש מחליפה אותו.",
+        "download": "הורדה עבור claude.ai",
+        "upload": "העלו את ה-zip ב-Claude תחת התאמה אישית ← מיומנויות."
+      },
+      "title": "כל מה שמסביב למסכים שלכם.",
+      "back": "→ המסכים שלי",
+      "screens": {
+        "title": "מסכים",
+        "text": "הוסיפו מסך, או בנו והתקינו מחדש את הקושחה של מסך שכבר יש לכם.",
+        "firmware_detail": "בנייה והתקנה דרך USB או Wi-Fi"
+      },
+      "language": {
+        "title": "שפה ואזור",
+        "screen_language": "שפת המסכים",
+        "auto": "השפה של Home Assistant ({name})",
+        "auto_plain": "השפה של Home Assistant",
+        "ha_missing": "המסכים משתמשים באנגלית עד שהשפה של Home Assistant תהיה זמינה.",
+        "unchecked": "{name} · עדיין לא נבדק, עזרה תתקבל בברכה",
+        "help": "{name} עדיין לא נבדק, עזרה תתקבל בברכה: {guide}",
+        "guide": "איך לתרגם",
+        "update_hint": "אחרי שינוי כל מסך צריך עדכון קושחה, בנייה אחת לכל אחד: עם כפתור העדכון שלו, או בעדכונים הליליים.",
+        "time": "תבנית שעה",
+        "time_auto": "אוטומטי, לפי השפה ({clock})",
+        "clock_24": "24 שעות",
+        "clock_12": "12 שעות",
+        "numbers": "תבנית מספרים",
+        "numbers_auto": "אוטומטי, לפי השפה ({example})",
+        "profile": "פרופיל ה-Home Assistant שלכם: {formats}",
+        "use_profile": "להשתמש באלה",
+        "editor_hint": "העורך עצמו עוקב אחרי השפה של פרופיל ה-Home Assistant שלכם.",
+        "saved": "נשמר.",
+        "saved_language": "נשמר. כל מסך יקבל את השפה החדשה בעדכון הבא שלו."
+      },
+      "alerts": {
+        "text": "כרטיס על כל המסך מאוטומציה, במסך אחד או בכולם. בדף העזר יש את שמות הפעולות, השדות, הסמלים והצבעים, וטופס לניסיון.",
+        "detail": "התראות במסך מלא, מאוטומציה"
+      },
+      "build_server": {
+        "title": "שרת בנייה",
+        "intro": "בנו קושחה במחשב מהיר יותר. Tessera שולח את ה-YAML של המסך לשרת בנייה של ESPHome ומתקין את מה שחוזר. כשהשרת לא יכול, הבנייה רצה כאן כמו קודם.",
+        "connect": "חיבור שרת בנייה",
+        "how_title": "איך להפעיל שרת בנייה",
+        "how_desktop": "ESPHome Desktop במחשב: הוא בונה עבור מכשירים אחרים מההתחלה.",
+        "how_builder": "ESPHome Device Builder: הגדרות ← שרת בנייה ← הפעלת בנייה מרחוק.",
+        "how_headless": "בשרת בלי מסך: הריצו {command} והשתמשו במפתח שהוא מדפיס.",
+        "how_link": "עוד על שרתי בנייה",
+        "address": "כתובת",
+        "address_hint": "כתובת ה-IP או שם המארח של המחשב. אפליקציות Home Assistant לא יכולות לחפש אותו ברשת.",
+        "port": "פורט",
+        "look_up": "חיפוש",
+        "looking": "מחפש…",
+        "check_title": "האם זה שרת הבנייה שלכם?",
+        "check_text": "{name} · ESPHome {version}",
+        "check_hint": "שרת הבנייה מציג את טביעת האצבע שלו היכן שהפעלתם בנייה עבור מכשירים אחרים, או בחלון שבו הפעלתם אותו. צמדו רק כשהאימוג׳ים האלה תואמים.",
+        "server_emoji": "טביעת האצבע שלו",
+        "own_emoji": "טביעת האצבע של Tessera",
+        "own_emoji_hint": "שרת הבנייה מציג את אלה כשאתם מאשרים את Tessera.",
+        "key": "מפתח צימוד",
+        "key_hint": "המפתח ששרת הבנייה הזה הדפיס כשהופעל, כמו ABCD-EFGH-JKLM-NPQR. הוא עובד פעם אחת.",
+        "pair": "הם תואמים, צימוד",
+        "pairing": "מצמד…",
+        "back": "חזרה",
+        "cancel": "ביטול",
+        "wait_title": "אשרו את Tessera ב-{name}",
+        "wait_text": "פתחו את בקשות הצימוד בשרת הבנייה, בדקו שהוא מציג את האימוג׳ים האלה עבור Tessera, ואשרו אותו.",
+        "paired": "צומד עם {name}. מעכשיו המסכים נבנים שם.",
+        "status": {
+          "connecting": "מתחבר…",
+          "online": "מוכן",
+          "busy": "עסוק בבנייה אחרת",
+          "offline": "לא זמין",
+          "pending": "ממתין לאישור שלכם",
+          "refused": "כבר לא מצומד",
+          "mismatch": "טביעת האצבע השתנתה"
+        },
+        "offline_text": "הבניות רצות כאן עד שהוא יחזור.",
+        "refused_text": "{name} כבר לא מכיר את Tessera, או שאף אחד לא אישר אותו בזמן. צמדו אותו שוב כדי לבנות שם.",
+        "mismatch_text": "{name} ענה עם טביעת אצבע שונה מזו שבדקתם. אם התקנתם אותו מחדש, צמדו אותו שוב.",
+        "send": "בניית מסכים בשרת הזה",
+        "send_hint": "כבוי, או כשאין גישה לשרת: הבניות רצות כאן.",
+        "version_same": "בונה עם ESPHome {version}, כמו Tessera.",
+        "version_other": "בונה עם ESPHome {ours}, שבו Tessera משתמש. השרת מתקין אותו פעם אחת, לצד ה-{theirs} שלו.",
+        "building": "בונה את {file} · {step}",
+        "last_server": "בנייה אחרונה: {file} בשרת הזה תוך {time}.",
+        "last_here": "בנייה אחרונה: {file} רץ כאן, {reason}.",
+        "last_failed": "בנייה אחרונה: {file} נכשל בשרת הזה. היומן שלו אומר למה.",
+        "minutes": "{m} דק׳ {s} שנ׳",
+        "seconds": "{s} שנ׳",
+        "pair_again": "צימוד מחדש",
+        "forget": "שכחה",
+        "forget_confirm": "לשכוח את {name}? המסכים ייבנו שוב כאן. כדי להסיר את Tessera גם שם, הסירו אותו מהמכשירים המצומדים של שרת הבנייה.",
+        "forget_go": "שכחה",
+        "unavailable": "Tessera הזה לא יכול לדבר עם שרת בנייה."
+      }
+    },
+    "firmware": {
+      "title": "בנייה והתקנה של קושחת מסך",
+      "intro": "ה-CLI המובנה של ESPHome משתמש בפרופיל שלכם (YAML עם מפתחות) וב-secrets. בחרו את פרופיל המסך, ואז יציאת USB (מסך מחובר למכונת ה-Home Assistant), {ota} עם שם המארח, או {download} כדי להעלות את הקושחה למסך מהמחשב שלכם. {check} רק מאמת, {build} מהדר, {install} מעלה את הקושחה למסך. האריחים שלכם נשארים כפי שהם ב-Tessera. הבנייה יכולה להימשך 20 דקות ויותר במכונת Home Assistant כמו Raspberry Pi, במיוחד בפעם הראשונה. זה רגיל.",
+      "ota": "Wi-Fi / OTA",
+      "download": "הורדה",
+      "check": "בדיקה",
+      "build": "בנייה בלבד",
+      "install": "בנייה והתקנה",
+      "build_download": "בנייה והורדה",
+      "no_cli": "ה-CLI של ESPHome חסר. עדכנו את האפליקציה ל-0.2.0.",
+      "choose": "בחרו את הפרופיל המיועד, ואז יציאת USB, כתובת IP או הורדה.",
+      "profile": "פרופיל ESPHome",
+      "install_to": "התקנה אל",
+      "no_board": "עדיין לא מחובר שם מסך",
+      "download_target": "הורדת הקובץ וצריבה עצמית",
+      "host": "כתובת IP או שם מארח",
+      "download_file": "הורדת {name}",
+      "download_how": "העלו אותו למסך עם {esphome_web} ב-Chrome או Edge: Connect, בחרו את יציאת ה-USB של המסך, Install, ובחרו את הקובץ הזה. הוא מכיל את סיסמת ה-Wi-Fi שלכם ואת המפתחות של המסך: שמרו אותו לעצמכם.",
+      "waiting": "ממתין לתורו, בנייה אחת לפניו | ממתין לתורו, {n} בניות לפניו"
+    },
+    "installer": {
+      "board": "איזה מסך יש לכם?",
+      "board_title": "{name} · {inch} אינץ׳",
+      "status": {
+        "new": "חדש",
+        "experimental": "ניסיוני"
+      },
+      "status_hint": {
+        "new": "חדש: נוסה עד כה רק בכמה מסכים. ספרו לנו איך הולך.",
+        "experimental": "ניסיוני: עוד לא נוסה על החומרה הזו. ספרו לנו איך הולך."
+      },
+      "abilities": {
+        "camera": "תמונות מצלמה",
+        "no_camera": "בלי תמונות מצלמה",
+        "dimming": "תאורה אחורית ניתנת לעמעום",
+        "no_dimming": "תאורה אחורית תמיד דולקת",
+        "standby": "המתנה ולילה",
+        "no_standby": "בלי המתנה",
+        "tiles": "עד {n} אריחים ב-{pages} עמודים",
+        "calibration": "כיול מגע בהפעלה הראשונה"
+      },
+      "choice": {
+        "DISPLAY_MODEL": "בקר תצוגה",
+        "FLASH_SIZE": "זיכרון פלאש",
+        "BOARD_VARIANT": "לוח"
+      },
+      "choice_hint": {
+        "DISPLAY_MODEL": "התחילו עם הראשון. קחו את השני כשהמסך נשאר שחור או מציג רעש או תמונה משובשת.",
+        "FLASH_SIZE": "לרוב הלוחות האלה יש 16 MB. קחו 8 MB כשהמסך נשאר שחור אחרי ההתקנה וממשיך לעלות מחדש.",
+        "BOARD_VARIANT": "קחו את זה שיש לכם. בלוח הצהוב בלי מארז, הקשה בפינה השמאלית העליונה תנחת אחרת בפינה הימנית התחתונה."
+      },
+      "choice_option": {
+        "BOARD_VARIANT": {
+          "black": "שחור, במארז",
+          "yellow": "צהוב, בלי מארז"
+        }
+      },
+      "choice_usual": "רוב הלוחות",
+      "orientation_landscape": "לרוחב",
+      "orientation_portrait": "לאורך",
+      "name": "שם",
+      "name_placeholder": "מסך הסלון",
+      "device_name": "שם המכשיר",
+      "name_hint": "כל מסך מקבל פרופיל משלו עם מפתחות משלו. ארבעה מסכים? עברו על זה ארבע פעמים עם שם אחר.",
+      "name_taken": "מסך אחר כבר נקרא כך. Home Assistant ימספר את שמות הישויות של המסך הזה, ואוטומציות יצביעו על המסך הלא נכון.",
+      "device_name_hint": "אותיות לטיניות קטנות, ספרות ומקפים. שם שונה לכל מסך.",
+      "node_taken": "למסך אחר כבר יש את שם המכשיר הזה. Home Assistant לא יכול להבחין בין שני מכשירים באותו שם.",
+      "wifi": {
+        "title": "Wi-Fi",
+        "ssid": "שם ה-Wi-Fi ‏(2.4 GHz)",
+        "password": "סיסמת ה-Wi-Fi",
+        "new": "מלאו פעם אחת: Tessera שומר את זה ב-secrets.yaml של ESPHome, ומסכים הבאים ישתמשו בזה אוטומטית.",
+        "missing": "ב-secrets.yaml של ESPHome שלכם עדיין חסרים פרטי Wi-Fi. Tessera ממלא רק את השורות החסרות.",
+        "ready": "ה-Wi-Fi מגיע מה-secrets.yaml של ESPHome שלכם.",
+        "invalid": "secrets.yaml בתיקיית ESPHome אינו YAML תקין. תקנו את הקובץ קודם; הוא לא יידרס.",
+        "other": "רשת אחרת",
+        "other_note": "כל מסך נבנה עם ה-Wi-Fi הזה, כך שמסכים שכבר יש לכם יקבלו אותו בעדכון הבא שלהם."
+      },
+      "install_via": "התקנה דרך",
+      "target": {
+        "usb": "חברו את המסך למכונת ה-Home Assistant עם כבל נתונים USB; הוא יופיע כאן מעצמו. הוא מחובר למחשב שבו אתם משתמשים עכשיו? בחרו מהמחשב הזה.",
+        "download": "הורידו את הקושחה והעלו אותה למסך מהמחשב שלכם, ב-Chrome או Edge. אחרי זה, העדכונים עוברים דרך Wi-Fi.",
+        "later": "הפרופיל נכנס לתיקיית ESPHome. אפשר להתקין אחר כך דרך קושחה ו-USB, או מ-ESPHome Device Builder.",
+        "several": "יותר מלוח אחד מחובר: בחרו את היציאה של המסך הזה.",
+        "once": "פעם אחת דרך USB; אחרי זה, הכול אלחוטי."
+      },
+      "install": "התקנה",
+      "save_profile": "שמירת פרופיל",
+      "no_cli": "ה-CLI של ESPHome חסר בהתקנה הזו; אפשר רק לשמור את הפרופיל.",
+      "progress": {
+        "saved": "{file} נמצא בתיקיית ESPHome",
+        "writing": "כותב קושחה אל {name}…",
+        "building": "בונה קושחה…",
+        "ready": "הקושחה עבור {name} מוכנה",
+        "installed": "הקושחה נמצאת ב-{name}",
+        "build_failed": "הבנייה נכשלה",
+        "install_failed": "ההתקנה נכשלה",
+        "waiting": "ממתין לתורו…"
+      },
+      "detail": {
+        "saved": "התקינו אותו אחר כך מקושחה ו-USB: בחרו את הפרופיל הזה, ואז את יציאת ה-USB של מכונת ה-Home Assistant, או הורדה כדי להעלות את הקושחה למסך מהמחשב שלכם. שמרו את מפתח ה-API לצימוד:",
+        "uploading": "אל תנתקו עדיין את כבל ה-USB.",
+        "building": "הבנייה יכולה להימשך 20 דקות ויותר במכונת Home Assistant כמו Raspberry Pi, במיוחד בפעם הראשונה. זה רגיל. אפשר לעזוב את הדף: ההתקנה ממשיכה לרוץ ותמצאו אותה שוב תחת מסך חדש.",
+        "building_download": "הבנייה יכולה להימשך 20 דקות ויותר במכונת Home Assistant כמו Raspberry Pi, במיוחד בפעם הראשונה. זה רגיל. אפשר לעזוב את הדף: הבנייה ממשיכה לרוץ ותמצאו אותה שוב תחת מסך חדש.",
+        "downloaded": "העלו אותו למסך מהמחשב שלכם. הוא יופיע כאן ברגע שיהיה ב-Wi-Fi שלכם.",
+        "booted": "המסך עולה, מתחבר ל-Wi-Fi שלכם ומצטרף ל-Home Assistant בעצמו.",
+        "booted_calibrate": "המסך עולה ומתחבר ל-Wi-Fi שלכם. קודם הוא מבקש כיול מגע: הקישו על הצלבים. אחר כך הוא מצטרף ל-Home Assistant בעצמו.",
+        "see_log": "ראו את היומן למטה.",
+        "waiting": "בנייה אחת לפני. הבנייה הזו תתחיל מעצמה מיד אחריה, ואפשר לעזוב את הדף. | {n} בניות לפני. הבנייה הזו תתחיל מעצמה מיד אחריהן, ואפשר לעזוב את הדף.",
+        "waiting_browser": "בנייה אחת לפני. הבנייה הזו תתחיל מעצמה מיד אחריה. השאירו את הדף פתוח: הוא כותב למסך ברגע שהקושחה שלו נבנית. | {n} בניות לפני. הבנייה הזו תתחיל מעצמה מיד אחריהן. השאירו את הדף פתוח: הוא כותב למסך ברגע שהקושחה שלו נבנית."
+      },
+      "download_steps": {
+        "plug": "{bold} עם כבל נתונים USB.",
+        "plug_bold": "חברו את המסך למחשב שלכם",
+        "open": "{bold} ב-Chrome או Edge, לחצו Connect ובחרו את יציאת ה-USB של המסך.",
+        "open_bold": "פתחו את {esphome_web}",
+        "install": "{bold} ובחרו את {file}. המסך יופעל מחדש ויצטרף ל-Wi-Fi שלכם.",
+        "install_calibrate": "{bold} ובחרו את {file}. המסך יופעל מחדש ויצטרף ל-Wi-Fi שלכם. קודם הוא מבקש כיול מגע: הקישו על הצלבים.",
+        "install_bold": "לחצו Install"
+      },
+      "download_keep": "הקובץ מכיל את סיסמת ה-Wi-Fi שלכם ואת המפתחות של המסך: שמרו אותו לעצמכם.",
+      "api_key": "מפתח API",
+      "pairing": {
+        "ha": "{bold} Home Assistant מציג את {name} כמכשיר ESPHome שהתגלה; לחצו הוספה. לא התגלה? הוסיפו ESPHome ידנית עם כתובת ה-IP של המסך.",
+        "ha_bold": "עברו ל-Home Assistant ← הגדרות ← מכשירים ושירותים.",
+        "key": "{bold} שלמטה אם Home Assistant מבקש מפתח הצפנה.",
+        "key_bold": "הדביקו את מפתח ה-API",
+        "actions": "{bold} אינטגרציית ESPHome ← הגדרה ← “לאפשר למכשיר לבצע פעולות Home Assistant”. בלי זה, המסך רואה הכול אבל לא שולט בכלום.",
+        "actions_bold": "אפשרו פעולות HA:",
+        "tiles": "{bold} בחזרה ב-Tessera, המסך יופיע ברשימה משמאל תוך כשלושים שניות; עד אז הוא מוצג שם כ“עוד לא ב-Home Assistant”.",
+        "tiles_bold": "בחרו את האריחים שלכם."
+      },
+      "retry": "ניסיון חוזר",
+      "another": "התקנת מסך נוסף",
+      "start_over": "התחלה מחדש",
+      "done": "סיום",
+      "key_more": "הצגת מפתח ה-API",
+      "steps": {
+        "board": "מסך",
+        "setup": "הגדרה",
+        "install": "התקנה"
+      },
+      "pick_title": "איזה מסך יש לכם?",
+      "pick_intro": "בחרו את הלוח שלכם. חפשו לפי מותג, גודל או מה שמודפס עליו.",
+      "search": "חיפוש לפי מותג, גודל או דגם",
+      "sizes": {
+        "all": "הכול",
+        "small": "עד 4 אינץ׳",
+        "medium": "4 עד 6 אינץ׳",
+        "large": "7 אינץ׳ ומעלה"
+      },
+      "none_found": "אין מסך שמתאים ל-“{query}”.",
+      "try_virtual": "אין עדיין מסך? נסו מסך תצוגה מקדימה",
+      "setup_title": "תנו לו אופי משלכם",
+      "install_title": "איך תרצו להתקין אותו?",
+      "next": "הבא",
+      "advanced": "מתקדם",
+      "ways": {
+        "ha_title": "USB ב-Home Assistant",
+        "ha_found": "נמצא: {port}",
+        "ha_waiting": "חברו את המסך למכונה שעליה Home Assistant רץ",
+        "browser_title": "מהמחשב הזה",
+        "browser_detail": "Chrome או Edge, עם המסך ב-USB של המחשב הזה",
+        "download_title": "הורדת הקובץ",
+        "download_detail": "העלו אותו למסך בעצמכם עם ESPHome Web",
+        "later_title": "אחר כך",
+        "later_detail": "לשמור רק את ההגדרות בינתיים"
+      },
+      "steps_done": {
+        "prepare": "מתכונן",
+        "build": "בונה את הקושחה",
+        "write": "מעלה למסך",
+        "restart": "מופעל",
+        "done": "סיום",
+        "download": "מוכן להורדה"
+      },
+      "elapsed": "{time} עד עכשיו",
+      "show_log": "הצגת פרטים",
+      "hide_log": "הסתרת פרטים",
+      "next_title": "מה הלאה",
+      "model": "איזה דגם זה?",
+      "model_hint": "מודפס על גב הלוח. הם נראים דומים, אבל כל אחד צריך קושחה משלו.",
+      "models": "דגם {n} | {n} דגמים",
+      "arrive": {
+        "waiting": "ממתין ש-{name} יצטרף ל-Wi-Fi שלכם...",
+        "seen": "{name} ב-Wi-Fi שלכם. מכין אותו...",
+        "paired": "{name} מצומד עם Home Assistant.",
+        "missing": "{name} עוד לא ב-Wi-Fi שלכם",
+        "hotspot": "הסתכלו על המסך: הוא מציג נקודה חמה ואת הסיסמה שלה. התחברו אליה עם הטלפון ובחרו שם את ה-Wi-Fi הנכון. או הגדירו כאן את ה-Wi-Fi הנכון והתקינו שוב.",
+        "no_hotspot": "שם ה-Wi-Fi או הסיסמה כנראה שגויים. הגדירו כאן את ה-Wi-Fi הנכון והתקינו שוב, כשהמסך עדיין מחובר בכבל.",
+        "change": "שינוי Wi-Fi והתקנה מחדש",
+        "failed": "Tessera לא יכול להוסיף את {name} ל-Home Assistant בעצמו. הוסיפו אותו בעצמכם למטה."
+      },
+      "memory": {
+        "low_title": "מעט זיכרון פנוי במכונת ה-Home Assistant",
+        "low": "פנויים {free} זיכרון, ולכן הקושחה נבנית עם פחות מהדרים במקביל ({jobs} במקום {cores}). זה לוקח יותר זמן, אבל זה נכנס.",
+        "tight_title": "ייתכן שלמכונת ה-Home Assistant חסר זיכרון",
+        "tight": "בניית הקושחה צריכה כ-{need} זיכרון פנוי ויש {free}. היא מנסה עם מהדר אחד בכל פעם. אם הבנייה נעצרת, עצרו כמה תוספים לזמן מה או תנו למכונה יותר זיכרון ונסו שוב.",
+        "retry_title": "לבנייה נגמר הזיכרון והיא ממשיכה עם מהדר אחד",
+        "retry": "המערכת עצרה את המהדר כי הזיכרון נגמר ({free} היו פנויים כשהבנייה התחילה). הבנייה ממשיכה עם מהדר אחד בכל פעם, מהמקום שבו נעצרה. זה לוקח יותר זמן, אבל זה נכנס.",
+        "out_title": "אין מספיק זיכרון לבניית הקושחה",
+        "out": "בניית הקושחה צריכה כ-{need} זיכרון פנוי ולמכונת ה-Home Assistant הזו יש {free}. עצרו כמה תוספים לזמן מה או תנו למכונה יותר זיכרון, ואז נסו שוב.",
+        "limit_title": "אין מספיק זיכרון לבניית הקושחה",
+        "limit": "לבנייה נגמר הזיכרון, גם עם מהדר אחד בכל פעם. עצרו כמה תוספים לזמן מה או תנו למכונה יותר זיכרון, ואז נסו שוב."
+      },
+      "pair_yourself": "הוסיפו אותו ב-Home Assistant בעצמכם",
+      "grid": "רשת",
+      "grid_hint": "הרשת המוצעת היא הטובה ביותר למסך הזה. אפשר לשנות אותה, ואת כיוון התלייה, אחר כך לצד העמודים בעורך, בלי בנייה חדשה.",
+      "grid_best": "חזרה לטובה ביותר",
+      "waits_turn": "מסך אחר נבנה עכשיו. המסך הזה ממתין לתורו ומתחיל מעצמו מיד אחריו."
+    },
+    "alerts": {
+      "eyebrow": "התראות · דף עזר",
+      "title": "התראה במסך מלא, מאוטומציה.",
+      "intro": "לכל מסך יש את הפעולה {action}. היא מניחה כרטיס מעל הכול, מעירה את המסך ושומרת את התאורה האחורית בבהירות רגילה עד שמישהו מקיש על הכפתור או שהזמן הקצוב נגמר. Home Assistant עצמו לא מציג הסבר או רשימות נפתחות לפעולות ESPHome; כל מה שאפשר למלא מופיע כאן.",
+      "loading": "דף העזר עדיין נטען; רגע אחד.",
+      "example": {
+        "title": "מישהו בדלת",
+        "subtitle": "דלת 3, אחורית",
+        "button": "בא"
+      },
+      "sections": "מקטעים",
+      "nav": {
+        "try": "נסו",
+        "screens": "המסכים שלכם",
+        "howto": "באוטומציה",
+        "all": "כל המסכים",
+        "fields": "השדות",
+        "icons": "סמלים",
+        "colors": "צבעים",
+        "behaviour": "התנהגות",
+        "events": "אירועים",
+        "tips": "טיפים",
+        "one": "מסך אחד",
+        "choice": "שני כפתורים"
+      },
+      "try": {
+        "text": "שלחו התראה אחת עכשיו, עם אותם שדות שאוטומציה שולחת. המסך מציג את הכרטיס, ועם הבהוב פועל, מהבהב בתאורה האחורית.",
+        "screen": "מסך",
+        "all": "כל המסכים ({ready} מוכנים)",
+        "not_ready": "{name} · לא מוכן",
+        "title": "כותרת",
+        "subtitle": "כותרת משנה",
+        "icon": "סמל",
+        "color": "צבע",
+        "button": "טקסט הכפתור",
+        "timeout": "זמן קצוב (שניות, 0 ממתין לכפתור)",
+        "flash": "הבהוב התאורה האחורית",
+        "flash_hint": "ארבע פעמים כשההתראה מגיעה.",
+        "sending": "שולח…",
+        "send": "שליחת התראה",
+        "sent_all": "נשלח למסך {n}. | נשלח ל-{n} מסכים.",
+        "sent_to": "נשלח אל {name}.",
+        "sent_one": "נשלח למסך.",
+        "skipped": "אחד דולג (לא מקוון או קושחה ישנה). | {n} דולגו (לא מקוונים או קושחה ישנה).",
+        "left_empty": "נשארו ריקים: {fields}.",
+        "nothing": "אף מסך לא יכול היה להציג אותה: בדקו שמסך מקוון עם קושחה {version} ומעלה."
+      },
+      "white": "לבן (ברירת מחדל)",
+      "screens": {
+        "text": "לכל מסך יש פעולה משלו, עם שם המכשיר בתוכה. מקושחה {version}; עדכנו מסך ישן עם כפתור העדכון שלו תחת מסכים.",
+        "none": "עדיין לא צומד מסך. התקינו אחד דרך מסך חדש; הפעולה תופיע ברגע ש-Home Assistant יראה את המסך.",
+        "ready": "● קושחה {version}",
+        "update": "נדרש עדכון · קושחה {version}",
+        "unknown": "שם המכשיר לא ידוע · עדכנו את המסך",
+        "show": "הצגת התראה",
+        "dismiss": "סגירת התראה"
+      },
+      "howto": {
+        "add": "{add} וחפשו {esphome}. בחרו את הפעולה של המסך שלכם: Home Assistant קורא לה \"Performs the action show_alert of the node {device}\".",
+        "add_bold": "הוספת פעולה",
+        "device": "שם מכשיר",
+        "fields": "{bold} Home Assistant מבקש את כל השבעה; השאירו ריק את מה שלא בשימוש ({empty}, {zero}, כבוי).",
+        "fields_bold": "מלאו את השדות.",
+        "yaml": "מעדיפים YAML? בחרו {edit} על הפעולה והדביקו את הדוגמה שלמטה.",
+        "example_for": "דוגמה עבור",
+        "no_screen": "מסך (עוד לא צומד)"
+      },
+      "edit_yaml": "עריכה ב-YAML",
+      "copy_yaml": "העתקת YAML",
+      "all": {
+        "title": "כל המסכים בבת אחת",
+        "text": "הפעילו את האירוע {show} עם אותם שדות, ו-Tessera יעביר את ההתראה לכל מסך מקוון, כולל מסכים שתוסיפו בהמשך. {dismiss} מנקה אותה בכל מקום. באוטומציה, הוסיפו את הפעולה {event} או הדביקו את הדוגמה תחת {edit}. השמיטו את השדות שלא בשימוש. Tessera צריך לפעול לשם כך.",
+        "event": "הפעלת אירוע ידני"
+      },
+      "fields": {
+        "text": "הטקסט חופשי; המגבלה בבתים, ואות עם סימן ניקוד או אות עברית נספרת כשניים. מה שלא נכנס מקבל שלוש נקודות (כותרת) או נשמט (כותרת משנה).",
+        "field": "שדה",
+        "type": "סוג",
+        "what": "מה הוא עושה",
+        "example": "דוגמה",
+        "limit": "מגבלה",
+        "types": {
+          "string": "טקסט",
+          "int": "מספר",
+          "bool": "פועל / כבוי",
+          "entity": "ישות"
+        },
+        "bytes": "{limits} בתים",
+        "seconds": "0 עד 86400 שנ׳",
+        "camera_limit": "כל מסך מלבד ה-CYD, קושחה 0.2.57+",
+        "screen_limit": "אפליקציה 0.2.133+"
+      },
+      "icons": {
+        "text": "מלאו את השם ב-{field}, למשל {example}. גם {mdi} ונקודת הקוד ההקסדצימלית ({hex}) עובדים. רק הסמלים האלה כלולים בקושחה; כל שם אחר מציג את משולש האזהרה. הקישו על סמל כדי להעתיק את שמו.",
+        "handy": "שימושי להתראות",
+        "search_label": "חיפוש סמל",
+        "search": "חיפוש לפי שם או תיאור…",
+        "extra": "זמינים גם: סמלי שליטה ומזג אוויר",
+        "copy": "העתקת {name}",
+        "none": "אין סמל עבור \"{query}\". שמות לא מוכרים מציגים את משולש האזהרה ({fallback})."
+      },
+      "colors": {
+        "text": "מלאו את השם ב-{field}. אלה גווני הפסטל של האריחים, עם טקסט כהה. ריק או לא מוכר נותן את הכרטיס הלבן. הקישו להעתקה."
+      },
+      "behaviour": {
+        "wakes": "{bold} התראה מעירה מיד מסך מעומעם או כבוי ומופיעה מעל כל עמוד, כל כרטיס אור פתוח ושכבת ההמתנה.",
+        "wakes_bold": "מעירה את המסך.",
+        "on": "{bold} כל עוד הכרטיס מוצג, התאורה האחורית נשארת בבהירות רגילה. שעות ההמתנה והלילה ממתינות. אחרי הכפתור, זמן ההמתנה הרגיל מתחיל מחדש.",
+        "on_bold": "דולק עד הכפתור.",
+        "timeout": "{bold} {zero} ממתין לכפתור, כמה זמן שזה ייקח. עם {minute} הכרטיס נעלם אחרי דקה, אבל הכפתור סוגר אותו מוקדם יותר.",
+        "timeout_bold": "זמן קצוב.",
+        "blinking": "{bold} {flash} מהבהב בתאורה האחורית ארבע פעמים כשההתראה מגיעה (כשנייה) ומשאיר את המסך דולק אחר כך.",
+        "blinking_bold": "הבהוב.",
+        "replacing": "{bold} התראה חדשה מחליפה את הנוכחית; אין ערימה. ההתראה שהוחלפה מדווחת על עצמה כ-{replaced}.",
+        "replacing_bold": "החלפה.",
+        "closing": "{bold} {dismiss} מנקה את הכרטיס, למשל אם הדלת כבר פתוחה. בלי התראה, הפעולה הזו לא עושה כלום.",
+        "closing_bold": "סגירה מרחוק.",
+        "beside": "{bold} לא עושה כלום; רק הכפתור סוגר. כך הקשת השכמה לעולם לא סוגרת בטעות את ההתראה.",
+        "beside_bold": "הקשה לצד הכרטיס"
+      },
+      "events": {
+        "text": "כל סיום מפעיל את האירוע {event} עם {action}, {title}, {screen} (שם המכשיר) וה-{device_id} ש-Home Assistant מוסיף. גלוי תחת הגדרות ← כלים ← אירועים.",
+        "when": "מתי",
+        "wait": "המתנה עד שמישהו לוחץ על הכפתור"
+      },
+      "tips": {
+        "color": "השתמשו ב{bold}: כתום לדלת, אדום לעשן או מים, ירוק ל\"בוצע\". הטקסט תמיד נשאר כהה וקריא.",
+        "color_bold": "צבע לכל סוג התראה",
+        "short": "שמרו את הכותרת {bold}; מסך מציג כעשרים תווים בשורה אחת ומסיים כותרת ארוכה יותר בשלוש נקודות. שימו פרטים בכותרת המשנה.",
+        "short_bold": "קצרה",
+        "button": "{bold} הופך את ההתראה לשאלה: \"בא\", \"ראיתי\", \"כיבוי\". האירוע אז מספר לכם מי הגיב.",
+        "button_bold": "טקסט כפתור מותאם",
+        "resolve": "להתראה שנפתרת מעצמה (הדלת נפתחת, הכביסה מוצאת) סגרו אותה באותה אוטומציה עם {dismiss}.",
+        "every": "כל המסכים? הפעילו את {event} פעם אחת (ראו כל המסכים בבת אחת). המסכים עדיין פועלים באופן עצמאי וכל אחד מדווח עם {screen} משלו.",
+        "claude": "מעדיפים {bold} לגבי האוטומציה? התקינו את מיומנות Tessera תחת הגדרות ← Claude.",
+        "claude_bold": "לשאול את Claude"
+      },
+      "wait_yaml": {
+        "comment": "פעמון דלת: הצג את ההתראה והמתן עד שמישהו ילחץ על הכפתור.",
+        "message": "מישהו מגיע לדלת."
+      },
+      "one": {
+        "title": "מסך אחד, עם מצלמה או פעולת כפתור",
+        "text": "הוסיפו {screen} לאותו אירוע ורק המסך הזה יקבל את ההתראה. כך מסך בודד מציג תמונת {camera} או מריץ {action} מהכפתור שלו: לפעולה של המסך עצמו אין שדות לאלה. אחרי {screen} בא אחד מהערכים ברשימה שלמטה.",
+        "more": "כמה מסכים? תנו רשימה, כמו {list}. גם חדר עובד ומגיע לכל מסך בו. שם שלא מתאים לאף מסך לא שולח כלום; היומן של Tessera Screen Manager מציין אז את המסכים שהוא מכיר.",
+        "value": "אחרי screen:",
+        "name": "שם ב-Home Assistant",
+        "room": "חדר",
+        "picture": "תמונת מצלמה",
+        "picture_yes": "כן",
+        "picture_no": "לא, ההתראה מגיעה בלעדיה",
+        "none": "עדיין לא צומדו מסכים. ברגע שמסך יצומד, מה למלא עבורו יופיע כאן."
+      },
+      "choice": {
+        "title": "שני כפתורים וצבעי כפתורים",
+        "text": "הוסיפו {second} לכפתור שני משמאל לראשון, כדי שמי שעומד מול המסך יוכל לבחור, כמו לא עכשיו ופתיחה. {first_color} ו-{second_color} נותנים לכפתור צבע משלו, ירוק לכן ואדום ללא. איזו תשובה באיזה צד זו בחירה שלכם: הכפתור הראשון תמיד מימין.",
+        "event": "דרך האירוע כל אחד מהשדות האלה הוא רשות, ו-{second_action} עם {second_data} מריץ פעולה מהכפתור השני, כמו ש-{action} עושה מהראשון. מסך עם קושחה ישנה מ-{version} מציג את ההתראה עם הכפתור האחד שלה.",
+        "direct": "קוראים למסך ישירות? הפעולה שלו {choice} מקבלת את השדות של show_alert ועוד שלושת אלה; הכפתור השני מסיים את ההתראה עם {ending}."
+      }
+    },
+    "override": {
+      "eyebrow": "מתקדם · דריסה מקומית",
+      "title": "YAML דריסה",
+      "title_named": "YAML דריסה · {name}",
+      "intro": "הקובץ הקטן הזה שלכם. הוא נטען אחרי חבילת המסך המשותפת ונשאר במקומו כש-Tessera מתעדכן. שנו כאן פרטים ייחודיים לחומרה, כמו דגם תצוגה.",
+      "safe_title": "מה בטוח לשנות?",
+      "safe_text": "תצוגה, מסך מגע, substitutions, פינים ופרטי מכשיר אחרים. שם, Wi-Fi, API, OTA וקישורי חבילות נשארים בניהול.",
+      "active": "פעיל",
+      "ready": "מוכן לצירוף",
+      "editor_label": "YAML דריסה מקומית",
+      "use_example": "שימוש בדוגמה",
+      "clear": "ניקוי",
+      "characters": "תו אחד | {n} תווים",
+      "lines": "שורה אחת | {n} שורות",
+      "save_check": "שמירה ובדיקה",
+      "save": "שמירת דריסה",
+      "no_profile": "לא נמצא פרופיל ESPHome למסך הזה.",
+      "attached": "שינויים כאן חלים בבנייה הבאה.",
+      "not_attached": "שמרו פעם אחת כדי לצרף את הקובץ הזה לפרופיל.",
+      "saving": "בודק ושומר…",
+      "saved": "נשמר. הדריסה נשמרת בזמן עדכוני קושחה.",
+      "saved_toast": "YAML הדריסה נשמר.",
+      "checking": "נשמר. ESPHome בודק את הפרופיל המלא…",
+      "checking_profile": "ESPHome בודק את הפרופיל…",
+      "checking_stage": "ESPHome בודק את הפרופיל… {stage}",
+      "valid": "הפרופיל המלא תקין. בטוח לבנות ולהתקין.",
+      "rejected": "ESPHome דחה את הפרופיל המלא. ראו קושחה ו-USB ליומן המלא.",
+      "confirm_example": "להחליף את הטקסט הנוכחי בדוגמה?",
+      "example_loaded": "הדוגמה נטענה. שמרו אותה כשתהיו מוכנים.",
+      "confirm_clear": "לנקות את הדריסה המקומית?",
+      "cleared": "הדריסה תהיה ריקה אחרי השמירה.",
+      "checking_waits": "ממתין לבנייה שרצה עכשיו, ואז בודק…"
+    },
+    "mockup": {
+      "home": "בית",
+      "unknown": "לא ידוע",
+      "calendar_free": "פנוי"
+    },
+    "pages": {
+      "mode": "מצב עורך",
+      "simple": "פשוט",
+      "advanced": "מתקדם",
+      "redo": "ביצוע מחדש",
+      "title": "כותרת העמוד",
+      "title_hint": "השאירו ריק כדי להשתמש בכותרת המסך.",
+      "is_home": "דף הבית",
+      "set_home": "הגדרה כבית",
+      "drag_home": "דף הבית. גררו לעמוד אחר כדי להזיז את הבית.",
+      "include_navigation": "הצגה בנקודות העמודים ובניווט בהחלקה",
+      "migration_dropped": "לא ניתן היה להעביר {count} אריחים: {names}. הפריסה המקורית נשמרת ב-screens.v1.backup.json.",
+      "dismiss_migration": "סגירת ההערה הזו",
+      "start_fresh": "התחלה מחדש במסך הזה",
+      "start_fresh_confirm": "להתחיל עם עמוד ריק אחד במסך הזה? הפריסה המקורית נשארת בגיבוי ההעברה. מסכים אחרים לא משתנים.",
+      "offline_notice": "ממתין שהמסך יתחבר מחדש. העריכה משתמשת ביכולות האחרונות שלו שאומתו.",
+      "include_navigation_hint": "כשכבוי, קישורים ישירים עדיין פותחים את העמוד הזה. חזרה מופיע בסרגל התחתון, או מחליף את הבית כשהסרגל מוסתר.",
+      "dock_picture": "תמונת העמוד",
+      "in_dock": "ב-Dock",
+      "in_dock_hint": "ה-Dock נפתח בהחלקה למעלה מהקצה התחתון ומציג כל עמוד שאפשר לקפוץ אליו.",
+      "dock_mode_picture": "תמונה",
+      "dock_mode_icon": "סמל",
+      "dock_mode_hidden": "מוסתר",
+      "dock_hint_picture": "ה-Dock מציג תמונה קטנה של העמוד הזה.",
+      "dock_hint_icon": "ה-Dock מציג את הסמל הזה לעמוד במקום התמונה שלו.",
+      "dock_hint_hidden": "העמוד נשאר בהחלקות ובנקודות העמודים; רק ה-Dock משמיט אותו.",
+      "wizard_home": "מקש בית",
+      "home_control": "הצגת פקד בית בעמוד הזה",
+      "clock_control": "שעה",
+      "edit_topbar": "עריכת הסרגל העליון של העמוד הזה",
+      "order": "סדר העמודים",
+      "order_hint": "פקודות הצגת עמוד לפי מספר עוקבות אחרי הסדר הזה. קישורי עמודים לפי שם שומרים על היעד שלהם.",
+      "map_position": "מיקום במפה",
+      "left": "הזזה שמאלה",
+      "up": "הזזה למעלה",
+      "down": "הזזה למטה",
+      "right": "הזזה ימינה",
+      "routes": "חיבורי עמודים",
+      "no_routes": "אין אריחי ניווט שמקשרים אל העמוד הזה או ממנו.",
+      "edit_page": "עריכת עמוד",
+      "copy_conflict": "עותק מלא ישכפל ישויות שכבר במסך הזה. אפשר ליצור עמוד ריק עם אותו סרגל עליון.",
+      "duplicate": "שכפול עמוד",
+      "empty_copy": "עמוד ריק חדש עם הסרגל העליון הזה",
+      "position_occupied": "כבר יש עמוד במיקום הזה במפה.",
+      "map_hint": "הזיזו עמודים כדי לארגן את המפה הזו. סדר העמודים נשאר אותו דבר.",
+      "arrange": "סידור מהבית",
+      "zoom_out": "הקטנה",
+      "zoom_in": "הגדלה",
+      "zoom": "גודל העמודים",
+      "zoom_reset": "חזרה ל-100%",
+      "choose_destination": "בחרו את עמוד היעד.",
+      "move_map": "הזזת {name} במפה",
+      "change_destination": "שינוי יעד של אריח ניווט ב-{name}",
+      "deeplink": "קישור עומק",
+      "page_settings": "הגדרות עמוד",
+      "back_map": "חזרה למפה",
+      "wait_grid": "חברו את המסך הזה כדי לטעון את הרשת המאומתת שלו לפני העריכה.",
+      "update_notice": "עדכנו את המסך כדי להשתמש בסרגל הכותרת ובפריסה החדשים",
+      "conflict": "עורך אחר שמר שינויים. טענו את הגרסה השמורה כדי לבטל את הטיוטה שלכם, או שמרו על העיצוב שלכם והחליפו את הפריסה השמורה.",
+      "reload_saved": "טעינת הגרסה השמורה",
+      "keep_mine": "שמירה על העיצוב שלי ושמירה",
+      "shared_bar": "המסך הזה עדיין משתמש בפריטי סרגל עליון משותפים. שינויים בפריטים האלה חלים על כל עמוד עד שהקושחה תתעדכן.",
+      "unreachable": "מהבית אין דרך אל {pages}. הוסיפו אריח ניווט או כללו את העמוד בניווט העמודים.",
+      "no_way_home": "מ-{pages} אין דרך חזרה לבית. הוסיפו אריח חזרה או הפעילו את פקד הבית.",
+      "navigation": "ניווט עמודים",
+      "previous": "העמוד הקודם",
+      "next": "העמוד הבא",
+      "go_home": "לבית",
+      "try_navigation": "ניסיון ניווט",
+      "preview_hint": "תצוגה מקדימה בלבד. קישורי עמודים עובדים כאן; פקדי ישויות לא מפעילים מכשירים.",
+      "swipe_previous": "החלקה לעמוד הקודם",
+      "swipe_next": "החלקה לעמוד הבא",
+      "copy_bar": "העתקת סרגל עליון",
+      "copy_from": "מעמוד",
+      "copy_to": "לעמודים שנבחרו",
+      "copy_content": "העתקה",
+      "copy_items": "פריטים בלבד, לשמור כותרות ופקדי בית",
+      "copy_whole": "כל הסרגל, כולל כותרת ופקד בית",
+      "copy_apply": "העתקה לעמודים שנבחרו",
+      "history_label": "היסטוריית מקליט, {hours} שעות",
+      "history_loading": "טוען היסטוריה…",
+      "history_empty": "אין היסטוריה מוקלטת",
+      "grid_changed": "רשת המסך השתנתה. בדקו את מיקומי האריחים לפני שמירה או שליחה.",
+      "grid_review": "בדיקת התאמת הרשת",
+      "grid_review_hint": "השוו את המיקומים השמורים משמאל למיקומים המוצעים מימין. אריחים שכבר לא נכנסים עוברים לעמוד חדש מיד אחרי העמוד שלהם. שום דבר לא נשלח עד שתשמרו.",
+      "grid_accept": "שימוש במיקומים האלה",
+      "selected_full": "העמוד הזה מלא. בחרו תא ריק בעמוד אחר.",
+      "choose_page": "עמוד",
+      "all_connections": "כל החיבורים",
+      "migration_adjusted": "הגדרות ישנות לא תקינות הוחלפו בברירות מחדל: {fields}. המקוריות נשארות בגיבוי ההעברה.",
+      "view_row": "שורה",
+      "view_map": "מפה",
+      "preview": "תצוגה מקדימה",
+      "page_menu": "עמוד {page}: עוד",
+      "home_chip": "בית",
+      "detail_chip": "דרך אריח",
+      "cells_used": "תאים בשימוש",
+      "tiles_go": "אריח אחד הולך איתו | {n} אריחים הולכים איתו",
+      "connections": "חיבורים",
+      "connections_selected": "נבחרו",
+      "sections": {
+        "title": "כותרת",
+        "navigation": "ניווט"
+      },
+      "home_hint": "כפתור הבית והחלקה למעלה מובילים לכאן.",
+      "bar_entities": "גם מימין",
+      "actions_blocked": "Home Assistant עדיין לא מאפשר למסך הזה לבצע פעולות, כך שהקשה על אריח לא עושה כלום.",
+      "allow_actions": "לאפשר פעולות",
+      "actions_allowed": "{name} יכול עכשיו לשלוט במכשירים שלכם.",
+      "part_page": "העמוד: כותרת וניווט",
+      "part_page_hint": "כותרת, דף בית ואיך מגיעים לכאן",
+      "home_control_hint": "שם את כפתור הבית בצד שמאל של הסרגל העליון של העמוד הזה. הוא מוביל לדף הבית."
+    },
+    "feedback": {
+      "question": "המסך שלכם עובד כמו שציפיתם?",
+      "intro": "עזרו לנו לשפר את הדגם הזה. התשובה שלכם ודגם המסך משותפים עם Tessera, בלי חשבון ובלי הגדרות ה-Home Assistant שלכם.",
+      "yes": "כן, עובד טוב",
+      "no": "לא בדיוק",
+      "later": "אחר כך",
+      "never": "לא לשאול שוב",
+      "add_something": "הוספת משהו",
+      "issues_question": "מה מפריע?",
+      "issues": {
+        "display": "מסך",
+        "touch": "מגע",
+        "connection": "חיבור",
+        "installation": "התקנה",
+        "other": "אחר"
+      },
+      "comment_label": "עוד משהו? (רשות)",
+      "comment_hint": "נא לא לכלול פרטים אישיים, יומנים, סיסמאות ומפתחות API.",
+      "report_title": "רוצים שזה יתוקן?",
+      "report_text": "פתחו בעיה ב-GitHub. הלוח שלכם, הגרסאות ומה שסיפרתם לנו כבר ממולאים. הוסיפו יומן ונוכל לבדוק, ולשאול אתכם על זה.",
+      "report_open": "פתיחת בעיה ב-GitHub",
+      "add_details": "הוספת פרטים",
+      "done": "סיום",
+      "settings_title": "משוב",
+      "shared": {
+        "working": "שיתפתם: עובד טוב",
+        "not_working": "שיתפתם: לא בדיוק"
+      },
+      "none_yet": "עוד לא שיתפתם תשובה למסך הזה.",
+      "none_now": "שום דבר מהמסך הזה לא משותף כרגע.",
+      "share": "שיתוף תשובה",
+      "change": "שינוי התשובה",
+      "delete": "מחיקת התשובה ששיתפתי",
+      "retry": "ניסיון חוזר",
+      "status": {
+        "sending": "שולח…",
+        "received": "תודה, התשובה שלכם התקבלה.",
+        "waiting": "עוד לא נשלח; ננסה שוב מאוחר יותר.",
+        "failed": "לא נשלח: לא הייתה גישה ל-Tessera במשך יום.",
+        "deleting": "עוד לא נמחק; ננסה שוב מאוחר יותר.",
+        "delete_failed": "עוד לא נמחק: לא הייתה גישה ל-Tessera במשך יום.",
+        "deleted": "התשובה ששיתפתם נמחקה.",
+        "conflict": "ל-Tessera יש תשובה אחרת למסך הזה. שנו את התשובה שלכם כדי לשתף אותה שוב.",
+        "rejected": "Tessera לא קיבל את התשובה הזו."
+      },
+      "what_title": "מה משותף?",
+      "what": {
+        "model": "דגם המסך: {model}",
+        "answer": "התשובה שלכם, הבעיות שבחרתם וההערה שלכם",
+        "firmware": "גרסת הקושחה של המסך: {version}",
+        "addon": "גרסת Tessera: {version}",
+        "nothing_else": "שום דבר אחר: לא שם, חשבון, ישויות, יומנים או הגדרות Home Assistant. כל מסך משתף תחת מפתח אקראי משלו."
+      },
+      "privacy": "פרטיות"
+    },
+    "webflash": {
+      "target": "התקנה מהדפדפן הזה (Chrome או Edge)",
+      "hint": "חברו את המסך למחשב הזה עם כבל נתונים USB. Tessera בונה את הקושחה, ואז הדף הזה מעלה אותה למסך, ב-Chrome או Edge. אחרי זה, העדכונים עוברים דרך Wi-Fi.",
+      "firmware_hint": "חברו את המסך למחשב הזה עם כבל נתונים USB. Tessera בונה את הקושחה, ואז הדף הזה מעלה אותה למסך, ב-Chrome או Edge. המסך שומר את ההגדרות וכיול המגע שלו. זה גם מציל מסך שממשיך לעלות מחדש ולא מגיע לרשת.",
+      "go": "חיבור והתקנה",
+      "building": "הבנייה יכולה להימשך 20 דקות ויותר במכונת Home Assistant כמו Raspberry Pi, במיוחד בפעם הראשונה. זה רגיל. השאירו את הלשונית הזו פתוחה ואת המסך מחובר: הדף הזה מתקין את הקושחה ברגע שהיא מוכנה.",
+      "keep_open": "השאירו את הלשונית פתוחה ואת כבל ה-USB מחובר עד הסיום.",
+      "unavailable": {
+        "insecure": "התקנה מהדפדפן דורשת ש-Home Assistant ייפתח דרך https, למשל דרך כתובת ה-Home Assistant Cloud שלכם, ב-Chrome או Edge. הדף הזה נפתח דרך http רגיל. בחרו הורדה במקום, או פתחו את Home Assistant דרך https.",
+        "browser": "הדפדפן הזה לא יכול לגשת ליציאות USB. השתמשו ב-Chrome או Edge במחשב, או בחרו הורדה במקום."
+      },
+      "phase": {
+        "picking": "בחרו את יציאת ה-USB של המסך בחלון שהדפדפן מציג.",
+        "connecting": "מתחבר ללוח…",
+        "waiting": "מחובר ללוח ({chip}). הקושחה תעלה ברגע שתיבנה.",
+        "downloading": "מביא את הקושחה מ-Tessera…",
+        "erasing": "מוחק את זיכרון הלוח…",
+        "writing": "מתקין… {percent}%",
+        "restarting": "מפעיל מחדש את המסך…",
+        "done": "הותקן. המסך מופעל מחדש."
+      },
+      "errors": {
+        "no_port": "לא נבחרה יציאה. אם המסך לא היה ברשימה:",
+        "blocked": "הדפדפן לא מאפשר לדף הזה להשתמש ביציאות USB. בדקו את הרשאות האתר בדפדפן, או בחרו הורדה במקום.",
+        "busy": "יציאת המסך בשימוש של תוכנה או לשונית אחרת, כמו צג טורי או ESPHome Web. סגרו אותה ונסו שוב.",
+        "connect": "הלוח לא ענה. החזיקו את כפתור BOOT בלוח בזמן שאתם בוחרים את היציאה, עד שההתקנה מתחילה, ונסו שוב. ניתוק וחיבור הכבל יכולים לעזור גם.",
+        "wrong_chip": "בלוח שעל הכבל יש שבב {found}, אבל הקושחה של המסך הזה מיועדת ל-{expected}. חברו את המסך הנכון, או בחרו את הלוח שלו.",
+        "wrong_image": "הקושחה ש-Tessera בנה מיועדת ל-{expected}, אבל בלוח שעל הכבל יש {found}. שום דבר לא נכתב.",
+        "disconnected": "המסך נותק. חברו אותו שוב ונסו שוב.",
+        "download": "לא ניתן היה להביא את הקושחה מ-Tessera: {error}",
+        "failed": "ההתקנה לא עבדה: {error}"
+      },
+      "hints": {
+        "computer": "חברו את המסך למחשב הזה, זה שהדפדפן הזה רץ עליו.",
+        "power": "בדקו שללוח יש חשמל: לרובם יש נורית קטנה.",
+        "cable": "השתמשו בכבל USB שמעביר נתונים. חלק מהכבלים רק טוענים.",
+        "driver": "התקינו את הדרייבר לשבב ה-USB של הלוח אם המחשב שלכם צריך (CP210x, CH340 או CH9102)."
+      },
+      "group_ha": "מחובר למכונת ה-Home Assistant",
+      "group_here": "מחובר למחשב הזה",
+      "group_wifi": "דרך Wi-Fi"
+    },
+    "preview": {
+      "type": "סוג מסך חדש",
+      "physical": "מסך פיזי",
+      "virtual": "תצוגה מקדימה וירטואלית",
+      "intro": "עצבו מסך עם ישויות Home Assistant בלי לצמד חומרה. תצוגות מקדימות נשמרות בדפדפן הזה. בתצוגה המקדימה של הקושחה, הקשות מגיעות ל-Home Assistant רק כשמפעילים זאת.",
+      "profile": "לוח / פרופיל",
+      "design_only": "פרופיל תצוגה מקדימה בלבד. זה לא מוסיף תמיכת קושחה פיזית ללוח הזה.",
+      "override": "דריסת רזולוציה או רשת",
+      "width": "רוחב (פיקסלים)",
+      "height": "גובה (פיקסלים)",
+      "columns": "עמודות",
+      "rows": "שורות",
+      "name": "שם התצוגה המקדימה",
+      "name_placeholder": "תצוגה מקדימה של Waveshare 4B",
+      "create": "יצירת מכשיר וירטואלי",
+      "created": "המכשיר הווירטואלי \"{name}\" נוצר.",
+      "invalid_shape": "בחרו שם, פרופיל נתמך, רשת של 1–8 עמודות/שורות ומשטח של 160–2560 פיקסלים.",
+      "canvas": "תצוגה מקדימה של קושחת LVGL",
+      "packet_error": "הקושחה דחתה חבילת תצוגה מקדימה: {message}",
+      "stopped": "התצוגה המקדימה של הקושחה נעצרה: {message}",
+      "action_error": "פקודת Home Assistant נכשלה: {message}",
+      "remove": "התצוגה המקדימה והפריסה השמורה שלה בדפדפן הזה.",
+      "save": "שמירת תצוגה מקדימה",
+      "saved": "נשמר בדפדפן הזה",
+      "hint": "הקושחה של המסך עצמו, משורטטת מהפריסה שאתם עורכים. הקישו, החזיקו והחליקו כמו במסך. שינויי פריסה לא נשמרים.",
+      "control": "הקשות שולטות במכשירים",
+      "control_hint": "כשפועל, הקשות יכולות לשלוט במכשירי Home Assistant ולשנות את הגדרות הלוח הזה. כשכבוי, הגדרות החומרה לקריאה בלבד ושינויים אחרים נשארים בתצוגה המקדימה.",
+      "skipped": "לא ניתן היה לטעון את מסך התצוגה המקדימה {names} והוא הושמט.",
+      "not_kept": "הדפדפן הזה לא הצליח לשמור את מסך התצוגה המקדימה: האחסון שלו מלא או חסום."
+    },
+    "inspector": {
+      "kind": {
+        "tile": "אריח",
+        "page": "עמוד",
+        "bar": "סרגל עליון"
+      },
+      "back": "חזרה אל {name}"
+    },
+    "confirm": {
+      "leave_question": "יש לכם שינויים שלא נשמרו. לעבור לסקירה בכל זאת?",
+      "discard_open": "ביטול ופתיחה",
+      "discard_leave": "ביטול ויציאה",
+      "replace_layout": "החלפת פריסה",
+      "import": "ייבוא",
+      "start_fresh": "התחלה מחדש",
+      "calibrate": "התחלת כיול",
+      "add_anyway": "הוספה בכל זאת",
+      "use_example": "החלפה בדוגמה",
+      "clear_override": "ניקוי הדריסה"
+    },
+    "undo": {
+      "undo": "ביטול: {what}",
+      "redo": "ביצוע מחדש: {what}",
+      "undone": "בוטל: {what}",
+      "redone": "בוצע מחדש: {what}",
+      "a_tile": "אריח",
+      "what": {
+        "grid": "הרשת שונתה ל-{grid}",
+        "page_added": "עמוד {page} נוסף",
+        "page_copied": "עמוד {page} נוסף כעותק",
+        "page_removed": "עמוד {page} הוסר",
+        "page_moved": "העמוד הוזז למקום {page}",
+        "pages_moved": "סדר העמודים שונה",
+        "tile_added": "{name} נוסף",
+        "tiles_added": "אריח אחד נוסף | {n} אריחים נוספו",
+        "tile_removed": "{name} הוסר",
+        "tiles_removed": "אריח אחד הוסר | {n} אריחים הוסרו",
+        "tile_moved": "{name} הוזז",
+        "tile_moved_page": "{name} הוזז לעמוד {page}",
+        "tiles_moved": "אריח אחד הוזז | {n} אריחים הוזזו",
+        "tile_link": "{name} פותח עכשיו את עמוד {page}",
+        "tile_renamed": "שם {name} שונה",
+        "tile_look": "התצוגה של {name} שונתה",
+        "tile_resized": "הגודל של {name} שונה",
+        "tile_icon": "הסמל של {name} שונה",
+        "tile_color": "הרקע של {name} שונה",
+        "tile_tap": "ההקשה של {name} שונתה",
+        "tile_option": "ההגדרות של {name} שונו",
+        "tiles_changed": "אריח אחד שונה | {n} אריחים שונו",
+        "screen_title": "כותרת המסך שונתה",
+        "page_title": "כותרת עמוד {page} שונתה",
+        "home_page": "עמוד {page} הפך לדף הבית",
+        "page_buttons": "כפתורי העמודים של עמוד {page} שונו",
+        "home_key": "פקד הבית בעמוד {page} שונה",
+        "top_bar": "הסרגל העליון של עמוד {page} שונה",
+        "top_bars": "הסרגלים העליונים שונו",
+        "map_moved": "עמוד {page} הוזז במפה",
+        "map_arranged": "המפה סודרה מהבית",
+        "stood_up": "המסך הועבר לאורך",
+        "laid_down": "המסך הועבר לרוחב",
+        "layout_copied": "הפריסה הועתקה מ-{name}",
+        "layout_imported": "הפריסה יובאה",
+        "changed": "הפריסה שונתה",
+        "restored": "שינויים שלא נשמרו שוחזרו",
+        "taken_over": "השינויים מהלשונית האחרת נלקחו"
+      }
+    },
+    "draft": {
+      "kept": "שינויים שלא נשמרו מ-{time}",
+      "kept_hint": "נשמרו בדפדפן הזה, עוד לא במסך.",
+      "restore": "שחזור",
+      "discard": "ביטול"
+    },
+    "tabs": {
+      "elsewhere": "המסך הזה נערך בלשונית אחרת",
+      "elsewhere_hint": "השינויים שלה עוד לא נשמרו.",
+      "take_over": "להמשיך כאן",
+      "keep_mine": "לשמור את שלי"
+    },
+    "connection": {
+      "lost": "אין גישה ל-ESP Screen Manager.",
+      "lost_hint": "השינויים שלכם נשארים כאן. מנסה שוב…",
+      "restored": "החיבור חזר"
+    },
+    "naming": {
+      "rename": "שינוי שם",
+      "reset": "חזרה אל {name}"
+    },
+    "phone": {
+      "menu": "תפריט",
+      "screens": "מסכים",
+      "add_tile": "הוספת אריח",
+      "add_to_cell": "נכנס למקום {cell} ב-{page}",
+      "add_to_page": "נכנס למקום הפנוי הראשון ב-{page}",
+      "added": "{name} נוסף",
+      "page_of": "{n} מתוך {total}",
+      "pages": "עמודים",
+      "page_tiles": "אריח {n} | {n} אריחים",
+      "pages_order": "עמודים וסדר",
+      "hint": "הקישו על אריח כדי לשנות אותו.",
+      "hint_pages": "הקישו על אריח כדי לשנות אותו. החליקו לעמוד הבא.",
+      "on_screen": "הכול נמצא במסך",
+      "not_sent": "שונה, עוד לא נשלח",
+      "more_settings": "עוד הגדרות",
+      "more_settings_hint": "תצוגה, שורה שנייה ומה הקשה עושה",
+      "move": "הזזה",
+      "full_editor": "עורך מלא",
+      "simple_editor": "תצוגה פשוטה"
+    },
+    "donate": {
+      "title": "תמכו ב-Tessera",
+      "body": "Tessera חינמי ויישאר חינמי. אני מוביל את הפיתוח והתחזוקה, עם תרומות מהקהילה. התמיכה שלכם נותנת לי יותר זמן לבנות, לסקור ולבדוק שיפורים. תרומה חודשית או קפה חד-פעמי יתקבלו בברכה.",
+      "monthly": "תמיכה חודשית",
+      "once": "או קנו לי קפה פעם אחת",
+      "later": "אולי אחר כך",
+      "donated": "כבר תרמתי",
+      "thanks": "תודה! זה לא יישאל שוב."
+    },
+    "plugins": {
+      "title": "תוספים",
+      "intro": "תוספות למסכים שלכם: אריחים לשים בעמוד, עוד משהו שכל המסך יכול לעשות, או חומרה על הלוח. תוסף נבנה לתוך קושחת המסך, כך שאתם בוחרים לכל מסך אילו תוספים הוא מקבל.",
+      "search": "חיפוש לפי שם, יוצר או מה הוא עושה",
+      "filter": "הצגה",
+      "from_tessera": "מ-Tessera",
+      "by": "מאת {maker}",
+      "label": {
+        "tessera": "מ-Tessera",
+        "community": "קהילה",
+        "test": "בדיקה"
+      },
+      "state": {
+        "building": "בונה…",
+        "installed": "מותקן",
+        "update": "עדכון {version}",
+        "test_on": "בדיקה ב-{name}",
+        "updates": "עדכון במסך {n} | עדכון ב-{n} מסכים",
+        "on_screens": "במסך {n} | ב-{n} מסכים",
+        "fits_none": "לא מתאים לאף אחד מהמסכים שלכם",
+        "failed": "הבנייה נכשלה",
+        "not_running": "לא רץ במסך",
+        "queued": "ממתין לתורו"
+      },
+      "source": {
+        "link": "מקישור",
+        "branch": "בדיקה מענף",
+        "folder": "בדיקה מתיקייה"
+      },
+      "misfit_short": {
+        "board": "לא ללוח הזה",
+        "psram": "צריך PSRAM",
+        "firmware": "צריך קושחה חדשה יותר",
+        "flash": "גדול מדי למסך הזה",
+        "blocked": "חסום",
+        "esphome": "צריך ESPHome חדש יותר",
+        "feature": "צריך חומרה שאין למסך הזה",
+        "needs": "צריך תוסף שלא מתאים",
+        "built_in": "מובנה בלוח הזה"
+      },
+      "misfit": {
+        "board": "התוסף הזה מיועד ללוחות אחרים משל {screen}.",
+        "psram": "התוסף הזה צריך לוח עם PSRAM, ול-{screen} אין.",
+        "firmware": "{screen} צריך עדכון קושחה לפני שיוכל לקבל את התוסף הזה.",
+        "flash": "ב-{screen} יש מקום לעוד כ-{kb} KB, והתוסף הזה גדול יותר.",
+        "blocked": "הגרסה הזו של התוסף חסומה: היא ידועה כמזיקה או שבורה.",
+        "esphome": "התוסף הזה צריך ESPHome חדש יותר ממה שהאפליקציה הזו בונה איתו.",
+        "feature": "ל-{screen} אין שום דבר שמביא את מה שהתוסף הזה צריך, ואף תוסף שמביא את זה לא מתאים.",
+        "needs": "התוסף הזה צריך תוסף אחר שלא מתאים ל-{screen}.",
+        "built_in": "הלוח של {screen} מביא את זה בעצמו, כך שהתוסף לא נחוץ שם."
+      },
+      "none_installed": "עדיין אין תוספים במסך הזה.",
+      "none_found": "אין תוסף שמתאים ל-“{query}”.",
+      "version": "גרסה {version}",
+      "stage": {
+        "beta": "בטא",
+        "example": "דוגמה"
+      },
+      "stage_hint": {
+        "beta": "בטא: זה עובד, אבל עוד מתייצב. ספרו ליוצר איך הולך.",
+        "example": "דוגמה: נוצרה כדי להראות מה תוסף יכול לעשות. נסו אותה, וקראו את הקוד שלה כדי ליצור משלכם."
+      },
+      "attribute": {
+        "cloud": "משתמש בשירות ענן",
+        "commercial": "מסחרי",
+        "ai-developed": "נוצר עם AI"
+      },
+      "test_note": "בדיקה: המסך נשאר על הקומיט שממנו נבנה, וקומיט חדש יותר מופיע כאן כעדכון. תיקייה נבנית כפי שהיא עכשיו.",
+      "remove": "הסרה מ-{screen}",
+      "building": "בונה את הקושחה עבור {screen}…",
+      "installed_on": "ב-{screen}, גרסה {version}",
+      "update": "עדכון ל-{version}",
+      "trust": {
+        "title": "אני סומך על היוצר הזה"
+      },
+      "adds": {
+        "title": "מה הוא מוסיף",
+        "tile": "אריח “{name}”",
+        "tile_sizes": "מ-{min} עד {max} בעמוד",
+        "tap": "פעולת הקשה “{name}”",
+        "tap_on": "באריחים של {domains}",
+        "card": "“{name}”, מסך משלו על הזכוכית",
+        "bar": "פריט סרגל עליון “{name}”",
+        "settings": "הגדרות",
+        "settings_where": "בדף ההגדרות של המסך וכאן, בפרטים שלו בלשונית התוספים"
+      },
+      "may": {
+        "title": "מה מותר לו",
+        "ha": "משתמש בפקודות Home Assistant האלה",
+        "ha_none": "לא מריץ פעולות Home Assistant",
+        "network": "מתחבר אל {hosts}",
+        "network_none": "לא מתחבר לשום דבר מחוץ ל-Home Assistant",
+        "read": "קורא את הישויות האלה מ-Home Assistant"
+      },
+      "warning": "תוסף רץ במסך שלכם עם גישה מלאה אליו, כולל ה-Wi-Fi שלו והפעולות שמותר לו לבצע ב-Home Assistant, והבנייה שלו רצה באפליקציה הזו, שם הוא יכול להגיע לתצורת ה-Home Assistant שלכם. הוסיפו רק תוספים מיוצרים שאתם סומכים עליהם, או קראו את הקוד קודם.",
+      "room": {
+        "title": "מקום ב-{screen}",
+        "small": "עוד {kb} KB: הקושחה עוברת מ-{before} ל-{after} מהמקטע שלה.",
+        "large": "{kb} KB, הרבה בתוך המקום שיש למסך הזה.",
+        "title_all": "מקום",
+        "per_screen": "{kb} KB בכל מסך שהוא נכנס אליו. לוח של 4 MB מראה כאן אם יש לו מקום בשבילו."
+      },
+      "works": {
+        "title": "עובד על:",
+        "any": "כל לוח",
+        "any_psram": "כל לוח עם PSRAM"
+      },
+      "source_code": "קוד מקור",
+      "issues": "דיווח על בעיה",
+      "add_link": "הוספה עם קישור",
+      "link": {
+        "title": "הוספה עם קישור",
+        "intro": "תוסף שאינו ברשימה, או אחד שאתם יוצרים. Tessera קורא קודם את התיאור שלו ואומר אם הוא מתאים לפני שמשהו נבנה.",
+        "sources": {
+          "link": "גרסה",
+          "branch": "בדיקת ענף",
+          "folder": "בדיקת תיקייה"
+        },
+        "url": "קישור GitHub",
+        "branch": "ענף",
+        "folder": "תיקייה במכונה הזו",
+        "hints": {
+          "link": "Tessera לוקח את הגרסה החדשה ביותר (בלי גרסה, את הקומיט החדש ביותר) ומשאיר את המסך עליה. משהו חדש יותר מופיע כעדכון.",
+          "branch": "Tessera לוקח את הקומיט החדש ביותר של הענף הזה ומשאיר את המסך עליו; קומיט חדש יותר מופיע כעדכון. לניסיון.",
+          "folder": "לתוסף שאתם יוצרים: שמרו, והבנייה הבאה לוקחת אותו. התיקייה נמצאת בתצורה של Home Assistant."
+        },
+        "fetch": "קריאת התוסף",
+        "test": "הוספה ל-{screen} כבדיקה",
+        "not_found": "אין תיאור תוסף בקישור הזה.",
+        "on_screen": "במסך"
+      },
+      "none_in_use": "לאף אחד מהמסכים שלכם עדיין אין תוסף.",
+      "screen_update": "גרסה {from}, עדכון ל-{to}",
+      "screen_version": "גרסה {version}",
+      "on_screens": "באילו מסכים",
+      "apply": {
+        "add": "הוספה למסך {n} | הוספה ל-{n} מסכים",
+        "remove": "הסרה ממסך {n} | הסרה מ-{n} מסכים",
+        "both": "החלה על מסך {n} | החלה על {n} מסכים",
+        "none": "החלה"
+      },
+      "update_all": "עדכון מסך {n} ל-{version} | עדכון {n} מסכים ל-{version}",
+      "tab": {
+        "intro": "התוספים ש-{screen} מריץ, ומה הוא יכול להוסיף. מה שתוסיפו מותקן יחד, בבנייה אחת של המסך הזה.",
+        "all": "כל התוספים",
+        "here": "במסך הזה",
+        "add": "הוספה",
+        "misfits": "לא מתאים למסך הזה ({n}) | לא מתאימים למסך הזה ({n})",
+        "updates": "עדכון לתוסף {n} | עדכונים ל-{n} תוספים",
+        "updates_note": "בנייה אחת עבור {screen}: {names}.",
+        "updates_rights": "{names} מבקש הרשאות אחרות מבעבר. | {names} מבקשים הרשאות אחרות מבעבר.",
+        "update_all": "עדכון הכול במסך הזה"
+      },
+      "pending": {
+        "add": "יתווסף כשתחילו",
+        "remove": "יוסר כשתחילו"
+      },
+      "setup": {
+        "on_screen": "{label} ב-{screen}",
+        "choose_pin": "בחרו פין",
+        "part_kb": "עוד {kb} KB",
+        "secret_set": "מוגדר. מלאו חדש כדי להחליף אותו.",
+        "part_needs": "צריך {what} במסך"
+      },
+      "readme": {
+        "title": "קראו אותי"
+      },
+      "english_only": "באנגלית בלבד",
+      "build_note": "ההתקנה בונה מחדש את קושחת המסך הזה ושולחת אותה דרך Wi-Fi, כמה דקות לכל מסך. התוסף נמצא ב-YAML של המסך, כך שגם בנייה ב-ESPHome Device Builder כוללת אותו.",
+      "attach": {
+        "row": "צירוף פעם אחת, בלשונית של המסך",
+        "text": "{screen} נבנה מה-YAML שלו. הוסיפו אליו את השורה הזו פעם אחת; אחרי זה Tessera שומר את התוספים שלו בקובץ משלהם, ו-ESPHome Device Builder בונה אותם כמו תמיד, גם אחרי עדכון.",
+        "copy": "העתקת השורה",
+        "done": "הוספתי אותה",
+        "file": "מה ש-Tessera כותב ב-{file}"
+      },
+      "folder_error": "התיקייה {folder} עדיין אינה תוסף: {why}",
+      "rebuild": "בנייה מחדש",
+      "failed": "הקושחה עבור {screen} לא נבנתה עם התוסף הזה. היומן שלה נמצא תחת קושחה ו-USB.",
+      "retry": "ניסיון חוזר",
+      "privacy": "פרטיות",
+      "consent": {
+        "title": "העדכון הזה מבקש הרשאות אחרות",
+        "agree": "אני מסכים למה שמותר לו עכשיו"
+      },
+      "settings_missing": "עוד לא במסך הזה: זה יגיע עם הבנייה הבאה של התוסף.",
+      "changes": "מה השתנה",
+      "tray": {
+        "title": "מוכן להתקנה",
+        "count": "תוסף {n} | {n} תוספים",
+        "add": "הוספה",
+        "added": "נוסף",
+        "setup": "הגדרה",
+        "remove": "הוצאת {name}",
+        "room": "{kb} KB מתוך {room} KB שנשארו למסך הזה",
+        "too_much": "{kb} KB יחד, נשארו {room} KB: הוציאו אחד",
+        "trust": "{names} מגיע מהקהילה ולא נבדק על ידי Tessera. | {names} מגיעים מהקהילה ולא נבדקו על ידי Tessera.",
+        "install": "התקנת תוסף {n} | התקנת {n} תוספים",
+        "one_build": "{screen} נבנה פעם אחת, עם כולם.",
+        "builds": "{n} מסכים נבנים, אחד אחרי השני.",
+        "stage": "הוספה ל-{screen}",
+        "in_tray": "מוכן להתקנה",
+        "in_tray_note": "התקינו אותו מהכרטיס שבפינה, לבד או עם אחרים.",
+        "along": "מגיע יחד עם {names}",
+        "title_changes": "מוכן לבנייה",
+        "changes": "שינוי {n} | {n} שינויים",
+        "build": "בניית שינוי {n} | בניית {n} שינויים",
+        "off": "יוסר מהמסך הזה",
+        "off_note": "הונח בצד להסרה. זה ייכנס בבנייה הבאה מהכרטיס שבפינה, יחד עם כל דבר אחר למסך הזה.",
+        "keep": "להשאיר",
+        "keep_named": "להשאיר את {name}",
+        "minutes": "כל בנייה לוקחת כמה דקות.",
+        "off_set": "הונח בצד להסרה"
+      },
+      "maker": {
+        "title": "צרו תוסף משלכם",
+        "lead": "תוסף הוא תיקייה עם תיאור וקצת קוד ESPHome, במאגר GitHub משלכם. אתם יוצרים אותו, ואתם מפרסמים את העדכונים שלו.",
+        "guide": "איך ליצור תוסף",
+        "start": {
+          "title": "התחילו מהתבנית",
+          "text": "הפכו אותה למאגר ב-GitHub שלכם, עם שם וסמל.",
+          "action": "פתיחת התבנית"
+        },
+        "test": {
+          "title": "נסו אותו במסך שלכם",
+          "text": "הוסיפו את המאגר שלכם עם קישור. דחפו, וכל קומיט או גרסה חדשים מופיעים כאן כעדכון.",
+          "folder": "או שימו את התיקייה שלו ב-{path} כדי לבדוק בלי גרסה."
+        },
+        "share": {
+          "title": "שתפו אותו עם כולם",
+          "text": "עובד טוב? רשמו אותו בקהילה והוא יופיע כאן לכולם, ישר מהמאגר שלכם. אתם נשארים היוצרים שלו.",
+          "action": "רישום"
+        }
+      },
+      "settings": {
+        "title": "הגדרות",
+        "live": "במסך הזה",
+        "live_note": "שינוי נכנס לתוקף מיד.",
+        "shared": "לכל מסך",
+        "shared_note": "ממולא פעם אחת, לכל מסך עם התוסף הזה.",
+        "build": "בזמן בנייה",
+        "build_note": "שינוי בונה מחדש את {screen}.",
+        "save_build": "שמירה ובנייה",
+        "run": "הרצה",
+        "too_short": "לפחות {n} תווים."
+      },
+      "tabs": {
+        "tiles": "אריחים",
+        "screensavers": "שומרי מסך",
+        "functions": "פונקציות",
+        "hardware": "חומרה",
+        "in_use": "בשימוש"
+      },
+      "types": {
+        "tiles": "אריחים",
+        "screensavers": "שומר מסך",
+        "functions": "פונקציה",
+        "hardware": "חומרה"
+      },
+      "topics": {
+        "time": "זמן וספירות לאחור",
+        "weather": "מזג אוויר ושמיים",
+        "calendar": "יומן ומשימות",
+        "home": "בית",
+        "energy": "אנרגיה",
+        "travel": "בדרכים",
+        "money": "כסף",
+        "sports": "ספורט",
+        "news": "חדשות ועובדות",
+        "media": "מוזיקה ומדיה",
+        "photos": "תמונות ואמנות",
+        "fun": "משחקים והנאה",
+        "voice": "קול וצליל",
+        "tech": "טכנולוגיה"
+      },
+      "topic_filter": "נושאים",
+      "sort": {
+        "label": "מיון לפי",
+        "popular": "הכי אהובים",
+        "new": "החדשים ביותר",
+        "name": "שם",
+        "rated": "המדורגים ביותר",
+        "used": "הנפוצים ביותר"
+      },
+      "none_in_tab": {
+        "tiles": "עדיין אין תוספים עם אריחים.",
+        "screensavers": "עדיין אין תוספי שומר מסך.",
+        "functions": "עדיין אין תוספים לכל המסך.",
+        "hardware": "עדיין אין תוספי חומרה."
+      },
+      "fits_none_group": "תוסף {n} לא מתאים לאף אחד מהמסכים שלכם | {n} תוספים לא מתאימים לאף אחד מהמסכים שלכם",
+      "likes": {
+        "count": "אדם {n} אוהב את זה | {n} אנשים אוהבים את זה",
+        "like": "לייק",
+        "unlike": "ביטול הלייק",
+        "ask": "הלייק שלכם נספר במספר ציבורי לכל תוסף. רק המספר ציבורי: שום דבר עליכם, על Home Assistant או על המסכים שלכם לא נשלח.",
+        "like_hint": "סמנו לייק, גם כשהוא לא נמצא באף אחד מהמסכים שלכם: תודה ליוצר שלו."
+      },
+      "along": {
+        "title": "מגיע יחד",
+        "brings": "מביא את ה{what}",
+        "needed_by": "נחוץ ל-{name}",
+        "came_with": "הגיע יחד עם {names}.",
+        "needed_now": "{names} צריך את התוסף הזה.",
+        "choose": "איזה תוסף מביא את ה{what}?"
+      },
+      "remove_ask": {
+        "needed": "{names} צריך את {name}, ולכן גם הוא יוסר.",
+        "orphans": "להסיר גם את {names}",
+        "orphans_note": "הוא רק הגיע יחד עם {name}; שום דבר אחר במסך לא צריך אותו.",
+        "both": "הסרה יחד",
+        "go": "הסרה"
+      },
+      "blocked_now": "הגרסה הזו חסומה ({why}) ותוסר בבנייה הבאה. עדכנו לגרסה חדשה יותר.",
+      "other_origin": "המסך הזה מריץ תוסף אחר בשם הזה, מ-{origin}. הוא לא מתעדכן מכאן.",
+      "switch": "מעבר לזה מ-{origin}",
+      "needs": {
+        "title": "צריך ומביא",
+        "plugin": "תוסף אחר; הוא מגיע יחד כשאתם מוסיפים את זה.",
+        "feature": "{what}",
+        "feature_note": "מהלוח של המסך, או תוסף שמביא אחד: הוא מגיע יחד כשיש רק אחד.",
+        "brings": "מביא {what}",
+        "brings_note": "לתוספים אחרים שצריכים אחד, באותו מסך."
+      },
+      "features": {
+        "speaker": "רמקול",
+        "microphone": "מיקרופון",
+        "media_player": "נגן מדיה",
+        "camera": "זרם מצלמה ל-Home Assistant",
+        "camera_sensor": "חיישן מצלמה",
+        "bluetooth": "Bluetooth"
+      },
+      "fitting_only": "רק מה שמתאים למסכים שלי",
+      "made_by": {
+        "label": "נוצר על ידי",
+        "all": "כל אחד",
+        "tessera": "Tessera",
+        "community": "קהילה"
+      },
+      "filter_button": "סינון",
+      "filter_remove": "הסרת {what}",
+      "filter_clear": "ניקוי מסננים",
+      "fitting_all": "גם מה שלא מתאים",
+      "news": {
+        "title": "מה חדש ב-{version}",
+        "none": "היוצר לא כתב הערות לעדכון הזה.",
+        "history": "כל הגרסאות"
+      },
+      "failed_update": "גרסה {version} לא נבנתה עבור {screen}, ולכן הוא חזר ל-{current}, זו שהוא מריץ. היומן שלה נמצא תחת קושחה ו-USB.",
+      "interrupted": "האפליקציה הופעלה מחדש במהלך הבנייה.",
+      "stars": {
+        "label": "כוכבים עבור {name}",
+        "of_five": "{n} מתוך 5 כוכבים",
+        "say": {
+          "1": "לא עובד",
+          "2": "חלש",
+          "3": "סביר",
+          "4": "טוב",
+          "5": "מצוין"
+        },
+        "yours": "הכוכבים שלכם",
+        "give": "איך זה עובד אצלכם?",
+        "clear": "ביטול"
+      },
+      "numbers": {
+        "rating": "{rating} מדירוג {n} | {rating} מ-{n} דירוגים",
+        "few": "דירוג {n} עד כה | {n} דירוגים עד כה",
+        "homes": "בשימוש בבית {n} | בשימוש ב-{n} בתים"
+      },
+      "counting": {
+        "label": "לספור את התוספים שלי בחנות",
+        "hint": "פעם ביום השמות והגרסאות של התוספים שלכם והדגם של כל מסך. שום דבר אחר.",
+        "on_hint": "פועל: פעם ביום השמות והגרסאות של התוספים שלכם והדגם של כל מסך נשלחים ל-Tessera. כיבוי מסיר אותם שם."
+      },
+      "rate_card": {
+        "by": "{maker} · {version}",
+        "question": "{name} רץ ב-{screen} כבר יום {days}. איך הוא בעיניכם? | {name} רץ ב-{screen} כבר {days} ימים. איך הוא בעיניכם?",
+        "send": "שליחה",
+        "what_title": "מה משותף?",
+        "what": {
+          "plugin": "התוסף והגרסה שלו: {name} {version}",
+          "board": "דגם המסך: {board}",
+          "stars": "הכוכבים שלכם",
+          "counting": "כשהספירה פועלת: פעם ביום אילו תוספים המסכים שלכם מריצים, הגרסאות שלהם ודגמי המסכים",
+          "nothing_else": "שום דבר אחר: לא שם, חשבון, ישויות או הגדרות Home Assistant. האפליקציה משתפת תחת מפתח אקראי אחד משלה."
+        },
+        "thanks": "תודה! הכוכבים שלכם אצל {name}.",
+        "heart_hint": "אוהבים אותו מאוד? תנו ל-{maker} גם לב. הוא נספר במספר ציבורי לכל תוסף; שום דבר עליכם לא נשלח.",
+        "hearted": "תודה על הלב",
+        "issue_hint": "חבל. רוצים שזה יתוקן? פתחו בעיה עבור {maker}, עם הגרסה ודגם המסך שלכם ממולאים.",
+        "issue_open": "פתיחת בעיה ב-GitHub"
+      },
+      "sharing": {
+        "title": "חנות התוספים",
+        "text": "עזרו לאחרים למצוא תוספים טובים. לבבות וכוכבים נשלחים רק כשאתם נותנים אותם, ספירה רק כל עוד היא פועלת.",
+        "asking": "לבקש כוכבים כמה ימים אחרי תוסף חדש",
+        "asking_hint": "כרטיס מעל המסך, תוסף אחד בכל פעם."
+      },
+      "forget": {
+        "go": "הסרה מהרשימה",
+        "note": "אף מסך לא מריץ את התוסף הזה. הסירו אותו מהרשימה כדי לשכוח את הקישור."
+      }
+    },
+    "plugin_tile": {
+      "from": "אריח של התוסף {plugin}",
+      "details": "פרטי התוסף",
+      "options": "אפשרויות",
+      "choose": "בחירה…",
+      "less": "פחות",
+      "more": "עוד",
+      "from_fetch": "הבחירות מגיעות ממקור הנתונים של התוסף עצמו, דרך Tessera.",
+      "on_screen": "במסך",
+      "sizes": "מ-{min} עד {max}; גררו קצה של האריח כדי לשנות את גודלו.",
+      "placeholder": "העורך מציג מציין מיקום: מה שהתוסף משרטט מופיע במסך עצמו.",
+      "now": "עכשיו",
+      "minutes": "{n} דק׳",
+      "live": "העורך משרטט אותו מהנתונים של התוסף עצמו; המסך משרטט אותו בעצמו וסופר לאחור לפי השעון שלו.",
+      "entity": "ישות",
+      "add": "הוספה",
+      "change": "בחירת אחר",
+      "find": "חיפוש…",
+      "search": "חיפוש…",
+      "search_more": "הקלידו שתי אותיות או יותר",
+      "none_found": "לא נמצא כלום",
+      "remove": "הסרת {name}",
+      "type": "הקלידו ולחצו Enter",
+      "full": "המסך לא מקבל יותר לאריח הזה: האפשרויות שלו מלאות.",
+      "count": "{n} מתוך {max}"
+    },
+    "build": {
+      "plugins": "בונה עם התוספים שלו",
+      "install": "מתקין",
+      "failed": "הבנייה האחרונה של {screen} נכשלה. היומן אומר למה.",
+      "title": "בונה עכשיו",
+      "count": "בנייה אחת בדרך | {n} בניות בדרך",
+      "ready": "{name} מוכן",
+      "ready_several": "{names} מוכנים",
+      "update_failed": "עדכון {name} נכשל",
+      "build_failed": "בניית {name} נכשלה",
+      "show_log": "הצגת היומן",
+      "waiting_place": "ממתין לתורו, בנייה אחת לפניו | ממתין לתורו, {n} בניות לפניו",
+      "server": {
+        "bundle": "אורז את ה-YAML",
+        "send": "שולח אל {name}",
+        "queued": "ממתין ב-{name}",
+        "build": "בונה ב-{name}",
+        "fetch": "מביא את הקושחה",
+        "here": "בונה כאן · {reason}",
+        "fallback": {
+          "offline": "שרת הבנייה לא זמין",
+          "refused": "שרת הבנייה לא מצומד",
+          "mismatch": "טביעת האצבע של שרת הבנייה השתנתה",
+          "unavailable": "אין כאן שרת בנייה",
+          "lost": "הקישור לשרת הבנייה נפל",
+          "refused_job": "שרת הבנייה לא קיבל אותה",
+          "provision": "שרת הבנייה לא הצליח להתקין את ESPHome",
+          "cancelled": "היא נעצרה בשרת הבנייה",
+          "fetch": "הקושחה לא חזרה",
+          "bundle": "לא ניתן היה לארוז את ה-YAML"
+        }
+      }
+    },
+    "grid": {
+      "title": "רשת",
+      "columns": "עמודות",
+      "rows": "שורות",
+      "columns_less": "פחות עמודות",
+      "columns_more": "יותר עמודות",
+      "rows_less": "פחות שורות",
+      "rows_more": "יותר שורות",
+      "hint": "אריחים שכבר לא נכנסים בעמוד עוברים לעמוד חדש מיד אחריו. המסך מקבל את הרשת החדשה כשתשמרו.",
+      "update_first": "עדכנו את המסך הזה כדי לבחור את הרשת שלו כאן.",
+      "pages_added": "עמוד אחד נוסף לאריחים שכבר לא נכנסים | {n} עמודים נוספו לאריחים שכבר לא נכנסים",
+      "new_page": "עמוד חדש למה שכבר לא נכנס",
+      "too_many_pages": "ב-{grid} האריחים האלה צריכים {needed} עמודים, והמסך הזה מקבל {most}. הסירו אריחים או בחרו רשת אחרת; שום דבר לא שונה.",
+      "way": "כיוון",
+      "landscape": "לרוחב",
+      "portrait": "לאורך",
+      "turn_hint": "כשהוא מסתובב, המסך עולה מחדש פעם אחת כדי למדוד את המשטח החדש שלו."
+    },
+    "clipboard": {
+      "copied": "אריח אחד הועתק. הדביקו אותו עם {key} בכל עמוד או מסך | {n} אריחים הועתקו. הדביקו אותם עם {key} בכל עמוד או מסך",
+      "cut": "אריח אחד נגזר | {n} אריחים נגזרו",
+      "pasted": "אריח אחד הודבק | {n} אריחים הודבקו",
+      "pasted_pages": "{n} אריחים הודבקו, השאר בעמוד חדש | {n} אריחים הודבקו, השאר ב-{pages} עמודים חדשים",
+      "pasted_some": "{n} מתוך {total} אריחים הודבקו. במסך הזה אין מקום או מיקום לאחרים",
+      "none_fit": "שום דבר לא הודבק. במסך הזה אין מקום או מיקום לאריחים האלה",
+      "empty": "עוד לא הועתק כלום"
+    },
+    "selection": {
+      "title": "אריח אחד | {n} אריחים",
+      "leave": "השמטת {name}",
+      "copy": "העתקה",
+      "hint": "{copy} מעתיק את האריחים עם כל ההגדרות. בחרו עמוד או תא, כאן או במסך אחר, ולחצו {paste}.",
+      "remove": "הסרת אריח | הסרת {n} אריחים"
+    },
+    "menu": {
+      "cut": "גזירה",
+      "move_to": "הזזה לעמוד",
+      "add_here": "הוספת אריח כאן",
+      "paste_here": "הדבקה כאן"
+    },
+    "report": {
+      "button": "המסך שלי לא עובד כמו שצריך",
+      "card_title": "משהו לא בסדר?",
+      "card_hint": "הרכיבו דוח של מה שהאפליקציה יודעת על המסך הזה, קראו אותו, ושלחו אותו ל-Tessera כדי שנוכל למצוא את הסיבה.",
+      "eyebrow": "פתרון בעיות",
+      "title": "המסך שלי לא עובד כמו שצריך",
+      "title_named": "{name} לא עובד כמו שצריך",
+      "intro": "האפליקציה אוספת את מה שהיא יודעת על המסך הזה לכמה קבצים. אתם קוראים אותם כאן, ורק שליחה מעבירה אותם ל-Tessera.",
+      "loading": "קורא את מה שהאפליקציה יודעת…",
+      "collects_title": "מה נכנס",
+      "collects": "הלוח והגרסאות של המסך, היומן שלו עצמו (עד 45 שניות, חי), השורות ביומן של Home Assistant שעוסקות בו, היומן של האפליקציה ויומן הבנייה האחרון. סיסמאות, מפתחות, כתובות רשת ושם המסך מושחרים.",
+      "nothing_leaves": "שום דבר לא יוצא מה-Home Assistant שלכם עד שתלחצו שליחה. אפשר לקרוא כל קובץ קודם.",
+      "crash_title": "קריסה אחרונה",
+      "crash_line": "{reason}, {when}, {seen}",
+      "crash_seen": "נראתה פעם אחת השבוע | נראתה {n} פעמים השבוע",
+      "crash_lines": "שורות מפוענחות",
+      "full": "לכלול גם את פריסת העמודים שלי, שמות ישויות ושורות יומן אחרות של Home Assistant. זה עוזר מאוד במציאת הסיבה.",
+      "note_label": "מה קרה? (רשות)",
+      "note_hint": "מה ראיתם, מה עשיתם רגע לפני, וכמה פעמים זה קורה.",
+      "email_label": "הדוא״ל שלכם (רשות)",
+      "email_hint": "אם מותר לנו לשאול אתכם שאלה על זה.",
+      "remember_email": "לזכור את הדוא״ל שלי באפליקציה הזו",
+      "collect": "איסוף",
+      "check_again": "בדיקה חוזרת",
+      "blockers": {
+        "no_profile": "ה-YAML של המסך הזה אינו בתיקייה של האפליקציה הזו, כך שאי אפשר ליצור לו דוח.",
+        "collecting": "דוח של המסך הזה כבר נאסף. המתינו רגע ובדקו שוב."
+      },
+      "collecting": "אוסף…",
+      "collecting_hint": "זה לוקח עד דקה: האפליקציה מאזינה ליומן של המסך זמן מה.",
+      "steps": {
+        "identity": "קורא את זהות המסך",
+        "profile": "מעתיק את הפרופיל שלו",
+        "screen_log": "מאזין ליומן של המסך",
+        "ha_log": "קורא את היומן של Home Assistant",
+        "addon_log": "קורא את היומן של האפליקציה",
+        "build_log": "קורא את יומן הבנייה האחרון",
+        "crash": "קורא את הקריסה האחרונה",
+        "zip": "אורז את הקבצים"
+      },
+      "ready_title": "מוכן לקריאה",
+      "facts": {
+        "board": "לוח",
+        "firmware": "קושחה",
+        "addon": "Tessera",
+        "ha": "Home Assistant",
+        "esphome": "ESPHome",
+        "plugins": "תוספים",
+        "crash": "קריסה אחרונה",
+        "none": "אין",
+        "unknown": "לא ידוע"
+      },
+      "warnings": {
+        "screen_offline": "המסך לא מקוון: בדוח אין יומן חי, רק מה שהאפליקציה שמרה.",
+        "no_api_key": "לאפליקציה אין מפתח API למסך הזה, כך שלא ניתן היה לקרוא את היומן החי שלו.",
+        "no_elf": "קובץ הניפוי של הקושחה חסר, כך שאי אפשר לזהות קריסה לפי שורות הקוד שלה.",
+        "ha_log_unavailable": "לא ניתן היה לקרוא את היומן של Home Assistant.",
+        "addon_log_unavailable": "לא ניתן היה לקרוא את היומן של האפליקציה עצמה.",
+        "no_crash_record": "לא נמצא רישום קריסה למסך הזה."
+      },
+      "files_title": "קבצים בדוח",
+      "file_lines": "שורה אחת | {n} שורות",
+      "size": {
+        "b": "{n} B",
+        "kb": "{n} KB",
+        "mb": "{n} MB"
+      },
+      "download": "הורדת zip",
+      "send_title": "שליחה ל-Tessera",
+      "send_text": "זה נשלח ל-Tessera ונשמר {days} ימים. הוא מכיל את הקבצים שלמעלה, את ההערה שלכם ואת הדוא״ל שלכם אם נתתם.",
+      "privacy": "פרטיות",
+      "with_note": "עם ההערה שלכם.",
+      "with_email": "אנחנו עשויים לכתוב אל {email}.",
+      "change_note": "שינוי הערה או דוא״ל",
+      "consent": "קראתי מה יש בדוח ואני מסכים לשלוח אותו ל-Tessera.",
+      "send": "שליחה",
+      "sending": "שולח…",
+      "sent": {
+        "title": "נשלח, תודה",
+        "quote": "ציינו את המזהה הזה ב-GitHub או ב-Discord כדי שנוכל למצוא את הדוח שלכם.",
+        "copy": "העתקה",
+        "copied": "המזהה הועתק.",
+        "selected": "המזהה מסומן: העתיקו אותו עם Ctrl+C או ⌘C.",
+        "github": "פתיחת בעיה ב-GitHub",
+        "discord": "שאלה ב-Discord",
+        "new": "יצירת דוח חדש"
+      },
+      "failed_title": "לא ניתן היה ליצור את הדוח",
+      "try_again": "ניסיון חוזר"
+    }
+  }
+}

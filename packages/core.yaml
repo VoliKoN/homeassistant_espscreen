@@ -30,6 +30,15 @@ substitutions:
   # translation file says `"script": "cyrillic"` (a test as well).
   SCRIPT_GLYPHS_CYRILLIC: "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяЁё№"
   SCRIPT_GLYPHS: '${ SCRIPT_GLYPHS_CYRILLIC if LANGUAGE.split("-")[0] in ["ru"] else "" }'
+  # Hebrew: Roboto has no Hebrew, so its letters come from NotoSansHebrew-400/500/700.ttf (OFL), Noto
+  # Sans Hebrew's variable font instanced at each Roboto weight and cut to these letters. Each text font names that file
+  # as an extra whose glyphs are ${SCRIPT_GLYPHS_NOTO}, empty on every screen but one built in Hebrew, so the others carry
+  # none of them. The same letters as header_bar.SCRIPT_GLYPHS['hebrew'] (tests/test_script_glyphs.py).
+  SCRIPT_GLYPHS_HEBREW: "אבגדהוזחטיךכלםמןנסעףפץצקרשת־׳״₪"
+  SCRIPT_GLYPHS_NOTO: '${ SCRIPT_GLYPHS_HEBREW if LANGUAGE.split("-")[0] in ["he"] else "" }'
+  # Right-to-left text: LVGL's BiDi orders a label by its first strong letter, so a Hebrew name reads right to left and
+  # an English one stays left to right. Only a screen built in Hebrew pays for it (LV_USE_BIDI, the build flags below).
+  LVGL_BIDI: '${ 1 if LANGUAGE.split("-")[0] in ["he"] else 0 }'
   # Swipe between pages on a screen that has stored no choice of its own: off, as every screen set up before had it, so
   # an update changes nothing there. New screen writes "1" into a new screen's own YAML, which then swipes and opens the
   # Dock out of the box. Once the screen stores a choice (any change of a setting), that choice wins. Keep "0" here.
@@ -108,6 +117,9 @@ esphome:
       - -DLV_USE_SLIDER=1
       # The band of a heat/cool range in the thermostat card (firmware 0.25.0) is LVGL's scale; the YAML names none.
       - -DLV_USE_SCALE=1
+      # Right to left, on a screen built in Hebrew only (LVGL_BIDI above).
+      - -DLV_USE_BIDI=${LVGL_BIDI}
+      - -DLV_BIDI_BASE_DIR_DEF=LV_BASE_DIR_AUTO
       - -DGRID_COLS=${GRID_COLS}
       - -DGRID_ROWS=${GRID_ROWS}
       # The cells of a page when this screen stands up (firmware 0.2.92+). A board states both grids and the
@@ -916,6 +928,7 @@ font:
   # NotoSansSymbols2-hearts.ttf (OFL): Noto Sans Symbols 2 cut to those three with fontTools' pyftsubset, its U+2764 given
   # the U+2665 heart, as Noto's own is a squat one lying on its side. tools/profiles.py glyphs() reads both lists.
   # The last entry, ${SCRIPT_GLYPHS}, is empty on every screen but one built in a language of another script.
+  # The last extra, NotoSansHebrew at the font's weight, is likewise empty but on a screen built in Hebrew.
   - file: "${FONT_DIR}/Roboto-500.ttf"
     id: headline
     size: ${FONT_HEADLINE_SIZE}
@@ -936,6 +949,8 @@ font:
     extras:
       - file: "${FONT_DIR}/NotoSansSymbols2-hearts.ttf"
         glyphs: ['♡','♥','❤']
+      - file: "${FONT_DIR}/NotoSansHebrew-500.ttf"
+        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]
 
   - file: "${FONT_DIR}/Roboto-500.ttf"
     id: watch_value
@@ -957,6 +972,8 @@ font:
     extras:
       - file: "${FONT_DIR}/NotoSansSymbols2-hearts.ttf"
         glyphs: ['♡','♥','❤']
+      - file: "${FONT_DIR}/NotoSansHebrew-500.ttf"
+        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]
 
   # Clock card digits only; the date line reuses the tile title font.
   - file: "${FONT_DIR}/Roboto-500.ttf"
@@ -1008,6 +1025,8 @@ font:
     extras:
       - file: "${FONT_DIR}/NotoSansSymbols2-hearts.ttf"
         glyphs: ['♡','♥','❤']
+      - file: "${FONT_DIR}/NotoSansHebrew-700.ttf"
+        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]
 
   - file: "${FONT_DIR}/Roboto-400.ttf"
     id: sublabel
@@ -1029,6 +1048,8 @@ font:
     extras:
       - file: "${FONT_DIR}/NotoSansSymbols2-hearts.ttf"
         glyphs: ['♡','♥','❤']
+      - file: "${FONT_DIR}/NotoSansHebrew-400.ttf"
+        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]
 
   - file: "${FONT_DIR}/Roboto-400.ttf"
     id: sublabel_big
@@ -1050,6 +1071,8 @@ font:
     extras:
       - file: "${FONT_DIR}/NotoSansSymbols2-hearts.ttf"
         glyphs: ['♡','♥','❤']
+      - file: "${FONT_DIR}/NotoSansHebrew-400.ttf"
+        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]
 
   # The name in the starting screen's Tessera lockup (firmware 0.3.8+): only its own letters, a few hundred bytes.
   - file: "${FONT_DIR}/Roboto-700.ttf"

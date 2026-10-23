@@ -95,7 +95,8 @@ A partial check helps too. Say which sections you went through, and leave `check
 | Cyrillic | Russian | Yes: the Cyrillic letters go only onto a screen built in a Cyrillic language (see "Letters" below) |
 | Cyrillic, Greek | Ukrainian, Bulgarian, Greek | Possible in the same way: a maintainer adds the language to the list, or a list for a new script. Ask first. |
 | Chinese, Japanese, Korean | | Only on a Guition, with the characters the texts need; a CYD has too little room and shows English |
-| Right-to-left, or letters that join | Arabic, Hebrew, Persian, Thai, Hindi | Not yet: the screens' graphics library doesn't write them without extra work |
+| Hebrew | Hebrew | Yes: the Hebrew letters and right-to-left text go only onto a screen built in Hebrew (see "Letters" below). The layout itself stays left to right. |
+| Right-to-left with letters that join, or other scripts | Arabic, Persian, Thai, Hindi | Not yet: their letters change shape by their neighbours, which the screens' graphics library doesn't do without extra work |
 
 The editor and the app's messages work in any language, whatever the screens can draw.
 
@@ -117,6 +118,14 @@ A list holds the letters its languages write and no more, since every letter is 
 built in that language. To add a language of a script that has a list, add its code to `SCRIPT_GLYPHS` beside `ru` and
 the letters it writes that the list lacks to both lists (Ukrainian adds Є, є, І, і, Ї, ї, Ґ and ґ). A new script takes a
 list of its own in both places, letters the text font (Roboto) has.
+
+Hebrew is the one script Roboto lacks. Its letters (`SCRIPT_GLYPHS_HEBREW`, with the maqaf, geresh, gershayim and ₪) come
+from `fonts/NotoSansHebrew-400/500/700.ttf`, Noto Sans Hebrew cut to those letters at each Roboto weight, and every text
+font names that file as its last extra with the glyphs `"${SCRIPT_GLYPHS_NOTO}"`, empty unless the screen is built in
+Hebrew. The same `LANGUAGE` turns on LVGL's BiDi (`LVGL_BIDI`, the build flag `LV_USE_BIDI`), which orders each label by
+its first strong letter: a Hebrew name reads right to left, an English one stays left to right, and only a Hebrew screen
+pays for it. LVGL does not join or reshape letters, which Hebrew doesn't need but Arabic and Persian do. The app drops
+niqqud (the vowel points), which the fonts don't carry.
 
 ## The format
 

@@ -72,5 +72,59 @@ class AppLetters(unittest.TestCase):
         self.assertEqual(header_bar.clean_text('Кухня'), '')
 
 
+
+class HebrewLetters(unittest.TestCase):
+    """Hebrew (no Roboto letters): its letters come from NotoSansHebrew as each text font's last extra, filled by
+    SCRIPT_GLYPHS_NOTO on a screen built in Hebrew only, and LVGL's BiDi is built in on such a screen alone."""
+
+    def expression(self, name):
+        return re.search(r"(?m)^  " + name + r": '(.*)'$", CORE).group(1)
+
+    def tearDown(self):
+        i18n.SCREEN.set(None)
+
+    def test_the_app_and_the_firmware_name_the_same_letters(self):
+        self.assertEqual(set(core_list('hebrew')), set(header_bar.SCRIPT_GLYPHS['hebrew']))
+        self.assertEqual(len(core_list('hebrew')), len(set(core_list('hebrew'))), 'a letter twice')
+        self.assertFalse(set(core_list('hebrew')) & set(header_bar.GLYPHS))
+
+    def test_every_text_font_takes_them_from_noto_at_its_own_weight(self):
+        for font in TEXT_FONTS:
+            start = CORE.index('    id: ' + font + '\n')
+            end = re.compile(r'(?m)^  - file: |^\S').search(CORE, start)
+            block = CORE[CORE.rindex('\n  - file: ', 0, start):end.start() if end else None]
+            weight = re.search(r'Roboto-(\d+)\.ttf', block).group(1)
+            self.assertIn('      - file: "${FONT_DIR}/NotoSansHebrew-' + weight + '.ttf"\n'
+                          '        glyphs: ["${SCRIPT_GLYPHS_NOTO}"]', block, font)
+            self.assertTrue((ROOT / 'fonts' / f'NotoSansHebrew-{weight}.ttf').exists())
+
+    def test_the_letters_and_bidi_go_only_into_a_screen_built_in_hebrew(self):
+        for language, letters, bidi in (('en', '', '0'), ('ru', '', '0'), ('he', core_list('hebrew'), '1')):
+            with self.subTest(language=language):
+                values = {'LANGUAGE': language, 'SCRIPT_GLYPHS_HEBREW': core_list('hebrew')}
+                self.assertEqual(profiles.resolve(self.expression('SCRIPT_GLYPHS_NOTO'), values), letters)
+                self.assertEqual(profiles.resolve(self.expression('LVGL_BIDI'), values), bidi)
+        self.assertIn('- -DLV_USE_BIDI=${LVGL_BIDI}', CORE)
+
+    def test_the_languages_it_takes_are_the_hebrew_translation_files(self):
+        named = set(re.findall(r'"([a-z]{2,3})"', self.expression('SCRIPT_GLYPHS_NOTO')))
+        files = {path.stem for path in (ROOT / 'screen_manager/translations').glob('*.json')
+                 if json.loads(path.read_text(encoding='utf-8')).get('_meta', {}).get('script') == 'hebrew'}
+        self.assertEqual(named, files)
+
+    def test_noto_carries_every_letter(self):
+        from fontTools.ttLib import TTFont
+        for weight in ('400', '500', '700'):
+            cmap = TTFont(ROOT / 'fonts' / f'NotoSansHebrew-{weight}.ttf').getBestCmap()
+            self.assertLessEqual({ord(char) for char in core_list('hebrew')}, set(cmap), weight)
+
+    def test_a_hebrew_screen_keeps_its_letters_without_points_and_any_other_drops_them(self):
+        i18n.SCREEN.set({'language': 'he', 'legacy': False})
+        self.assertEqual(i18n.screen_script(), 'hebrew')
+        self.assertEqual(header_bar.clean_text('אור בסלון 2'), 'אור בסלון 2')
+        self.assertEqual(header_bar.clean_text('שָׁלוֹם ₪5'), 'שלום ₪5')
+        i18n.SCREEN.set({'language': 'en', 'legacy': False})
+        self.assertEqual(header_bar.clean_text('סלון 2'), '2')
+
 if __name__ == '__main__':
     unittest.main()
