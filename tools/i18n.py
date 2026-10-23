@@ -207,7 +207,10 @@ LINT_KEEP = {
     # The live view's log of what lies over a live tile (runtime_tiles.h, drawn_over).
     'the top layer', 'the system layer', 'something on the page', 'another screen',
     # Why a live tile stops streaming (runtime_tiles.h, the live tiles' check before LVGL draws).
-    'its card moved', 'nothing over it',
+    'its card moved', 'nothing over it', 'it is gone', 'it moved',
+    # The rate limiter's reason for a missed doorbell ring in the top bar (runtime_tiles.h, module doorbell), and the
+    # wake source Home Assistant's Wake button reports (packages/core.yaml, wake_from): log lines only.
+    'header doorbell', 'Home Assistant',
     # The picture loader's log of a picture's steps (picture_loader.h, note()).
     'not wanted now', 'asks again', 'breaks off for the glass', 'load failed',
     'history range', 'card button ', 'header navigation', 'header item', 'media key ', 'screensaver play', 'screensaver mute', 'let go', 'too short (', 'already handled in this contact',
