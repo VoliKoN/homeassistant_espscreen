@@ -41,5 +41,5 @@ const card = props.card;
 .tile .favorite-text { position: absolute; inset: auto 0 0 0; padding: 0 calc(var(--key, 34px) + 14px) 8px 9px; display: flex; flex-direction: column; color: white; pointer-events: none; min-width: 0; }
 .tile .favorite-text .nm { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile .favorite-text .st { font-size: .85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tile .favorite-key { position: absolute; right: 8px; bottom: 8px; width: var(--key, 34px); height: var(--key, 34px); border-radius: 50%; background: #f2f2f2; color: #000; display: grid; place-items: center; font-size: 20px; pointer-events: none; }
+.tile .favorite-key { position: absolute; inset-inline-end: 8px; bottom: 8px; width: var(--key, 34px); height: var(--key, 34px); border-radius: 50%; background: #f2f2f2; color: #000; display: grid; place-items: center; font-size: 20px; pointer-events: none; }
 </style>

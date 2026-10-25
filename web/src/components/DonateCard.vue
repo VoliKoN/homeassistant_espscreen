@@ -56,9 +56,9 @@ function donated() {
 </template>
 
 <style scoped>
-.donate { position: fixed; right: 24px; bottom: 24px; z-index: 40; width: 340px; padding: 20px; background: var(--surface);
+.donate { position: fixed; inset-inline-end: 24px; bottom: 24px; z-index: 40; width: 340px; padding: 20px; background: var(--surface);
   border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); color: var(--ink); }
-.donate-close { position: absolute; top: 8px; right: 10px; font-size: 20px; line-height: 1; padding: 4px 6px; color: var(--muted); }
+.donate-close { position: absolute; top: 8px; inset-inline-end: 10px; font-size: 20px; line-height: 1; padding: 4px 6px; color: var(--muted); }
 .donate-close:hover { color: var(--ink); }
 .donate-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .donate-head strong { font-size: 15px; }
@@ -72,6 +72,6 @@ function donated() {
 .donate-quiet { margin-top: 12px; }
 .donate-quiet .donate-link { color: var(--muted); }
 @media (max-width: 640px) {
-  .donate { left: 12px; right: 12px; bottom: 12px; width: auto; }
+  .donate { inset-inline-start: 12px; inset-inline-end: 12px; bottom: 12px; width: auto; }
 }
 </style>

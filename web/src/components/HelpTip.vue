@@ -32,7 +32,7 @@ const placementOptions: Record<string, unknown> = { container: false };
 .help-trigger { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; color: var(--muted); background: transparent; font-size: 18px; cursor: help; }
 /* The icon comes from CSS, so a label with a tip beside it still reads as just its words. */
 .help-trigger::before { content: attr(data-glyph); }
-.help-trigger.help-label { display: inline; width: auto; height: auto; border-radius: 2px; font: inherit; color: inherit; text-align: left;
+.help-trigger.help-label { display: inline; width: auto; height: auto; border-radius: 2px; font: inherit; color: inherit; text-align: start;
   text-decoration: underline dotted color-mix(in srgb, currentColor 45%, transparent); text-underline-offset: 3px; }
 .help-trigger.help-label::before { content: none; }
 .help-trigger.help-label:hover, .help-trigger.help-label:focus-visible { background: transparent; color: var(--ink); text-decoration-color: currentColor; }

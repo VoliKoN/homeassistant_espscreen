@@ -33,5 +33,5 @@ const hints = computed(() => props.state.phase === "failed" && props.state.probl
 .webflash { display: grid; gap: 6px; padding: 10px 12px; border-radius: 8px; background: var(--surface-2); }
 .webflash p { margin: 0; }
 .webflash.bad p { color: var(--danger); }
-.webflash ul { margin: 0; padding-left: 18px; }
+.webflash ul { margin: 0; padding-inline-start: 18px; }
 </style>

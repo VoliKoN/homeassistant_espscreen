@@ -110,11 +110,20 @@ export function loadLanguage(code: string): Promise<boolean> {
     () => (delete loading[code], false),
   ));
 }
+// The scripts written right to left (a file's `_meta.script`). The editor's page turns with its language: the browser
+// mirrors the layout and orders each sentence from the right, so a Hebrew text with English names in it reads in order.
+// What a screen draws (the mockup, the firmware preview, the page map) stays left to right, as on the glass.
+const RTL_SCRIPTS = new Set(["hebrew", "arabic"]);
+/** Whether a language is written right to left. */
+export const isRtl = (code = editorLanguage()) => RTL_SCRIPTS.has(META[code]?.script || "");
+/** The direction of the editor's page, "rtl" or "ltr". */
+export const editorDir = (): "rtl" | "ltr" => (isRtl() ? "rtl" : "ltr");
 /** The editor's own language: the one of the user's Home Assistant profile, as far as ESP Screens has it. */
 export async function setEditorLanguage(code = pickLanguage(requestedLanguage())) {
   const chosen = (await loadLanguage(code)) ? code : "en";
   i18n.global.locale.value = chosen;
   document.documentElement.lang = chosen;
+  document.documentElement.dir = isRtl(chosen) ? "rtl" : "ltr";
   return chosen;
 }
 

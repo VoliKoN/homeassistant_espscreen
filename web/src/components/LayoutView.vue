@@ -263,7 +263,7 @@ function onCanvasClick(e: MouseEvent) {
 .page-pills button[aria-pressed="true"] b { color: inherit; opacity: .7; }
 /* No room of its own in the column: it stands over the corner of the pages, at the foot of what is in view. */
 .zoom-dock { position: sticky; bottom: 0; align-self: flex-end; margin-top: auto; height: 0; z-index: 2; }
-.zoom-pill { position: absolute; right: 0; bottom: 0; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(20, 24, 40, 0.08); }
+.zoom-pill { position: absolute; inset-inline-end: 0; bottom: 0; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(20, 24, 40, 0.08); }
 .zoom-pill .icon-btn { width: 28px; height: 28px; border-radius: 50%; }
 .zoom-value { min-width: 46px; height: 28px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer; }
 .zoom-value:hover { background: var(--seg); }

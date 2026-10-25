@@ -112,7 +112,7 @@ function open(e: MouseEvent, kind: SaverStep) {
 .saver-tx small { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .saver-tx small.missing { color: var(--accent); }
 .saver-row.off .saver-av, .saver-row.off .saver-tx b { opacity: 0.5; }
-.saver-menu-glyph { margin-right: 8px; color: var(--ink-2); }
+.saver-menu-glyph { margin-inline-end: 8px; color: var(--ink-2); }
 #saver-add-step { margin-bottom: 10px; }
-.saver-chev { flex: none; margin-left: -4px; color: var(--muted); font-size: 16px; }
+.saver-chev { flex: none; margin-inline-start: -4px; color: var(--muted); font-size: 16px; }
 </style>

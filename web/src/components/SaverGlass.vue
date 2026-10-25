@@ -51,15 +51,15 @@ useResizeObserver(line, () => measure());
 </script>
 
 <template>
-  <div v-if="screensaver.clockPluginFace" class="saver-glass plugin" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
+  <div v-if="screensaver.clockPluginFace" class="saver-glass plugin glass-ltr" dir="ltr" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
     <span class="mdi saver-glass-icon">{{ glyph(pluginFace?.saver.icon || pluginFace?.plugin.icon || "F0A66") }}</span>
     <span class="saver-glass-date">{{ pluginFace ? text(pluginFace.saver.example || pluginFace.saver.name) : screensaver.stepLabel(screensaver.clockPluginFace) }}</span>
   </div>
-  <div v-else-if="screensaver.face !== 'digital'" class="saver-glass face" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
+  <div v-else-if="screensaver.face !== 'digital'" class="saver-glass face glass-ltr" dir="ltr" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
     <SaverFace :kind="screensaver.face" :dark="screensaver.faceDark" :numerals="screensaver.saver?.numerals ?? 4" :seconds="screensaver.saver?.seconds ?? true"
       :width="screensaver.glassSize.width" :height="screensaver.glassSize.height" :at="at" v-bind="words" />
   </div>
-  <div v-else class="saver-glass" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
+  <div v-else class="saver-glass glass-ltr" dir="ltr" aria-hidden="true" :style="{ aspectRatio: screensaver.glassRatio, height: `${height}px`, '--glass-h': `${height}px` }">
     <span class="saver-glass-time">{{ screensaver.clockPreview.time }}</span>
     <span class="saver-glass-date">{{ screensaver.clockPreview.date }}</span>
     <span ref="line" class="saver-glass-line">
@@ -77,8 +77,8 @@ useResizeObserver(line, () => measure());
 .saver-glass-icon { font-size: calc(var(--glass-h) * 0.22); opacity: 0.85; }
 .saver-glass.plugin .saver-glass-date { text-align: center; padding: 0 8px; }
 .saver-glass-date { font-size: max(10px, calc(var(--glass-h) * 0.07)); opacity: 0.8; }
-.saver-glass-line { position: absolute; left: 8px; right: 8px; bottom: calc(var(--glass-h) * 0.06); display: flex; justify-content: safe center; gap: 4px;
+.saver-glass-line { position: absolute; inset-inline-start: 8px; inset-inline-end: 8px; bottom: calc(var(--glass-h) * 0.06); display: flex; justify-content: safe center; gap: 4px;
   font-size: max(10px, calc(var(--glass-h) * 0.064)); opacity: 0.85; white-space: nowrap; overflow: hidden; }
-.saver-glass-line > span + span::before { content: "·"; margin-right: 4px; opacity: 0.7; }
-.saver-glass-line .mdi { margin-right: 3px; }
+.saver-glass-line > span + span::before { content: "·"; margin-inline-end: 4px; opacity: 0.7; }
+.saver-glass-line .mdi { margin-inline-end: 3px; }
 </style>

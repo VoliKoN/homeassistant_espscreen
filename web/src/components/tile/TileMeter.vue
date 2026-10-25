@@ -147,7 +147,7 @@ const cells = computed(() => {
 
 <style scoped>
 .meter-face { position: relative; flex: 1 1 auto; align-self: stretch; min-width: 0; min-height: 0; width: 100%; }
-.meter-ruler { position: absolute; left: 0; top: 0; visibility: hidden; white-space: nowrap; font-size: 100px; font-weight: 600; font-style: normal; line-height: 1; pointer-events: none; }
+.meter-ruler { position: absolute; inset-inline-start: 0; top: 0; visibility: hidden; white-space: nowrap; font-size: 100px; font-weight: 600; font-style: normal; line-height: 1; pointer-events: none; }
 .meter-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .meter-face > span { position: absolute; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mv { font-weight: 600; color: v-bind(INK); letter-spacing: -0.01em; }
@@ -155,6 +155,6 @@ const cells = computed(() => {
 .meter-face .nm { font-size: inherit; }
 .caps { text-transform: uppercase; letter-spacing: 0.04em; font-weight: 400; }
 .tape-value { font-weight: 400; }
-.tape-value small { display: inline; margin-left: 0.15em; font-weight: 400; color: v-bind(MUTED); }
+.tape-value small { display: inline; margin-inline-start: 0.15em; font-weight: 400; color: v-bind(MUTED); }
 .end { transform: translateX(-50%); overflow: visible !important; }
 </style>

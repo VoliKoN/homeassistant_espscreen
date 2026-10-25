@@ -34,7 +34,7 @@ defineEmits<{ activate: [] }>();
 .bedside-clock .round-tile, .bedside-clock .round-key { max-width: none; }
 .round-tile { position: relative; display: grid; justify-items: center; min-width: 0; max-width: 64px; }
 .round-key { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; max-width: 64px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; }
-.round-tile .remove { top: -6px; right: 4px; }
+.round-tile .remove { top: -6px; inset-inline-end: 4px; }
 .round-tile .disc { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tile-circle); color: var(--tile-icon); font-size: 19px; }
 .round-tile .disc .value { font-size: 10px; color: var(--ink, inherit); }
 .round-tile .kn { font-size: 9px; opacity: .7; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

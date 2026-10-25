@@ -124,7 +124,7 @@ async function onKey(e: KeyboardEvent) {
 .tile.tall.big-key { flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 4px; container-type: size; }
 /* Additional rows extend the existing header and controls. All single-row selectors remain unchanged. */
 .tile.tall { flex-direction: column; align-items: stretch; justify-content: start; container-type: size; }
-.tile.full.tall { justify-content: start; text-align: left; }
+.tile.full.tall { justify-content: start; text-align: start; }
 .tile.tall.tall-action { justify-content: center; }
 .tile.tall.photo { color: white; }
 .tile.camera { justify-content: end; }

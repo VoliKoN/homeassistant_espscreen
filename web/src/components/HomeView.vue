@@ -86,7 +86,7 @@ onMounted(entities.loadOverview);
               :columns="live.columns" :rows="live.rows" :layout="layout" :pictures="drawsPictures(screen)" :dark="screen.settings?.values?.dark_mode === true" still
               @ready="drawn.add(screen.id)" @failed="failed.add(screen.id)" />
           </span>
-          <span v-if="view && !(live && layout && drawn.has(screen.id) && !failed.has(screen.id))" class="home-glass"
+          <span v-if="view && !(live && layout && drawn.has(screen.id) && !failed.has(screen.id))" class="home-glass glass-ltr" dir="ltr"
             :style="{ zoom: scale(view.style, view.shape) }" aria-hidden="true">
             <span class="page home-page" :style="view.style">
               <span class="device" :class="{ compact: view.compact }">
@@ -130,7 +130,7 @@ onMounted(entities.loadOverview);
 .home-head p { color: var(--muted); margin-top: 2px; }
 .home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
 .home-card { display: grid; cursor: pointer; grid-template-rows: auto auto; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
-  text-align: left; transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s; }
+  text-align: start; transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s; }
 .home-card:hover { border-color: var(--line-strong); box-shadow: var(--shadow); transform: translateY(-1px); }
 .home-stage { height: 236px; display: grid; place-items: center; background: var(--surface-2); border-bottom: 1px solid var(--line); padding: 20px; }
 /* The live screen and the mockup it replaces share one place, the live one on top. */
@@ -146,7 +146,7 @@ onMounted(entities.loadOverview);
 .home-empty { display: grid; justify-items: center; gap: 6px; color: var(--muted); font-size: 12.5px; }
 .home-empty .ui-icon { font-size: 26px; }
 .home-foot { display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-width: 0; }
-.home-foot .led { position: relative; top: auto; right: auto; flex: none; box-shadow: none; }
+.home-foot .led { position: relative; top: auto; inset-inline-end: auto; flex: none; box-shadow: none; }
 .home-name { display: grid; min-width: 0; flex: 1; }
 .home-name strong { font-size: 13.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-name small { font-size: 11.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

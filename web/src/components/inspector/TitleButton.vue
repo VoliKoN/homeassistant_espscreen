@@ -15,8 +15,8 @@ defineEmits<{ rename: [] }>();
 </template>
 
 <style scoped>
-.dr-title-btn { justify-self: start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; margin-left: -6px; padding: 2px 6px; border-radius: 6px;
-  color: inherit; text-align: left; transition: background 0.12s; }
+.dr-title-btn { justify-self: start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; margin-inline-start: -6px; padding: 2px 6px; border-radius: 6px;
+  color: inherit; text-align: start; transition: background 0.12s; }
 .dr-title-btn b { font-weight: 600; font-size: 14px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dr-pencil { flex: none; font-size: 14px; opacity: 0; transition: opacity 0.12s; color: var(--head-soft, var(--muted)); }
 .dr-title-btn:hover, .dr-title-btn:focus-visible { background: color-mix(in srgb, var(--head-ink, var(--ink)) 12%, transparent); }

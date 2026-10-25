@@ -117,14 +117,14 @@ watch(() => props.entity, () => {
 .picker-items.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 8px; }
 .picker-item { position: relative; display: flex; align-items: center; min-width: 0; border-radius: 8px; }
 .picker-items:not(.grid) .picker-item:hover { background: var(--hover, rgba(0, 0, 0, .04)); }
-.pick { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; padding: 6px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: 8px; }
+.pick { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; padding: 6px; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; border-radius: 8px; }
 .grid .pick { flex-direction: column; align-items: stretch; padding: 0; gap: 4px; text-align: center; }
 .art { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; background: var(--track, #e5e7eb); }
 .badge { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #d9f2fd; color: #0c91ce; font-size: 16px; }
 .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.25; font-size: .9em; }
 .chosen .art { outline: 3px solid var(--accent, #03a9f4); outline-offset: 2px; }
 .chosen .name { color: var(--accent, #03a9f4); }
-.open { position: absolute; right: 2px; }
+.open { position: absolute; inset-inline-end: 2px; }
 .picker-link { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line, rgba(0, 0, 0, .08)); }
 .link-label { font-weight: 600; }
 .link-row { display: flex; gap: 6px; }
@@ -132,5 +132,5 @@ watch(() => props.entity, () => {
 .picker-link .help { margin: 0; }
 .linked .pick { padding: 6px; }
 .linked .art { width: 56px; flex: none; }
-.grid .open { top: 4px; right: 4px; background: rgba(255, 255, 255, .85); border-radius: 50%; }
+.grid .open { top: 4px; inset-inline-end: 4px; background: rgba(255, 255, 255, .85); border-radius: 50%; }
 </style>

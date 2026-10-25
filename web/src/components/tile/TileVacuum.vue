@@ -119,7 +119,7 @@ const roomIcon = (i: number) => glyph(preview.value?.rooms[i]?.[1] || "F0FE6");
 .vacuum-face > * { position: absolute; box-sizing: border-box; }
 .vacuum-face .mdi { font-style: normal; line-height: 1; }
 .vc-circle { display: grid; place-items: center; border-radius: 50%; background: var(--tile-circle); color: var(--tile-icon); padding: 0; }
-.vc-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 1px; min-width: 0; text-align: left; }
+.vc-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 1px; min-width: 0; text-align: start; }
 .vc-text b, .vc-text small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .vc-text small { color: v-bind(MUTED); }
 .vc-chip { display: flex; align-items: center; gap: .3em; padding: 0 .75em 0 .6em; border-radius: 999px; background: v-bind(TRACK); white-space: nowrap; }

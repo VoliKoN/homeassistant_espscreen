@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onKeyStroke } from "@vueuse/core";
 import { computed, watch } from "vue";
-import { t } from "./i18n";
+import { ConfigProvider } from "reka-ui";
+import { editorDir, i18n, t } from "./i18n";
 import Icon from "./components/ui/Icon.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Toast from "./components/Toast.vue";
@@ -27,6 +28,8 @@ import { useInventoryStore } from "./stores/inventory";
 import { useDragStore } from "./stores/drag";
 import { useDocumentStore } from "./stores/document";
 
+// Reka UI's menus and pickers open and step with the page's direction (i18n.ts, editorDir).
+const dir = computed(() => (i18n.global.locale.value, editorDir()));
 const ui = useUiStore();
 const sidebar = useSidebarStore();
 const plugins = usePluginsStore();
@@ -55,6 +58,7 @@ onKeyStroke((e) => (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && !q
 </script>
 
 <template>
+  <ConfigProvider :dir="dir">
   <div class="app" :class="{ dragging: dragging.active, phone: ui.phone, 'side-folded': sidebar.folded, 'side-resizing': sidebar.resizing }"
     :style="{ '--side-w': `${sidebar.shownWidth}px` }">
     <!-- On a phone the sidebar is a sheet from the left, everything it holds on a wider page, behind the menu key of
@@ -73,4 +77,5 @@ onKeyStroke((e) => (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && !q
     <CommandPalette />
     <ConfirmDialog />
   </div>
+  </ConfigProvider>
 </template>
