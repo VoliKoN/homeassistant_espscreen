@@ -114,15 +114,15 @@ watch(() => scr.selected, cancel);
 .tile:has(> .resize-handle) { overflow: visible; }
 .tile:has(> .resize-handle):is(:hover, :focus-within) { z-index: 4; }
 /* Absolute offsets start inside the 1px border. Centre the grip on its stroke. */
-.resize-handle.columns { right: -.5px; top: 50%; width: 24px; height: 40px; transform: translate(50%, -50%); cursor: ew-resize; }
-.resize-handle.rows { bottom: -.5px; left: 50%; width: 40px; height: 24px; transform: translate(-50%, 50%); cursor: ns-resize; }
-.resize-handle span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 12px; height: 30px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); box-shadow: 0 1px 3px rgb(0 0 0 / .12); font-size: 14px; }
+.resize-handle.columns { inset-inline-end: -.5px; top: 50%; width: 24px; height: 40px; transform: translate(50%, -50%); cursor: ew-resize; }
+.resize-handle.rows { bottom: -.5px; inset-inline-start: 50%; width: 40px; height: 24px; transform: translate(-50%, 50%); cursor: ns-resize; }
+.resize-handle span { position: absolute; top: 50%; inset-inline-start: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 12px; height: 30px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); box-shadow: 0 1px 3px rgb(0 0 0 / .12); font-size: 14px; }
 .resize-handle.rows span { width: 30px; height: 12px; }
-.resize-handle svg { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; fill: currentColor; transform: translate(-50%, -50%); }
+.resize-handle svg { position: absolute; top: 50%; inset-inline-start: 50%; width: 18px; height: 18px; fill: currentColor; transform: translate(-50%, -50%); }
 .resize-handle.columns svg { transform: translate(-50%, -50%) rotate(90deg); }
 .tile:hover .resize-handle, .tile:focus-within .resize-handle, .resize-handle:focus-visible { opacity: 1; pointer-events: auto; }
 .resize-handle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .tile-resize-preview { position: fixed; z-index: 10000; box-sizing: border-box; pointer-events: none; border: 2px solid var(--accent); border-radius: 12px; background: var(--accent-soft); opacity: .85; }
-.tile-resize-preview > span { position: absolute; right: 6px; bottom: 6px; padding: 3px 6px; border-radius: 5px; background: var(--surface); color: var(--ink); font-size: 12px; }
+.tile-resize-preview > span { position: absolute; inset-inline-end: 6px; bottom: 6px; padding: 3px 6px; border-radius: 5px; background: var(--surface); color: var(--ink); font-size: 12px; }
 @media (hover: none) { .tile.chosen .resize-handle { opacity: 1; pointer-events: auto; } }
 </style>

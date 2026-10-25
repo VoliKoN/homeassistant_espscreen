@@ -89,12 +89,12 @@ const icon = (name: string) => glyph(inv.inventory.icons?.controls?.[name] || ''
 .cover-slider, .cover-key, .cover-caption { position: absolute; }
 .cover-slider { border-radius: 12px; background: var(--tile-circle); overflow: hidden; }
 .cover-slider.lying { border-radius: 9px; }
-.cover-slider .fill { position: absolute; left: 0; top: 0; right: 0; background: var(--tile-accent); }
-.cover-slider.lying .fill { bottom: 0; right: auto; }
-.cover-slider .handle { position: absolute; left: 30%; width: 40%; height: 3px; border-radius: 3px; background: white; transform: translateY(-7px); }
-.cover-slider.lying .handle { left: auto; top: 25%; width: 3px; height: 50%; transform: translateX(-7px); }
-.cover-slider.tilt .handle { left: 20%; width: 60%; height: 5px; background: var(--tile-accent); transform: translateY(50%); }
-.cover-slider.tilt.lying .handle { left: auto; top: 20%; width: 5px; height: 60%; transform: translateX(-50%); }
+.cover-slider .fill { position: absolute; inset-inline-start: 0; top: 0; inset-inline-end: 0; background: var(--tile-accent); }
+.cover-slider.lying .fill { bottom: 0; inset-inline-end: auto; }
+.cover-slider .handle { position: absolute; inset-inline-start: 30%; width: 40%; height: 3px; border-radius: 3px; background: white; transform: translateY(-7px); }
+.cover-slider.lying .handle { inset-inline-start: auto; top: 25%; width: 3px; height: 50%; transform: translateX(-7px); }
+.cover-slider.tilt .handle { inset-inline-start: 20%; width: 60%; height: 5px; background: var(--tile-accent); transform: translateY(50%); }
+.cover-slider.tilt.lying .handle { inset-inline-start: auto; top: 20%; width: 5px; height: 60%; transform: translateX(-50%); }
 .slats { position: absolute; inset: 0; width: 100%; height: 100%; }
 .slats line { stroke: var(--tile-accent); stroke-opacity: .32; stroke-linecap: round; }
 .cover-key { border-radius: 999px; display: grid; place-items: center; font-size: 1.6em; background: var(--tile-circle); color: var(--tile-accent); }

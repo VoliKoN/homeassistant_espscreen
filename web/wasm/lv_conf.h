@@ -4,6 +4,10 @@
 #define LV_COLOR_16_SWAP 0
 #define LV_USE_ARC 1
 #define LV_USE_LABEL 1
+/* Right to left, as a screen built in Hebrew has it (packages/core.yaml, LVGL_BIDI): one preview serves every
+   language, and with an automatic base direction a left-to-right text draws as before. */
+#define LV_USE_BIDI 1
+#define LV_BIDI_BASE_DIR_DEF LV_BASE_DIR_AUTO
 #define LV_FONT_MONTSERRAT_14 1
 #define LV_FONT_MONTSERRAT_28 1
 #define LV_FONT_FMT_TXT_LARGE 1

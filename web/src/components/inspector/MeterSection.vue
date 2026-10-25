@@ -202,13 +202,13 @@ const colorName = (name: string | null) => (name ? t(`editor.tile.meter.colors.$
 .meter-minmax input { flex: 1; min-width: 0; width: 100%; height: 30px; padding: 4px 8px; font-size: 13px; border-radius: 7px; }
 .meter-unit { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .meter-outside { margin: 0; }
-.meter-link { display: inline; padding: 0; margin-left: 4px; font: inherit; font-weight: 600; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.meter-link { display: inline; padding: 0; margin-inline-start: 4px; font: inherit; font-weight: 600; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 .meter-rows { display: grid; gap: 8px; padding: 4px 0 6px; }
 .meter-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .meter-swatch { width: 26px; height: 26px; flex: none; border-radius: 50%; border: 1px solid rgba(0, 0, 0, 0.12); padding: 0; }
 .meter-swatch:focus-visible { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
 .meter-words { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
 .meter-threshold { width: 0; flex: 1 1 70px; min-width: 50px; max-width: 120px; height: 30px; padding: 4px 8px; font-size: 13px; border-radius: 7px; }
-.meter-reset { justify-self: start; margin-left: 0; font-size: 12px; }
+.meter-reset { justify-self: start; margin-inline-start: 0; font-size: 12px; }
 .meter-palette .sw { max-width: 236px; }
 </style>

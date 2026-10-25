@@ -134,7 +134,7 @@ onBeforeUnmount(() => { doc.connectingTileId = null; });
   </div>
   <div class="map-scroll" @keydown.esc="doc.connectingTileId = null">
     <div :style="{ width: `${extent.width * zoom}px`, height: `${extent.height * zoom}px` }">
-      <div ref="world" class="map-world" :style="{ width: `${extent.width}px`, height: `${extent.height}px`, transform: `scale(${zoom})` }">
+      <div ref="world" class="map-world glass-ltr" dir="ltr" :style="{ width: `${extent.width}px`, height: `${extent.height}px`, transform: `scale(${zoom})` }">
         <svg class="map-links" :width="extent.width" :height="extent.height" :aria-label="t('editor.pages.routes')">
           <defs><marker id="page-link-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>
           <g v-for="edge in visibleEdges" :key="edge.tileId" :class="{ chosen: doc.selectedTileId === edge.tileId }">
@@ -175,12 +175,12 @@ onBeforeUnmount(() => { doc.connectingTileId = null; });
 .map-list { display: grid; gap: 10px; }
 .map-list section { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface); display: grid; gap: 6px; }
 .map-list-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.map-list-name { text-align: left; color: var(--ink-2); padding: 4px 0; }
+.map-list-name { text-align: start; color: var(--ink-2); padding: 4px 0; }
 .map-list-name b { color: var(--ink); font-weight: 650; }
-.map-list-route { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; background: var(--surface-2); color: var(--ink-2); font-size: 12.5px; text-align: left; }
+.map-list-route { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 8px; background: var(--surface-2); color: var(--ink-2); font-size: 12.5px; text-align: start; }
 .map-list-route .ui-icon { color: var(--accent); }
 .map-toolbar { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 12px; color: var(--muted); flex-wrap: wrap; }
-.map-hint { margin-right: auto; }
+.map-hint { margin-inline-end: auto; }
 .map-tool-label { font-weight: 500; color: var(--ink-2); }
 .zoom-value { min-width: 40px; text-align: center; color: var(--ink-2); font-size: 12px; }
 .map-scroll { overflow: auto; min-height: 500px; max-height: calc(100vh - 250px); background-color: var(--surface-2); background-image: radial-gradient(var(--line-strong) 1px, transparent 1px); background-size: 20px 20px; border-radius: 14px; border: 1px solid var(--line); }

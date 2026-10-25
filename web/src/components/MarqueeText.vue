@@ -32,7 +32,7 @@ onMounted(measure);
 .marquee { display: block; min-width: 0; overflow: hidden; white-space: nowrap; }
 .marquee-track { display: flex; width: max-content; }
 .marquee-text, .marquee-copy { flex: none; }
-.marquee-copy { padding-left: 32px; }
+.marquee-copy { padding-inline-start: 32px; }
 .scrolling .marquee-track { animation: media-title var(--marquee-duration) linear 1.4s infinite; }
 @keyframes media-title { 0%, 15% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
 @media (prefers-reduced-motion: reduce) {

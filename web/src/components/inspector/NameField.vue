@@ -51,7 +51,7 @@ function useFallback() {
 <style scoped>
 .name-input { position: relative; }
 .name-input input { font-size: 13.5px; height: 34px; }
-.name-input:has(.name-reset) input { padding-right: 36px; }
-.name-reset { position: absolute; top: 3px; right: 3px; width: 28px; height: 28px; border-radius: 6px; color: var(--muted); }
+.name-input:has(.name-reset) input { padding-inline-end: 36px; }
+.name-reset { position: absolute; top: 3px; inset-inline-end: 3px; width: 28px; height: 28px; border-radius: 6px; color: var(--muted); }
 .name-reset:hover { color: var(--ink); background: var(--surface-2); }
 </style>

@@ -65,7 +65,7 @@ const sections = ["alerts-try", "alerts-screens", "alerts-howto", "alerts-all", 
     <p v-if="!alerts" class="hint">{{ t("editor.alerts.loading") }}</p>
     <template v-else>
       <div class="alert-hero">
-        <div class="alert-mock" id="alert-mock" aria-hidden="true">
+        <div class="alert-mock glass-ltr" dir="ltr" id="alert-mock" aria-hidden="true">
           <div class="alert-mock-card" :style="orange ? { background: orange.color } : undefined">
             <span class="mdi alert-mock-icon" id="alert-mock-icon">{{ doorbell ? glyph(doorbell.cp) : "" }}</span>
             <strong id="alert-mock-title">{{ t("editor.alerts.example.title") }}</strong>

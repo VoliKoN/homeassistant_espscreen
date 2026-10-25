@@ -47,7 +47,7 @@ function click(e: MouseEvent) {
 
 <template>
   <div ref="box" class="tile-anchor" :title="t('editor.tile.anchor_hint')" @click.capture.stop="click">
-    <div class="tile-anchor-glass" :style="[canvas.deviceStyle, { zoom }]">
+    <div class="tile-anchor-glass glass-ltr" dir="ltr" :style="[canvas.deviceStyle, { zoom }]">
       <div class="device tile-anchor-device" :class="{ compact: canvas.isCompact, roomy: canvas.roomyNames, key }">
         <TileCard v-if="key" :tile="insp.previewed(tile)" :at="-1" round preview />
         <div v-else class="tiles" :style="grid">

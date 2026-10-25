@@ -42,6 +42,9 @@ def generate(dpi, look, profile):
     raw['DISPLAY_DPI'] = str(dpi)
     values = profiles.evaluate(raw)
     values.update(CAMERA_PAINT_FILL='', CALIBRATION_PAINT_FILL='')
+    # One preview serves every language: its text fonts carry the Hebrew letters a screen built in Hebrew has
+    # (packages/core.yaml, SCRIPT_GLYPHS_NOTO), so a Hebrew name draws as on that screen and not as boxes.
+    values['SCRIPT_GLYPHS_NOTO'] = values['SCRIPT_GLYPHS_HEBREW']
     core = profiles.resolve(profiles.CORE.read_text(), values)
     # Looks may add their own fonts. Let ESPHome merge the profile's font
     # packages, rather than assuming every font lives in the shared core.

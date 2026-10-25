@@ -234,7 +234,7 @@ const toggle = (issue: FeedbackIssue) => {
 .fb-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-top: 4px; }
 .fb-what { font-size: 12px; color: var(--muted); }
 .fb-what[open] { flex-basis: 100%; order: 1; }
-.fb-what summary { cursor: pointer; display: inline; margin-right: 12px; }
+.fb-what summary { cursor: pointer; display: inline; margin-inline-end: 12px; }
 .fb-what ul { margin: 6px 0 4px 18px; padding: 0; }
 .fb-privacy { font-size: 12px; color: var(--muted); }
 .btn.danger:hover:not(:disabled) { color: var(--danger); background: var(--danger-soft); }

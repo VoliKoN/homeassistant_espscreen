@@ -150,7 +150,7 @@ useEventListener(window, "keydown", (event: KeyboardEvent) => {
 .grow-badge { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-size: 16px; }
 .grow-close { margin: -4px -4px 0 0; }
 .grow-sets { display: grid; gap: 2px; }
-.grow-set { display: flex; align-items: center; gap: 10px; min-height: 34px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.grow-set { display: flex; align-items: center; gap: 10px; min-height: 34px; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; text-align: start; cursor: pointer; }
 .grow-set:hover, .grow-set:focus-visible { background: var(--hover, rgb(0 0 0 / .04)); outline: none; }
 .grow-set[aria-checked="true"] { background: var(--accent-soft); }
 .grow-set.none .grow-name { color: var(--muted); }

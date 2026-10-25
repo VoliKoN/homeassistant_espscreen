@@ -154,18 +154,18 @@ const openPrivacy = () => { if (ask.value) window.open(ask.value.privacy, "_blan
 
 <style scoped>
 .rate-card { position: relative; flex: none; margin: 14px 18px 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-.rate-more { position: absolute; top: 8px; right: 8px; color: var(--muted); }
+.rate-more { position: absolute; top: 8px; inset-inline-end: 8px; color: var(--muted); }
 .rate-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
 .rate-main.pictured { grid-template-columns: 168px minmax(0, 1fr); }
 .rate-picture { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 9px; border: 1px solid var(--line); display: block; }
 .rate-body { display: grid; gap: 10px; min-width: 0; justify-items: start; }
 .rate-who { margin: 0; font-size: 11.5px; color: var(--muted); }
-.rate-question { margin: 0; padding-right: 32px; font-size: 14px; font-weight: 600; line-height: 1.35; text-wrap: balance; }
+.rate-question { margin: 0; padding-inline-end: 32px; font-size: 14px; font-weight: 600; line-height: 1.35; text-wrap: balance; }
 .rate-count { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); cursor: pointer; max-width: 520px; }
 .rate-count span { display: grid; gap: 2px; font-size: 12.5px; }
 .rate-count small { color: var(--muted); line-height: 1.4; }
 .rate-shared { display: grid; gap: 6px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); font-size: 12.5px; color: var(--ink-2); max-width: 520px; }
-.rate-shared ul { margin: 0; padding-left: 16px; display: grid; gap: 2px; }
+.rate-shared ul { margin: 0; padding-inline-start: 16px; display: grid; gap: 2px; }
 .rate-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .rate-thanks { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 13px; font-weight: 550; color: var(--good); }
 .rate-card .hint { margin: 0 0 10px; }

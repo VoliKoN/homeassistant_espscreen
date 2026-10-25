@@ -3,7 +3,7 @@ import { useResizeObserver } from "@vueuse/core";
 import { nextTick, onMounted, ref, watch } from "vue";
 import { vTooltip } from "floating-vue";
 import "floating-vue/dist/style.css";
-import { t } from "../i18n";
+import { editorDir, t } from "../i18n";
 import { explainsItself, languageOnly, pendingText, rowStatus, screenBoardName, screenIcon, updateNotes } from "../model/screen-status";
 import { glyph } from "../model/topbar";
 import { summaryText } from "../model/broken-tiles";
@@ -111,19 +111,22 @@ onMounted(remeasure);
 // And whenever the sidebar itself changes size (the window, a phone turned).
 useResizeObserver(aside, remeasure);
 const tip = (key: string, text: string | undefined, always = false) =>
-  text && (sidebar.folded || always || cut.value[key]) ? { content: text, placement: "right", distance: 10, delay: { show: 200, hide: 0 } } : null;
+  text && (sidebar.folded || always || cut.value[key]) ? { content: text, placement: editorDir() === "rtl" ? "left" : "right", distance: 10, delay: { show: 200, hide: 0 } } : null;
 const screenTip = (screen: Screen) => [screen.name, subline(screen)?.text].filter(Boolean).join(" · ");
 // The edge: dragged, by the arrow keys (Shift for bigger steps) or reset with a double click (stores/sidebar.ts).
-let left = 0;
+// On a right-to-left page the sidebar stands at the right, so its width is measured from its right edge and the
+// arrow keys swap: the one pointing into the page makes it wider.
+let left = 0, right = 0;
 const edge = useResizeHandle({
-  onStart: () => { left = aside.value?.getBoundingClientRect().left || 0; sidebar.resizing = true; },
-  onMove: (e) => sidebar.drag(e.clientX - left),
+  onStart: () => { const box = aside.value?.getBoundingClientRect(); left = box?.left || 0; right = box?.right || 0; sidebar.resizing = true; },
+  onMove: (e) => sidebar.drag(editorDir() === "rtl" ? right - e.clientX : e.clientX - left),
   onEnd: () => { sidebar.resizing = false; },
 });
 function resizeKey(event: KeyboardEvent) {
   const by = event.shiftKey ? 48 : 16;
-  if (event.key === "ArrowLeft") sidebar.drag(sidebar.shownWidth - by);
-  else if (event.key === "ArrowRight") sidebar.drag(sidebar.folded ? SIDE_MIN : sidebar.shownWidth + by);
+  const [narrower, wider] = editorDir() === "rtl" ? ["ArrowRight", "ArrowLeft"] : ["ArrowLeft", "ArrowRight"];
+  if (event.key === narrower) sidebar.drag(sidebar.shownWidth - by);
+  else if (event.key === wider) sidebar.drag(sidebar.folded ? SIDE_MIN : sidebar.shownWidth + by);
   else if (event.key === "Home") sidebar.reset();
   else return;
   event.preventDefault();

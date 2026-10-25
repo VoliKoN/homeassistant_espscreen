@@ -29,7 +29,7 @@ const card = props.card;
 <style scoped>
 .tile .watch { position: relative; flex: 1; align-self: stretch; min-width: 0; min-height: 0; }
 .tile .watch > * { position: absolute; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tile .watch .alone { left: 0; right: 0; display: flex; justify-content: center; align-items: flex-end; }
+.tile .watch .alone { inset-inline-start: 0; inset-inline-end: 0; display: flex; justify-content: center; align-items: flex-end; }
 .tile .watch .alone > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .tile .watch .alone .unit { flex: none; }
 .tile .watch .ic:not(.thumb) { display: grid; place-items: center; padding: 0; line-height: 1; }

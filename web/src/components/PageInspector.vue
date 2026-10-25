@@ -170,14 +170,14 @@ const cells = computed(() => Math.min(12, (doc.documentGrid?.columns || 2) * (do
 </template>
 
 <style scoped>
-.nested { padding-left: 12px; border-left: 2px solid var(--line); }
+.nested { padding-inline-start: 12px; border-inline-start: 2px solid var(--line); }
 .bar-preview { flex: 1; min-width: 0; border-radius: 6px; padding: 1px 2px; display: block; }
 .bar-preview :deep(svg) { display: block; width: 100%; height: auto; }
 .map-move { display: inline-flex; gap: 2px; padding: 2px; border-radius: 9px; background: var(--seg); }
 .map-move .icon-btn { width: 28px; height: 28px; }
-.route-row { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 8px; background: var(--surface-2); text-align: left; font-size: 12.5px; color: var(--ink-2); }
+.route-row { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 8px; background: var(--surface-2); text-align: start; font-size: 12.5px; color: var(--ink-2); }
 .route-row:hover { background: var(--seg); color: var(--ink); }
 .route-row > .ui-icon { color: var(--accent); }
 .route-page { padding: 1px 7px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40%; }
-.route-end { margin-left: auto; color: var(--muted) !important; }
+.route-end { margin-inline-start: auto; color: var(--muted) !important; }
 </style>

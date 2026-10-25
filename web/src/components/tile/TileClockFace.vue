@@ -58,7 +58,7 @@ const card = props.card;
 .face-clock.flip { justify-content: center; }
 .face-clock .blocks { display: flex; align-items: baseline; gap: 3px; }
 .face-clock .block { background: #f1f1f1; border-radius: 4px; padding: 1px 5px; font-size: 24px; font-weight: 500; line-height: 1.25; background-image: linear-gradient(transparent calc(50% - .5px), #fff calc(50% - .5px), #fff calc(50% + .5px), transparent calc(50% + .5px)); }
-.face-clock .blocks small { font-size: 9px; margin-left: 2px; }
+.face-clock .blocks small { font-size: 9px; margin-inline-start: 2px; }
 .flip-wide { display: flex; flex-direction: column; justify-content: center; gap: 6px; width: 100%; height: 100%; min-width: 0; container-type: size; }
 /* As the screen draws it: two blocks sharing the width, each about as tall as wide, the digits filling them. */
 .flip-wide .blocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3%; height: min(calc(100cqh - 34px), 44cqw); }

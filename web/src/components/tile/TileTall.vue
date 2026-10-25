@@ -134,8 +134,8 @@ const standStyle = computed(() => ({ background: `linear-gradient(to top, ${card
 .tile .glass-tall .bar { display: flex; overflow: visible; }
 .tile .glass-tall .glass-row { display: flex; align-items: center; justify-content: center; gap: var(--key-gap); overflow: visible; }
 .tile .glass-tall .glass-row .tog { width: var(--tog-w); height: var(--tog-h); border-radius: 999px; flex: none; }
-.tile .glass-tall .glass-row .tog::after { width: var(--knob); height: var(--knob); top: calc((var(--tog-h) - var(--knob)) / 2); right: calc((var(--tog-h) - var(--knob)) / 2); }
-.tile .glass-tall .glass-row .tog.off::after { right: auto; left: calc((var(--tog-h) - var(--knob)) / 2); }
+.tile .glass-tall .glass-row .tog::after { width: var(--knob); height: var(--knob); top: calc((var(--tog-h) - var(--knob)) / 2); inset-inline-end: calc((var(--tog-h) - var(--knob)) / 2); }
+.tile .glass-tall .glass-row .tog.off::after { inset-inline-end: auto; inset-inline-start: calc((var(--tog-h) - var(--knob)) / 2); }
 .tile .glass-tall .glass-row .keys { position: absolute; display: flex; gap: var(--key-gap); }
 .tile .glass-tall .glass-row .key { width: var(--key-w); height: var(--key-h); flex: none; padding: 0; min-width: 0; font-size: var(--icon-mini); border-radius: var(--key-r); }
 .tile .glass-tall .glass-row .range + .key { width: var(--key-h); }
@@ -152,16 +152,16 @@ const standStyle = computed(() => ({ background: `linear-gradient(to top, ${card
 .tile.tall.photo .glass-tall .glass-row.playback .key, .tile.tall.photo .glass-tall .glass-row.volume_playback .key { background: transparent; color: white; }
 .tile.tall.photo .glass-tall .glass-row .key.primary, .tile.tall.photo .glass-tall .glass-row .range + .key { background: white; color: #1b1b1b; }
 /* A player's volume standing at the card's right, the whole height of its content; the rest keeps clear of it. */
-.vol-stand { position: absolute; top: 8px; bottom: 8px; right: 9px; width: clamp(22px, 18cqh, 36px); border-radius: 10px; }
-.vol-stand::after { content: ''; position: absolute; left: 25%; right: 25%; height: 3px; bottom: clamp(4px, var(--fill), calc(100% - 6px)); background: white; border-radius: 2px; }
-.tile.tall:has(> .vol-stand) > :not(.vol-stand, .tall-art, .remove, .resize-handle) { margin-right: calc(clamp(22px, 18cqh, 36px) + 8px); }
+.vol-stand { position: absolute; top: 8px; bottom: 8px; inset-inline-end: 9px; width: clamp(22px, 18cqh, 36px); border-radius: 10px; }
+.vol-stand::after { content: ''; position: absolute; inset-inline-start: 25%; inset-inline-end: 25%; height: 3px; bottom: clamp(4px, var(--fill), calc(100% - 6px)); background: white; border-radius: 2px; }
+.tile.tall:has(> .vol-stand) > :not(.vol-stand, .tall-art, .remove, .resize-handle) { margin-inline-end: calc(clamp(22px, 18cqh, 36px) + 8px); }
 /* Beside it the keys start at the left, under the track and the name (runtime_tiles render_tall). */
 .tile.tall:has(> .vol-stand) > .ctl { justify-content: flex-start; }
 </style>
 <style scoped>
 /* What a cover shows where its slats do not fit (CoverTilePreview's fallback): its position bar, or its keys. */
-.cover-range { position: absolute; left: 0; right: 0; bottom: 0; height: min(40%, 34px); border-radius: 10px; background: linear-gradient(to right, var(--tile-accent) var(--position), var(--tile-circle) var(--position)); }
-.cover-row { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 6px; justify-content: center; }
+.cover-range { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; height: min(40%, 34px); border-radius: 10px; background: linear-gradient(to right, var(--tile-accent) var(--position), var(--tile-circle) var(--position)); }
+.cover-row { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; display: flex; gap: 6px; justify-content: center; }
 .tile.tall.big-key .ic { width: 44cqmin; height: 44cqmin; display: grid; place-items: center; font-size: 24cqmin; padding: 0; }
 .tile.tall.big-key .nm { font-size: clamp(12px, 13cqmin, 26px); font-weight: 500; color: #1b1b1b; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tile.tall.big-key .st { font-size: 10px; }
@@ -169,13 +169,13 @@ const standStyle = computed(() => ({ background: `linear-gradient(to top, ${card
 .tile.tall.tall-action .head { flex-direction: column; justify-content: center; text-align: center; }
 .tile.tall.tall-action .tx { flex: none; width: 100%; }
 .tile.tall .tog { --toggle-height: clamp(22px, 18cqh, 36px); height: var(--toggle-height); width: calc(2 * var(--toggle-height)); border-radius: 99px; flex: none; }
-.tile.tall .tog::after { width: calc(var(--toggle-height) - 6px); height: calc(var(--toggle-height) - 6px); top: 3px; right: 3px; }
-.tile.tall .tog.off::after { right: auto; left: 3px; }
+.tile.tall .tog::after { width: calc(var(--toggle-height) - 6px); height: calc(var(--toggle-height) - 6px); top: 3px; inset-inline-end: 3px; }
+.tile.tall .tog.off::after { inset-inline-end: auto; inset-inline-start: 3px; }
 .tile.tall .tall-body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 3px; }
 .track-title { font-weight: 600; font-size: clamp(12px, 9cqh, 21px); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile.tall .ctl { justify-content: center; width: 100%; }
 .tile.tall .range { flex: 1; height: clamp(22px, 18cqh, 36px); border-radius: 10px; position: relative; }
-.tile.tall .range::after { content: ''; width: 3px; height: 50%; background: white; border-radius: 2px; position: absolute; left: clamp(4px, var(--fill), calc(100% - 6px)); top: 25%; }
+.tile.tall .range::after { content: ''; width: 3px; height: 50%; background: white; border-radius: 2px; position: absolute; inset-inline-start: clamp(4px, var(--fill), calc(100% - 6px)); top: 25%; }
 .tile.tall .key.disabled { opacity: .35; }
 .tile.tall .key { width: clamp(22px, 18cqh, 36px); height: clamp(22px, 18cqh, 36px); min-width: 0; padding: 0; border-radius: 50%; }
 .tile.tall .playback .key.primary, .tile.tall .key.active { background: var(--tile-accent); color: white; }

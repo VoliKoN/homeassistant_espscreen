@@ -134,7 +134,7 @@ const card = props.card;
 .tile .glass-full .art { overflow: hidden; }
 .tile .glass-full .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .tile .glass-full .nm, .tile .glass-full .st { text-align: center; }
-.tile .glass-full.media .nm, .tile .glass-full.media .st { text-align: left; }
+.tile .glass-full.media .nm, .tile .glass-full.media .st { text-align: start; }
 .tile .glass-full .st { color: var(--muted); }
 .tile .glass-full .art { display: grid; place-items: center; background: color-mix(in srgb, var(--media-blue) 20%, white); color: var(--media-blue); line-height: 1; }
 .tile .glass-full .track { color: #1b1b1b; }
@@ -145,13 +145,13 @@ const card = props.card;
 .tile .glass-full .key.accent { background: var(--media-accent); color: white; }
 .tile .glass-full .key.disabled { opacity: .4; }
 .tile .glass-full .volume { overflow: visible; border-radius: 999px; background: linear-gradient(to right, var(--media-accent) var(--fill), var(--track) var(--fill)); }
-.tile .glass-full .volume::after { content: ""; position: absolute; top: 50%; left: var(--fill); width: var(--knob); height: var(--knob); border-radius: 50%;
+.tile .glass-full .volume::after { content: ""; position: absolute; top: 50%; inset-inline-start: var(--fill); width: var(--knob); height: var(--knob); border-radius: 50%;
   background: #1b1b1b; transform: translate(-50%, -50%); }
 /* The control at the card's right at the glass's sizes (layout_panel, panel_metrics). */
 .tile .ctl.glass-panel { position: absolute; gap: var(--key-gap); justify-content: flex-end; }
 .tile .ctl.glass-panel .tog { width: var(--tog-w); height: var(--tog-h); border-radius: 999px; flex: none; }
-.tile .ctl.glass-panel .tog::after { width: var(--knob); height: var(--knob); top: calc((var(--tog-h) - var(--knob)) / 2); right: calc((var(--tog-h) - var(--knob)) / 2); }
-.tile .ctl.glass-panel .tog.off::after { right: auto; left: calc((var(--tog-h) - var(--knob)) / 2); }
+.tile .ctl.glass-panel .tog::after { width: var(--knob); height: var(--knob); top: calc((var(--tog-h) - var(--knob)) / 2); inset-inline-end: calc((var(--tog-h) - var(--knob)) / 2); }
+.tile .ctl.glass-panel .tog.off::after { inset-inline-end: auto; inset-inline-start: calc((var(--tog-h) - var(--knob)) / 2); }
 .tile .ctl.glass-panel > .key { width: var(--key-w); height: var(--key-h); border-radius: var(--key-r); padding: 0; font-size: var(--icon-mini); flex: none; }
 .tile .ctl.glass-panel > .range { height: var(--slider-h); border-radius: var(--slider-r); flex: 1; width: auto; }
 .tile .ctl.glass-panel > .range + .key { width: var(--key-h); }

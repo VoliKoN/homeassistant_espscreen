@@ -371,7 +371,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="firmware-preview" :class="{ still }" :style="{ aspectRatio: `${width} / ${height}` }">
+  <div class="firmware-preview glass-ltr" dir="ltr" :class="{ still }" :style="{ aspectRatio: `${width} / ${height}` }">
     <canvas ref="canvas" :width="width" :height="height" :aria-label="t('editor.preview.canvas')"
       @pointerdown.prevent="contact" @pointermove="contact" @pointerup="contact" @pointercancel="cancel" @lostpointercapture="cancel"></canvas>
   </div>

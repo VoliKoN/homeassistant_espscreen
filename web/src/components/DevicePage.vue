@@ -137,7 +137,7 @@ async function onKey(e: KeyboardEvent) {
 
 <template>
   <UiContextMenu v-model:open="menuOpen" width="248px" :disabled="preview || !owned" @update:open="menuOpened">
-  <div class="page" :class="{ carried, refused: dragging.refused === page, chosen: !preview && !!owned && doc.selectedPageId === owned.id && insp.inspector?.kind === 'page' }" :style="canvas.deviceStyle" :data-page-id="owned?.id" @click="pageClick" @contextmenu="aim">
+  <div class="page glass-ltr" dir="ltr" :class="{ carried, refused: dragging.refused === page, chosen: !preview && !!owned && doc.selectedPageId === owned.id && insp.inspector?.kind === 'page' }" :style="canvas.deviceStyle" :data-page-id="owned?.id" @click="pageClick" @contextmenu="aim">
     <div v-if="!preview" class="page-head" :class="{ selected: doc.selectedPageId === owned?.id && insp.inspector?.kind === 'page' }">
       <button v-if="movable" type="button" class="grab" :data-page="page" v-drag="{ kind: 'page', page }"
         :title="t('editor.page.move_title')" :aria-label="t('editor.page.move_aria', { page: page + 1 })" @keydown="onKey">
