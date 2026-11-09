@@ -23,6 +23,8 @@ on:
 
 permissions:
   contents: write
+  # Fork only (hebrew-screen): to start Fork image once the rebuilt preview is committed.
+  actions: write
 
 concurrency:
   group: preview-${{ github.ref }}
@@ -119,3 +121,10 @@ jobs:
             sleep $((attempt * 5))
           done
           exit 1
+      # Fork only (hebrew-screen): a commit pushed with this workflow's token starts no other workflow, so the image of
+      # the commit with the rebuilt preview is started here (fork-image.yml).
+      - name: Publish the image of the rebuilt preview
+        if: steps.stale.outputs.stale == 'true' && github.ref_name == 'hebrew-screen'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run fork-image.yml --ref "$GITHUB_REF_NAME"

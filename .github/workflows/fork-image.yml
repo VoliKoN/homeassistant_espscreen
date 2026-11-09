@@ -1,0 +1,94 @@
+# Fork only, not for upstream: the Screen Manager image of this fork's hebrew-screen branch, published to this fork's
+# own GitHub Container Registry, so a Docker install pulls it instead of building it on the machine that runs it.
+#
+#   ghcr.io/volikon/homeassistant_espscreen:hebrew                 the newest build, what `docker compose pull` takes
+#   ghcr.io/volikon/homeassistant_espscreen:0.4.97-hebrew          the newest build on that app version
+#   ghcr.io/volikon/homeassistant_espscreen:0.4.97-hebrew.<run>    one build, to pin or to go back to
+#   ghcr.io/volikon/homeassistant_espscreen:sha-<commit>           the build of one commit
+#
+# The image carries the editor with its firmware preview (screen_manager/app/static). When a push moves the firmware
+# past the committed preview, preview.yml rebuilds it, commits it and starts this workflow again on that commit; the
+# run of the push itself then publishes nothing, so no image ever has a stale preview.
+name: Fork image
+
+on:
+  push:
+    branches: [hebrew-screen]
+    paths: ["screen_manager/**", ".github/workflows/fork-image.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: fork-image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    name: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Is the preview current?
+        id: preview
+        run: |
+          version=$(sed -n 's|^FROM ghcr.io/esphome/esphome:||p' screen_manager/Dockerfile)
+          python -m pip install --quiet "esphome==$version" PyYAML jinja2
+          if python web/wasm/generate_renderer_manifest.py --check; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::The firmware preview is being rebuilt (Firmware preview); it starts this workflow again when it is done."
+          fi
+      - name: App version
+        id: app
+        if: steps.preview.outputs.current == 'true'
+        run: |
+          echo "version=$(sed -n 's/^version: "\(.*\)"$/\1/p' screen_manager/config.yaml)" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-qemu-action@v3
+        if: steps.preview.outputs.current == 'true'
+      - uses: docker/setup-buildx-action@v3
+        if: steps.preview.outputs.current == 'true'
+      - uses: docker/login-action@v3
+        if: steps.preview.outputs.current == 'true'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: meta
+        if: steps.preview.outputs.current == 'true'
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=hebrew
+            type=raw,value=${{ steps.app.outputs.version }}-hebrew
+            type=raw,value=${{ steps.app.outputs.version }}-hebrew.${{ github.run_number }}
+            type=sha,prefix=sha-,format=short
+      - uses: docker/build-push-action@v6
+        if: steps.preview.outputs.current == 'true'
+        with:
+          context: screen_manager
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_VERSION=${{ steps.app.outputs.version }}
+          cache-from: type=gha,scope=fork-image
+          cache-to: type=gha,scope=fork-image,mode=max
+      - name: Summary
+        if: steps.preview.outputs.current == 'true'
+        run: |
+          {
+            echo "### Published"
+            echo '```'
+            echo "${{ steps.meta.outputs.tags }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
