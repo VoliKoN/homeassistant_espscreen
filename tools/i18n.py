@@ -207,10 +207,21 @@ LINT_KEEP = {
     # The live view's log of what lies over a live tile (runtime_tiles.h, drawn_over).
     'the top layer', 'the system layer', 'something on the page', 'another screen',
     # Why a live tile stops streaming (runtime_tiles.h, the live tiles' check before LVGL draws).
-    'its card moved', 'nothing over it', 'it is gone', 'it moved',
-    # The rate limiter's reason for a missed doorbell ring in the top bar (runtime_tiles.h, module doorbell), and the
-    # wake source Home Assistant's Wake button reports (packages/core.yaml, wake_from): log lines only.
-    'header doorbell', 'Home Assistant',
+    'its card moved', 'nothing over it',
+    # The audio owner's log of who holds the speaker and the microphone (audio_owner.h).
+    '%s refused %s: %s holds it', '%s gave %s back: %s has it again', 'the speaker', 'the microphone',
+    # The live spots' log of why a tile streams or not (live_spots.h, runtime_tiles.h live_spots_bind).
+    'answered: no stream', 'could not open', 'it is gone', 'it moved',
+    # A static_assert's reason, read by a developer at build time (live_view.h).
+    'the sound moves in whole samples, two bytes each',
+    # The governor (pressure.h, runtime_tiles.h): its signs and works in the "Pressure" diagnostic sensor and the log, and
+    # the words of ESPHome's own log lines it listens for ("Resetting ring buffer", "took a long time").
+    'the panel ran dry', 'the main loop held up', 'the wake word fell behind', 'live tiles', 'own camera',
+    'ring buffer', 'took a long time',
+    # The rate limiter's reason for a tap on the top bar's doorbell item (runtime_tiles.h, allowed()).
+    'header doorbell',
+    # Who woke the screen, in the log (packages/core.yaml, wake_from's source).
+    'Home Assistant',
     # The picture loader's log of a picture's steps (picture_loader.h, note()).
     'not wanted now', 'asks again', 'breaks off for the glass', 'load failed',
     'history range', 'card button ', 'header navigation', 'header item', 'media key ', 'screensaver play', 'screensaver mute', 'let go', 'too short (', 'already handled in this contact',
@@ -224,14 +235,14 @@ LINT_KEEP = {
     # writes them, and the reasons an action is refused, which only the app's log and the plugin's maker see.
     'True', 'False', 'too many fields', "a field's name is a-z, 0-9 and _", 'entity_id is given twice', 'a field is given twice',
     'a value is no JSON', 'the fields are larger than 1 KB',
-    # The ES7210's diagnostic sensor (packages/hardware/es7210-aec.yaml): the states of a diagnostic entity in Home
+    # The ES7210's diagnostic sensor (packages/hardware/parts/es7210/aec.yaml): the states of a diagnostic entity in Home
     # Assistant, in English as Home Assistant's own diagnostics are.
     'Error', 'Starting', 'Enabled', 'Bypass',
     # Home Assistant's own values and units the code compares with, not words it shows.
     'None', 'Auto', 'Wh',
     # Placeholders of the YAML tree that the runtime tiles replace before a screen shows them, and profile defaults.
     'Lamp', 'Plug', 'Evening', 'All off', 'AC', 'Vacuum', 'Tile 7', 'Tile 8', 'Tile 9', 'Tile 10', 'Light', 'Light Color',
-    'Climate', 'Example lamp', 'My CYD', 'My Guition', 'My Guition 4.3', 'My Guition 5', 'My Guition 10', 'My Guition 10 V3', 'My Guition 10 V2', 'My Guition 7', 'My Guition 7 V2', 'My Waveshare', 'My Waveshare 5', 'My Waveshare 7', 'My Waveshare 7B', 'My Waveshare 4B', 'My Waveshare P4', 'My Hosyond', 'My Guition 3.5', 'My Sunton 7', 'My reTerminal D1001', 'My CrowPanel 10',
+    'Climate', 'Example lamp', 'My CYD', 'My Guition', 'My Guition 4.3', 'My Guition 5', 'My Guition 10', 'My Guition 10 V3', 'My Guition 10 V2', 'My Guition 7', 'My Guition 7 V2', 'My Waveshare', 'My Waveshare 5', 'My Waveshare 7', 'My Waveshare 7B', 'My Waveshare 4.3C', 'My Waveshare 4B', 'My Waveshare P4', 'My Hosyond', 'My Guition 3.5', 'My Sunton 7', 'My reTerminal D1001', 'My CrowPanel 10',
     'My Waveshare 4', 'My SenseCAP Indicator', 'My Freenove 4', 'My WT32-SC01 Plus', 'My Waveshare P4 7B',
     'My Waveshare P4 7', 'My Waveshare 10',
 }

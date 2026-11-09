@@ -159,7 +159,8 @@
       "microphone": "Microfoon",
       "media_player": "Volume",
       "wake_when_moved": "Wakker bij bewegen",
-      "doorbell": "Deurbel",
+      "backlight_pwm": "Achtergrondlicht-PWM",
+      "dimmest_level": "Laagste stand",
       "dark_mode": "Donkere modus",
       "auto_standby": "Automatisch stand-by",
       "standby_after": "Stand-by na",
@@ -192,6 +193,7 @@
       "hours_minutes": "{h} u {m}",
       "wifi": "Wifi",
       "tessera": "Tessera",
+      "debug_mode": "Debug mode",
       "plugins": "Plugins",
       "microphone_gain": "Microfoongain",
       "automatic_gain": "Automatische gain",
@@ -199,7 +201,12 @@
     },
     "doorbell": {
       "sound_on": "Geluid aan",
-      "sound_off": "Geluid uit"
+      "sound_off": "Geluid uit",
+      "door": "Deur",
+      "door_confirm": "Tik nog eens om te openen",
+      "door_sent": "Verstuurd",
+      "talk": "Spreken",
+      "coming_soon": "Binnenkort"
     },
     "tile": {
       "tap_to_open": "Tik om te openen",
@@ -218,7 +225,8 @@
       "color": "Kleur",
       "color_temperature": "Kleurtemperatuur",
       "brightness": "Helderheid",
-      "waiting": "Wachten..."
+      "waiting": "Wachten...",
+      "presets": "Presets"
     },
     "effects": {
       "effect": "Effect",
@@ -700,7 +708,8 @@
         "firmware_first": "Installeer eerst schermfirmware {version} of nieuwer voor deze tegels.",
         "entity_gone": "Een gekozen entiteit bestaat niet meer. Zoek de nieuwe entiteit op.",
         "ids_too_long": "De entiteits-ID's van deze tegels zijn samen te lang voor één bericht aan het scherm; verwijder een paar tegels.",
-        "favorite_play": "Kies wat deze favoriet afspeelt."
+        "favorite_play": "Kies wat deze favoriet afspeelt.",
+        "text_template": "Een template-tile heeft een template van hooguit 4000 tekens nodig."
       },
       "top_bar": {
         "invalid": "Ongeldige bovenbalk; vernieuw de beheerpagina.",
@@ -871,6 +880,7 @@
         "layout_conflict": "De indeling is gewijzigd in een andere editor; laad opnieuw en vergelijk je wijzigingen",
         "adaptation": "Het schermraster is gewijzigd; beoordeel en bevestig de aangepaste indeling",
         "normalization": "De tegelinstellingen moeten worden aangepast voordat de pagina kan worden opgeslagen",
+        "on_tile": "Pagina {page}, tegel “{tile}”: {problem}",
         "ambiguous_tile": "De tegelopdracht heeft meerdere mogelijke bronnen; geef de pagina op",
         "save_first": "Sla eerst de pagina-indeling op voordat je de instellingen opslaat",
         "destination_exists": "Het doelscherm heeft al een opgeslagen indeling",
@@ -967,6 +977,12 @@
         "retry": "Tessera nam het rapport zojuist niet aan. Probeer het over een minuut opnieuw, of download het.",
         "offline": "Tessera is van hieruit niet bereikbaar. Download het rapport in plaats daarvan.",
         "invalid": "Tessera heeft het rapport geweigerd. Download het en voeg het toe aan een GitHub-issue."
+      },
+      "automations": {
+        "not_allowed": "Home Assistant liet de app geen automatiseringen opslaan. De app heeft toegang van een beheerder nodig.",
+        "refused": "Home Assistant weigerde de automatisering: {reason}",
+        "not_ours": "Die automatisering is niet door Tessera gemaakt, dus de app laat hem met rust.",
+        "invalid": "Deze automatisering kan niet worden opgeslagen ({part})."
       }
     },
     "status": {
@@ -1037,7 +1053,9 @@
         },
         "light": {
           "toggle": "Aan/uit-schakelaar",
-          "brightness": "Helderheidsslider"
+          "brightness": "Helderheidsslider",
+          "presets": "Presets",
+          "brightness_presets": "Helderheidsslider en presets"
         },
         "fan": {
           "toggle": "Aan/uit-schakelaar",
@@ -1165,9 +1183,13 @@
           "label": "Wakker bij bewegen",
           "hint": "Het scherm wordt wakker uit stand-by als iemand het oppakt, verplaatst of erop tikt. Het voelt het scherm zelf, niet iemand die langsloopt."
         },
-        "doorbell": {
-          "label": "Deurbel",
-          "hint": "Als een deurbel in Home Assistant gaat, wordt dit scherm wakker, speelt een belgeluid en opent de camera live met geluid. Uit laat dit scherm met rust, bijvoorbeeld een slaapkamer in de nacht."
+        "backlight_pwm": {
+          "label": "Achtergrondlicht-PWM",
+          "hint": "Hoe snel het achtergrondlicht aan en uit schakelt om te dimmen. 150 Hz dimt elk exemplaar van dit bord, maar sommige piepen onder 20 kHz: kies 20 kHz als dat van jou piept, 15 kHz als 20 kHz niet gelijkmatig dimt."
+        },
+        "dimmest_level": {
+          "label": "Laagste stand",
+          "hint": "Hoe laag het achtergrondlicht gaat, als deel van zijn volle vermogen. Zet het hoger als het scherm op de laagste helderheid zwart blijft of flikkert."
         },
         "microphone_gain": {
           "label": "Microfoongain",
@@ -1432,7 +1454,8 @@
         "nightstand": "Nachtkastjesklok",
         "page": "Ga naar pagina {page}",
         "map": "Kaart",
-        "energy": "Energie"
+        "energy": "Energie",
+        "text": "Template"
       },
       "identify": {
         "title": "Dit is {name}",
@@ -1503,6 +1526,56 @@
         "directory": "Map",
         "music": "Muziek"
       }
+    },
+    "doorbell": {
+      "fields": {
+        "camera": {
+          "label": "Camera",
+          "help": "De camera-entiteit van de deurbel. Een scherm dat streamt (een ESP32-P4) toont hem live met geluid; elk ander scherm toont de foto in een alert. Verplicht."
+        },
+        "title": {
+          "label": "Titel",
+          "help": "Hoe het scherm de deurbel noemt, bovenaan het beeld en als titel van de alert. Leeg neemt de naam van de camera."
+        },
+        "screen": {
+          "label": "Scherm",
+          "help": "Welke schermen de bel krijgen: een apparaatnaam (zoals kitchen-screen), de naam die Home Assistant toont, of een ruimte. Een lijst bereikt er meerdere. Laat het weg voor elk scherm. Een naam die bij geen scherm past, stuurt niets."
+        },
+        "timeout": {
+          "label": "Timeout",
+          "help": "Seconden dat de bel blijft als niemand hem aanraakt, {min} tot {max}. Leeg is {default}. Een aanraking houdt hem open."
+        },
+        "keep_minutes": {
+          "label": "Gemist bewaren",
+          "help": "Minuten dat een bel die niemand beantwoordde in de bovenbalk blijft van de schermen met zijn beeld, geteld vanaf het aanbellen, 1 tot {most}. Leeg of 0: tot iemand hem opent."
+        },
+        "sound": {
+          "label": "Geluid",
+          "help": "Of het geluid van de deurbel meteen speelt als hij rinkelt, op een scherm met een luidspreker. Leeg of true: het belscherm opent met Geluid aan. false: het opent stil (een studio, een slaapkamer), en een tik op Geluid zet het aan."
+        },
+        "chime": {
+          "label": "Chime",
+          "help": "Of het scherm zijn chime speelt als er gebeld wordt, op een scherm met een luidspreker. Leeg of true: het speelt de chime. false: het belt zonder, en het belscherm opent net zo goed."
+        },
+        "lock": {
+          "label": "Slot",
+          "help": "Een slot-entity die de deurknop van het belscherm na een tweede tik ontgrendelt; de knop toont de stand. Een slot dat om een code vraagt, heeft een standaardcode in Home Assistant nodig (de instellingen van het slot). Laat het weg voor geen deurknop."
+        },
+        "door_action": {
+          "label": "Deuractie",
+          "help": "In plaats van een slot: een Home Assistant-actie die de deurknop na een tweede tik uitvoert, zoals script.open_gate of button.press. `door_data` geeft de velden (entity_id, ...)."
+        },
+        "door_data": {
+          "label": "Deurgegevens",
+          "help": "De velden van `door_action`, zoals entity_id."
+        }
+      },
+      "endings": {
+        "answered": "Iemand raakte hem aan: opgenomen, en dicht op de andere schermen",
+        "closed": "De sluitknop, of iets anders dat hem sloot",
+        "missed": "Niemand raakte hem aan voor de timeout",
+        "seen": "Een gemiste bel werd vanuit de bovenbalk weer geopend"
+      }
     }
   },
   "editor": {
@@ -1529,10 +1602,11 @@
     "nav": {
       "new_screen": "Nieuw scherm",
       "firmware": "Firmware & USB",
-      "alerts": "Alerts",
+      "events": "Events",
       "settings": "Instellingen",
       "new_screen_detail": "Aansluiten en installeren",
-      "plugins": "Plugins"
+      "plugins": "Plugins",
+      "manual": "Handleiding"
     },
     "api": {
       "failed": "Dat lukte niet. Vernieuw de pagina en probeer het opnieuw."
@@ -1987,7 +2061,11 @@
       "refresh": {
         "label": "Verversen",
         "seconds": "Elke {n} s",
-        "live": "Live"
+        "live": "Live",
+        "paused": "Live gepauzeerd",
+        "cap": "Dit scherm speelt {n} camera's tegelijk live; de andere tonen elke 15 seconden een plaatje. Met twee camera's loopt elke camera vloeiender dan met vier.",
+        "cap_one": "Dit scherm speelt één camera tegelijk live; de andere tonen elke 15 seconden een plaatje.",
+        "streams": "{used} van {most} live streams in gebruik, over alle schermen. Een camera daarboven toont elke 15 seconden een plaatje."
       },
       "picture": {
         "fit": {
@@ -2069,6 +2147,39 @@
         "room_hint": "Het scherm tekent ze waar de tegel er ruimte voor heeft (firmware 0.57.0 of nieuwer): onder de naam op een enkele tegel, ernaast op een dubbelbrede. Waar ze niet passen, ziet de tegel eruit zoals zonder.",
         "tilt": "Lamellenbediening",
         "tilt_hint": "Voegt de ondersteunde lamellenschuif of kantelknoppen toe als er genoeg ruimte is. Gebruik op kleinere tegels de detailweergave. Je keuze voor open/dicht blijft behouden."
+      },
+      "presets": {
+        "label": "Presets",
+        "preset": "Preset {n}",
+        "swatch_aria": "Preset {n}, helderheid {b}%",
+        "white": "Wit",
+        "colour": "Kleur",
+        "level": "Alleen helderheid",
+        "white_shade": "Witte tint",
+        "kelvin": "{k} K",
+        "hue": "Tint",
+        "degrees": "{h}°",
+        "saturation": "Verzadiging",
+        "brightness": "Helderheid",
+        "percent": "{n}%",
+        "use_light": "Huidige stand van de lamp gebruiken",
+        "use_light_off": "Zet de lamp aan om zijn helderheid en kleur over te nemen.",
+        "add": "Preset toevoegen",
+        "add_first": "Eerste preset toevoegen",
+        "levels": "Helderheid op presets tonen",
+        "levels_hint": "Zet de helderheid klein in elke cirkel. Een preset met alleen helderheid toont die altijd.",
+        "hint": "Een tik op een preset zet de lamp er in één keer op; de ring toont welke de lamp nu heeft. Klik er een aan om hem te wijzigen, sleep om de volgorde te veranderen.",
+        "hint_empty": "Tot vier ronde knoppen, zoals de favoriete kleuren in Home Assistant, elk met een eigen helderheid. Een nieuwe begint bij wat de lamp nu toont.",
+        "own": "Eigen instelling",
+        "device": "Preset van de lamp",
+        "effect": "Effect",
+        "search": "Zoeken",
+        "none_found": "Niets gevonden",
+        "device_kind": "Soort",
+        "device_preset": "Preset",
+        "device_playlist": "Playlist",
+        "device_hint": "Een preset van de lamp zelf zet zijn eigen kleur, effect en helderheid.",
+        "swatch_aria_named": "Preset {n}, {name}"
       },
       "tap": {
         "label": "Bij aantikken",
@@ -2322,6 +2433,58 @@
         "none": "Geen bediening",
         "never": "Niet meer tonen",
         "done": "Klaar"
+      },
+      "text": {
+        "title": "Template",
+        "hint": "Schrijf tekst met Home Assistant-templates erin, zoals bij Ontwikkelhulpmiddelen › Template. Home Assistant vult hem in, en het scherm toont het resultaat en houdt het bij. Is het resultaat leeg, dan verdwijnt de tile.",
+        "manual": "Zo schrijf je een template",
+        "field": "Template",
+        "placeholder": "Typ tekst, of {'{{'} om een status te lezen…",
+        "keys": {
+          "space": "Spatie",
+          "complete": "aanvullen",
+          "next": "volgend veld",
+          "comment": "commentaar"
+        },
+        "result": "Op het scherm",
+        "bytes": "{n} van {of} bytes",
+        "empty": "Het resultaat is leeg: het scherm toont hier niets.",
+        "access": "De template draait in Home Assistant met de rechten van de Tessera-app, en kan dus elke entiteit lezen.",
+        "markup": {
+          "label": "Opmaak",
+          "heading": "Kop",
+          "bullet": "Opsommingsteken",
+          "table": "Tabel",
+          "bold": "Vet",
+          "good": "Groene tekst",
+          "alert": "Rode tekst",
+          "accent": "Blauwe tekst"
+        },
+        "complete": {
+          "now": "nu",
+          "state": "Status: {state}"
+        },
+        "examples": {
+          "title": "Begin met een voorbeeld:",
+          "lights": "Lampen aan",
+          "open": "Open deuren en ramen",
+          "weather": "Weer",
+          "lights_heading": "Lampen aan",
+          "all_off": "Alle lampen zijn uit",
+          "open_heading": "Open",
+          "now": "Nu",
+          "humidity": "Luchtvochtigheid"
+        },
+        "listen": {
+          "label": "Ververst bij",
+          "time": "de tijd",
+          "none": "Leest geen entiteit: verandert alleen als je de template wijzigt.",
+          "all": "Leest alle statussen: Home Assistant ververst dit hooguit eens per minuut. Noem de entiteiten of een domein (states.light) om het meteen te laten volgen."
+        },
+        "lint": {
+          "unknown": "{id} bestaat niet in Home Assistant",
+          "replace": "Vervang door {id}"
+        }
       }
     },
     "precision": {
@@ -2977,6 +3140,14 @@
         "change": "Wifi wijzigen en opnieuw installeren",
         "failed": "Tessera kan {name} niet zelf aan Home Assistant toevoegen. Voeg hem hieronder zelf toe."
       },
+      "known": {
+        "title": "Dit bord staat al in Home Assistant als {name}",
+        "text": "Home Assistant houdt één ESPHome-apparaat per bord (zijn MAC-adres), dus {new} kan er niet bij zolang {name} er staat. Installeer {name} opnieuw, of vervang het: zodra de firmware op het bord staat, verdwijnt {name} met zijn entiteiten uit Home Assistant en komt {new} ervoor in de plaats.",
+        "reinstall": "{name} opnieuw installeren",
+        "replace": "{name} vervangen door {new}",
+        "replaced": "{name} is uit Home Assistant verwijderd; {new} komt ervoor in de plaats.",
+        "go_firmware": "Kies onder Firmware & USB het profiel van {name} en “Installeren vanuit deze browser”."
+      },
       "memory": {
         "low_title": "Weinig geheugen vrij op de Home Assistant-machine",
         "low": "Er is {free} geheugen vrij, dus de firmware bouwt met minder compilers tegelijk ({jobs} in plaats van {cores}). Dat duurt langer, maar het past.",
@@ -2996,8 +3167,6 @@
       "waits_turn": "Er wordt nu een ander scherm gebouwd. Dit scherm wacht op zijn beurt en begint daarna vanzelf."
     },
     "alerts": {
-      "eyebrow": "Alerts · cheatsheet",
-      "title": "Een melding over het hele scherm, vanuit een automatisering.",
       "intro": "Elk scherm heeft de actie {action}. Die legt een kaart over alles heen, wekt het scherm en houdt de backlight op de normale helderheid tot iemand op de knop tikt of de timeout verstrijkt. Home Assistant toont bij ESPHome-acties zelf geen uitleg of keuzelijsten; alles wat je kunt invullen staat hier.",
       "loading": "De cheatsheet laadt nog; even geduld.",
       "example": {
@@ -3007,7 +3176,6 @@
       },
       "sections": "Onderdelen",
       "nav": {
-        "try": "Uitproberen",
         "screens": "Jouw schermen",
         "howto": "In een automatisering",
         "all": "Alle schermen",
@@ -3021,10 +3189,6 @@
         "choice": "Twee knoppen"
       },
       "try": {
-        "text": "Stuur nu één alert, met dezelfde velden die een automatisering stuurt. Het scherm toont de kaart en laat, met knipperen aan, de backlight knipperen.",
-        "screen": "Scherm",
-        "all": "Alle schermen ({ready} klaar)",
-        "not_ready": "{name} · niet klaar",
         "title": "Titel",
         "subtitle": "Ondertitel",
         "icon": "Icoon",
@@ -3036,10 +3200,6 @@
         "sending": "Versturen…",
         "send": "Alert versturen",
         "sent_all": "Verstuurd naar {n} scherm. | Verstuurd naar {n} schermen.",
-        "sent_to": "Verstuurd naar {name}.",
-        "sent_one": "Verstuurd naar het scherm.",
-        "skipped": "1 overgeslagen (offline of oude firmware). | {n} overgeslagen (offline of oude firmware).",
-        "left_empty": "Leeg gelaten: {fields}.",
         "nothing": "Geen enkel scherm kon hem tonen: controleer of er een scherm online is met firmware {version} of nieuwer."
       },
       "white": "Wit (standaard)",
@@ -3153,7 +3313,80 @@
         "text": "Voeg {second} toe voor een tweede knop links van de eerste, zodat wie bij het scherm staat kan kiezen, bijvoorbeeld Nu niet en Openen. {first_color} en {second_color} geven een knop een eigen kleur, groen voor ja en rood voor nee. Welk antwoord aan welke kant staat kies je zelf: de eerste knop staat altijd rechts.",
         "event": "Via het event is elk van deze velden optioneel, en {second_action} met {second_data} voert een actie uit vanaf de tweede knop, zoals {action} dat doet vanaf de eerste. Een scherm met firmware ouder dan {version} toont de melding met één knop.",
         "direct": "Roep je een scherm direct aan? Zijn actie {choice} neemt de velden van show_alert plus deze drie; de tweede knop beëindigt de melding met {ending}."
-      }
+      },
+      "wizard": {
+        "camera": "Camera (optioneel)",
+        "no_camera": "Geen camera",
+        "screens_hint": "Niets gekozen: elk scherm dat een alert kan tonen.",
+        "description": "Gemaakt in Events van Tessera: een alert op de schermen.",
+        "title": "Nieuwe alert-automatisering",
+        "with_picture": "Laat het beeld van de camera zien",
+        "without_picture": "Laat de alert zonder beeld zien",
+        "summary": {
+          "says": "Tekst",
+          "buttons": "Knoppen"
+        },
+        "steps": {
+          "trigger": {
+            "title": "Wat start het?",
+            "help": "Kies waardoor de alert verschijnt: een sensor die aangaat, een schakelhelper, een knop of een event. Gebruik je hem in een automatisering die je al hebt? Dan kun je deze stap overslaan."
+          },
+          "words": {
+            "title": "Wat staat erop?",
+            "help": "Een korte titel en een regel eronder. Je ziet de kaart zoals het scherm hem tekent."
+          },
+          "look": {
+            "title": "Hoe ziet het eruit?",
+            "help": "Een icoon, een kleur, als je wilt een camerabeeld, en of hij knippert."
+          },
+          "screens": {
+            "title": "Welke schermen?",
+            "help": "Kies de schermen die hem tonen, en hoe lang hij blijft staan."
+          },
+          "try": {
+            "title": "Probeer het",
+            "help": "Stuur hem nu één keer, precies zoals de automatisering het doet. Kijk naar je schermen."
+          },
+          "add": {
+            "title": "Afronden",
+            "help": "Maak er een eigen automatisering van, of kopieer de actie naar een automatisering die je al hebt."
+          },
+          "buttons": {
+            "title": "Welke knoppen?",
+            "help": "Eén knop, of twee voor een keuze. Elke knop kan iets doen in Home Assistant als je hem indrukt, of alleen de alert sluiten."
+          }
+        },
+        "buttons": {
+          "one": "Eén knop",
+          "one_detail": "OK, Ik kom, Gezien: hij sluit de alert en kan één ding doen.",
+          "two": "Twee knoppen",
+          "two_detail": "Een keuze, zoals Openen en Niet nu, elk met een eigen actie.",
+          "first": "Rechterknop",
+          "second": "Linkerknop",
+          "second_example": "Niet nu",
+          "color": "Kleur",
+          "own_color": "Eigen kleur",
+          "does": "Bij indrukken",
+          "only_close": "Sluit alleen de alert",
+          "no_actions": "Deze entiteit heeft geen actie die verder niets nodig heeft. Kies een andere.",
+          "closes": "sluit de alert",
+          "only": "De knop"
+        },
+        "try_action": "Let op: een knop met een actie indrukken voert die echt uit, ook nu.",
+        "route": {
+          "event": "Verstuurd als het event {event}: de enige manier die een camera, een actie op een knop en een keuze van schermen meeneemt. De app geeft elk scherm de alert in de vorm die zijn firmware kent.",
+          "one_button": "{screens}: firmware ouder dan {version}, toont alleen de rechterknop.",
+          "action": "De app voert de actie van een knop één keer uit, op welk scherm hij ook wordt ingedrukt. Na de timeout of een nieuwe alert gebeurt er niets.",
+          "no_picture": "{screens}: toont de alert zonder het beeld van de camera."
+        }
+      },
+      "hero": {
+        "title": "Een alert op je schermen",
+        "text": "Een kaart over alles op het scherm, met een knop: als er iemand aanbelt, de was klaar is of een raam openstaat. De wizard loopt het met je door en zet de automatisering in Home Assistant.",
+        "create": "Maak een alert-automatisering",
+        "empty": "Nog geen alert-automatisering. Maak er hierboven een, dan verschijnt hij hier."
+      },
+      "reference": "Zelf schrijven"
     },
     "override": {
       "eyebrow": "Geavanceerd · lokale override",
@@ -3194,6 +3427,8 @@
       "calendar_free": "Vrij"
     },
     "pages": {
+      "repaired": "Pagina {page}, tegel “{tile}”: weggehaald wat niet klopte ({what}).",
+      "repaired_tile": "Pagina {page}: tegel “{tile}” weggehaald, die klopte niet meer.",
       "mode": "Editormodus",
       "simple": "Eenvoudig",
       "advanced": "Geavanceerd",
@@ -3325,8 +3560,7 @@
       "comment_label": "Toelichting (optioneel)",
       "comment_hint": "Laat persoonsgegevens, logs, wachtwoorden en API-keys weg.",
       "report_title": "Wil je dat het opgelost wordt?",
-      "report_text": "Open een issue op GitHub. Je bord, de versies en wat je ons vertelde staan er al in. Voeg een log toe, dan kunnen we het uitzoeken en je ernaar vragen.",
-      "report_open": "Open een GitHub-issue",
+      "report_text": "Stuur een rapport: Tessera verzamelt het bord, de versies, de logs en de laatste crash, laat ze je eerst zien en verstuurt ze pas als jij akkoord gaat. Of lees wat je kunt doen als iets niet werkt.",
       "add_details": "Details toevoegen",
       "done": "Klaar",
       "settings_title": "Feedback",
@@ -3359,7 +3593,9 @@
         "addon": "De versie van Tessera: {version}",
         "nothing_else": "Verder niets: geen naam, account, entiteiten, logs of Home Assistant-instellingen. Elk scherm deelt onder een eigen willekeurige sleutel."
       },
-      "privacy": "Privacy"
+      "privacy": "Privacy",
+      "report_send": "Rapport sturen",
+      "report_manual": "Lees de probleemgids"
     },
     "webflash": {
       "target": "Installeren vanuit deze browser (Chrome of Edge)",
@@ -3551,9 +3787,20 @@
       "donated": "Ik heb al gedoneerd",
       "thanks": "Dank je wel! Dit komt niet meer terug."
     },
+    "funding": {
+      "title": "Op zoek naar funding",
+      "body": "Ik heb een baan die de rekeningen betaalt, en die gaat voor. Tessera wordt steeds groter, en ik heb simpelweg niet de tijd die het nodig heeft. Om het in leven te houden heb ik funding nodig: zodat ik er de tijd aan kan geven die het verdient, of iemand kan inhuren om te helpen. Kun je helpen? Stuur me een mail.",
+      "mail": "Mail me",
+      "later": "Niet nu"
+    },
     "plugins": {
       "title": "Plugins",
       "intro": "Extra's voor je schermen: tegels voor op een pagina, iets wat het hele scherm extra kan, of hardware op het bordje. Een plugin wordt in de firmware van een scherm gebouwd, dus je kiest per scherm welke het krijgt.",
+      "risk": {
+        "title": "Plugins zijn op eigen risico",
+        "text": "Elke plugin kost een deel van het geheugen en de rekentijd van een scherm. Een paar gaan goed samen, maar veel tegelijk (bijvoorbeeld een spraakassistent, een Bluetooth-proxy en een camera) kunnen het geheugen vullen en een scherm traag maken, laten vastlopen of herstarten. Je kunt het proberen, maar voeg er een of twee tegelijk toe en kijk of het scherm stabiel blijft. Doet het vreemd, haal dan eerst de nieuwste eraf.",
+        "many": "{screen} draait na deze build {n} plugins. Zoveel kan een scherm instabiel maken: doet het vreemd, haal er dan een paar af."
+      },
       "search": "Zoek op naam, maker of wat hij doet",
       "filter": "Toon",
       "from_tessera": "Van Tessera",
@@ -3763,7 +4010,8 @@
         "keep": "Toch houden",
         "keep_named": "{name} toch houden",
         "minutes": "Elke build duurt een paar minuten.",
-        "off_set": "Klaargezet om eraf te gaan"
+        "off_set": "Klaargezet om eraf te gaan",
+        "risk": "Op eigen risico: elke plugin kost geheugen, en te veel kunnen een scherm instabiel maken."
       },
       "maker": {
         "title": "Zelf een plugin maken",
@@ -4142,6 +4390,173 @@
       },
       "failed_title": "Het rapport kon niet gemaakt worden",
       "try_again": "Opnieuw proberen"
+    },
+    "events": {
+      "eyebrow": "Events · uit Home Assistant",
+      "intro": "Wat een automatisering in Home Assistant naar je schermen kan sturen. Jij kiest de trigger, de schermen en wat ze laten zien.",
+      "alerts": "Alerts",
+      "doorbell": "Deurbel",
+      "wizard": {
+        "suggested": "Je deurbellen:",
+        "none": "Geen entiteit gevonden",
+        "pick_trigger": "Kies waarmee het start",
+        "yaml": "Toon de automatisering als YAML",
+        "kind": {
+          "doorbell": "Start als deze deurbel gaat (Doorbell rang van Home Assistant).",
+          "event": "Start elke keer dat dit event afgaat.",
+          "on": "Start als dit aangaat.",
+          "press": "Start elke keer dat hierop gedrukt wordt."
+        },
+        "back": "Terug",
+        "next": "Volgende",
+        "done": "Klaar",
+        "other": "Iets anders",
+        "other_detail": "Een sensor, schakelaar, helper, knop of event van jezelf",
+        "every_screen": "Elk scherm",
+        "summary": {
+          "starts": "Start bij",
+          "screens": "Schermen",
+          "title": "Naam in Home Assistant"
+        },
+        "domain": {
+          "binary_sensor": "Een sensor: van uit naar aan, bijvoorbeeld als hij iemand ziet.",
+          "switch": "Een schakelaar: als iemand hem aanzet.",
+          "input_boolean": "Een schakelhelper: als hij aangaat, bijvoorbeeld door een andere automatisering."
+        },
+        "finish": {
+          "label": "Hoe wil je hem gebruiken?",
+          "automation": "Maak de automatisering",
+          "automation_detail": "Tessera zet hem in Home Assistant, met wat je bij stap 1 koos als start.",
+          "needs_trigger": "Kies eerst bij stap 1 wat hem start.",
+          "action": "Gebruik in een eigen automatisering",
+          "action_detail": "Kopieer alleen de actie en plak hem in een automatisering die je al hebt.",
+          "paste": "Open in Home Assistant je automatisering, voeg een actie toe, kies Bewerken in YAML in het menu en plak dit.",
+          "copy": "Kopieer YAML"
+        }
+      },
+      "install": {
+        "add": "Toevoegen aan Home Assistant",
+        "saving": "Toevoegen…",
+        "saved": "Toegevoegd. Het werkt meteen, zonder herstart.",
+        "open": "Openen in Home Assistant",
+        "hint": "Hij heet \"{title}\" bij de automatiseringen van Home Assistant, waar je hem verder kunt aanpassen.",
+        "listed": "Van Tessera in Home Assistant",
+        "remove": "Verwijderen",
+        "remove_confirm": "\"{name}\" verwijderen uit Home Assistant?",
+        "on": "Aan",
+        "off": "Uit"
+      }
+    },
+    "doorbell": {
+      "intro": "Er wordt aangebeld en je schermen laten de deur zien. Een automatisering stuurt het event met de camera van de deurbel: een P4-scherm wordt wakker, speelt een belgeluid en opent de camera live met geluid; elk ander scherm toont de foto in een alert. Elke deurbel werkt, wat de automatisering ook start.",
+      "example": {
+        "title": "Voordeur",
+        "when": "Zojuist",
+        "sound": "Geluid aan"
+      },
+      "try": {
+        "send": "Bellen",
+        "views": "Live geopend op {n} scherm. | Live geopend op {n} schermen.",
+        "alerts": "Als alert getoond op {n} scherm. | Als alert getoond op {n} schermen.",
+        "nothing": "Geen scherm toonde hem. Staat het scherm aan, en is de camera een camera-entiteit?"
+      },
+      "no_camera": "Geen camera",
+      "fields": {
+        "title": "Titel",
+        "timeout": "Timeout (seconden)",
+        "keep": "Gemiste bel in de bovenbalk houden"
+      },
+      "screens": {
+        "view": "Live met geluid",
+        "picture": "Alert met foto",
+        "plain": "Alert zonder foto"
+      },
+      "after": {
+        "title": "Daarna",
+        "text": "Eén keer per bel stuurt de app {answered} als iemand hem op een scherm opnam, of {missed} als niemand dat deed. Beide hebben de camera en de titel; answered noemt ook het scherm.",
+        "dismiss": "Om een bel op elk scherm te sluiten, bijvoorbeeld als de deur opengaat:"
+      },
+      "yaml": {
+        "missed_alias": "Gemiste deurbel naar mijn telefoon",
+        "missed_message": "Er werd aangebeld",
+        "description": "Gemaakt in Events van Tessera: een deurbel op de schermen."
+      },
+      "wizard": {
+        "title": "Nieuwe deurbelautomatisering",
+        "camera_hint": "Een P4-scherm streamt hem live met geluid als de camera geluid heeft; andere schermen tonen de foto.",
+        "screens_hint": "Niets gekozen: elk scherm.",
+        "limits": "Niet elke deurbel kan alles: geluid komt alleen als de stream van de camera het heeft. Terugpraten komt later.",
+        "more_cameras": "Een andere camera…",
+        "timeout_hint": "Hoe lang een bel openblijft als niemand het scherm aanraakt. Leeg: de standaard.",
+        "summary": {
+          "camera": "Camera",
+          "door": "Deur"
+        },
+        "steps": {
+          "rings": {
+            "title": "Wat belt er?",
+            "help": "Kies wat Home Assistant vertelt dat er iemand voor de deur staat. Je deurbellen staan bovenaan; elke sensor, knop of event werkt ook. Gebruik je hem in een automatisering die je al hebt? Dan kun je deze stap overslaan."
+          },
+          "camera": {
+            "title": "Welke camera?",
+            "help": "De camera die de schermen laten zien als er gebeld wordt. Meestal de eigen camera van de deurbel."
+          },
+          "door": {
+            "title": "Een deur om te openen?",
+            "help": "Het belscherm kan een knop hebben die na een tweede tik de deur opent: een slot, of een andere actie zoals een script of de knop van een poort. Je kunt het weglaten."
+          },
+          "screens": {
+            "title": "Welke schermen?",
+            "help": "Kies de schermen die de bel laten zien. Bij elk staat wat het ermee kan."
+          },
+          "name": {
+            "title": "Naam en tijd",
+            "help": "De titel op het scherm en hoe lang een bel openblijft. Je mag ze allebei leeg laten."
+          },
+          "try": {
+            "title": "Probeer het",
+            "help": "Bel nu één keer, precies zoals de automatisering het doet. Kijk naar je schermen."
+          },
+          "add": {
+            "title": "Afronden",
+            "help": "Maak er een eigen automatisering van, of kopieer de actie naar een automatisering die je al hebt."
+          }
+        },
+        "door": {
+          "none": "Geen deurknop",
+          "lock": "Een slot",
+          "action": "Een andere actie",
+          "pick_lock": "Kies een slot…",
+          "pick_action": "Kies wat het opent…",
+          "code": "Dit slot vraagt om een code: de knop verschijnt alleen als het slot een standaardcode heeft in Home Assistant (de instellingen van het slot)."
+        },
+        "sound": {
+          "label": "De deurbel meteen horen",
+          "hint": "Het belscherm opent met het geluid van de deurbel aan. Zet dit uit voor een stille plek, zoals een studio: het geluid wacht dan op een tik op Geluid."
+        },
+        "chime": {
+          "label": "Chime bij het bellen",
+          "hint": "Het scherm speelt een deurbel-chime als er iemand belt. Zet dit uit als je dat ding-dong niet elke keer wilt horen."
+        },
+        "keep": {
+          "minutes": "{n} min",
+          "hours": "{n} uur",
+          "open": "Tot iemand hem opent",
+          "hint": "Een bel die niemand beantwoordde blijft zo lang na het aanbellen in de bovenbalk van de schermen staan, met hoe lang geleden. Een tik erop opent de deurbel weer."
+        }
+      },
+      "hero": {
+        "title": "Je deurbel op je schermen",
+        "text": "Er belt iemand en je schermen laten zien wie er voor de deur staat: live met geluid op een P4-scherm, als foto of alert op de andere. De wizard loopt het met je door en zet de automatisering in Home Assistant.",
+        "create": "Maak een deurbelautomatisering",
+        "empty": "Nog geen deurbelautomatisering. Maak er hierboven een, dan verschijnt hij hier."
+      },
+      "by_hand": {
+        "title": "Zelf de automatisering schrijven"
+      }
+    },
+    "drawer": {
+      "resize": "Breedte van de instellingen: sleep, of gebruik de pijltjestoetsen; dubbelklik om terug te zetten"
     }
   }
 }
