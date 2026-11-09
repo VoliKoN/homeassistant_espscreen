@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import profiles  # noqa: E402
+import generate_entries  # noqa: E402
 
 BOARDS = {'cyd': 'checkout/cyd.yaml', 'guition': 'checkout/guition.yaml',
           'waveshare7': 'checkout/waveshare7.yaml'}
@@ -46,10 +47,10 @@ class PackageTests(unittest.TestCase):
             package = (ROOT / 'packages' / f'{board}.yaml').read_text()
             self.assertNotIn('!secret', package)
             self.assertNotIn('type: local', package)
-            self.assertIn('url: https://github.com/MaxGramser/homeassistant_espscreen.git', package)
+            self.assertIn(f'url: {generate_entries.REPO}.git', package)
             # From main, unless the screen's own YAML names another branch (GITHUB_REF, the app's dev channel).
             self.assertIn('GITHUB_REF: "main"', package)
-            self.assertIn('FONT_DIR: "https://raw.githubusercontent.com/MaxGramser/homeassistant_espscreen/${GITHUB_REF}/fonts"', package)
+            self.assertIn(f'FONT_DIR: "{generate_entries.RAW}/${{GITHUB_REF}}/fonts"', package)
             # The fonts of the shared core come from that place; a checkout entry takes them from the checkout's own fonts/.
             self.assertIn('file: "${FONT_DIR}/Roboto-500.ttf"', profiles.CORE.read_text())
             self.assertIn('FONT_DIR: "../fonts"', (ROOT / BOARDS[board]).read_text())
