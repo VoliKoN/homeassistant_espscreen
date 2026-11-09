@@ -16,7 +16,7 @@
 # fonts/materialdesignicons-webfont.ttf (Apache 2.0, github.com/Templarian/MaterialDesign-Webfont).
 ############################################################
 substitutions:
-  SCREEN_FIRMWARE_VERSION: "0.57.0"
+  SCREEN_FIRMWARE_VERSION: "0.60.0"
   DASHBOARD_INBOX_INTERNAL: "false"
   CALIBRATION_ON_BOOT: "false"                     # a bench build: start on the touch test page
   ROOM_NAME: ""                                    # top left until ESP Screens sends the screen name
@@ -59,6 +59,9 @@ substitutions:
   ROTATION_LANDSCAPE: "0"                          # the LVGL angle that lays the panel out lying down
   LVGL_ROTATION: "${ROTATION_LANDSCAPE}"           # which way it is built to hang (New screen writes it for one standing
                                                    # up); the editor turns it later without a build (runtime_tiles::hang)
+  # How the camera's sensor sits against the glass: 0 as the glass, 180 upside down (the Tab5). Only those two; the
+  # camera turns its picture upright from this and the screen's rotation (camera_turn.h, plugin API 0.19).
+  CAMERA_ORIENTATION: "0"
   TOUCH_SWAP_XY: "false"                           # the touch panel's axes against the display's own pixels
   TOUCH_MIRROR_X: "false"
   TOUCH_MIRROR_Y: "false"
@@ -86,6 +89,9 @@ substitutions:
   # A board's extras on the settings page (docs/SETTINGS.md, "A board's own settings"): rows a feature or the board file
   # puts in settings_screen::board_rows. A screen without any has no Extras page.
   BOOT_AUDIO: ""                                   # features/audio.yaml: the speaker's bus, the microphone
+  BOOT_SPEAKER_PART: ""                            # the speaker's codec (packages/hardware/parts/)
+  BOOT_MIC_CONTROLS: ""                            # the microphones' gain and ALC (parts/es7210-controls.yaml)
+  BOOT_MICROPHONE_PART: ""                         # the microphones' codec and its transport (parts/es7210.yaml)
   BOOT_BOARD_SETTINGS: ""                          # the board file's own
   # The screen's moments (every 250 ms, the cards closing, the settings page opening, away from page 1, an alert) are
   # lists, not substitutions (screen_hooks.h): a feature adds to them at boot, a plugin through the plugin API.
@@ -335,6 +341,9 @@ esphome:
           runtime_tiles::bind_pages();
           ${BOOT_CARDS_TAIL}
           ${BOOT_AUDIO}
+          ${BOOT_SPEAKER_PART}
+          ${BOOT_MIC_CONTROLS}
+          ${BOOT_MICROPHONE_PART}
           ${BOOT_BOARD_SETTINGS}
           plugin_host::ready();
       # The settings page the screen opens on its own (0.2.44+): the same values ESP Screen Manager
@@ -346,7 +355,10 @@ esphome:
           settings_screen::row_font = id(sublabel_big)->get_lv_font();
           settings_screen::icon_font = id(materialdesign_icons_mini)->get_lv_font();
           settings_screen::store = []() { runtime_tiles::persist_settings(); };
-          settings_screen::apply = []() { id(apply_screen_settings).execute(false); };
+          settings_screen::apply = []() {
+            runtime_tiles::apply_debug_mode();
+            id(apply_screen_settings).execute(false);
+          };
           settings_screen::report = [](const char *key, int32_t value) { runtime_tiles::setting_event(key, value); };
           settings_screen::name_text = []() { return std::string("${DEVICE_FRIENDLY_NAME}"); };
           settings_screen::address_text = []() { return id(wifi_ip).state.empty() ? std::string(screen_text::tr(screen_text::txt::status_no_network)) : id(wifi_ip).state; };
@@ -430,6 +442,10 @@ logger:
   # out of the firmware, 9 KB on the CYD. For a diagnosis, give one screen `logger: level: DEBUG` in its Override YAML.
   level: INFO
   logs:
+    # ESP-IDF's own lines (a driver's error, the JPEG decoder refusing a picture) reach ESPHome's log at INFO whatever
+    # their own level, under this tag: kept at INFO so they come with Debug mode off too (settings_screen.h), where the
+    # rest of the log is warnings and errors. ESP-IDF itself writes its errors alone on these screens.
+    esp-idf: INFO
     sensor: WARN
     text_sensor: WARN
     xpt2046: WARN
@@ -717,10 +733,18 @@ api:
                     // types (plugin_host::hello).
                     features.add("plugins");
                     plugin_host::hello(root);
+                    // caps (hw.h, docs/PLATFORM_PLAN.md 3.3): what this screen's hardware can do, in one record: live
+                    // video, speaker, microphone, echo cancellation, a camera of its own, the live tiles it runs at
+                    // once, its memory. ESP Screens reads it where it reads a screen's features; the features "live"
+                    // and "doorbell" below stay for an app that reads only those.
+                    hw::hello(root);
                     // weather_week: the weather card draws the week (weather_chart.h), so ESP Screens sends seven days
                     // with their weekday, the next 48 hours with their hour, and the wind's bearing, the air pressure,
                     // the visibility and the rain's unit.
                     features.add("weather_week");
+                    // calendar_detail: a calendar card takes short events (calendar_feed.compact) and keeps 48 without PSRAM;
+                    // a tap on one asks for its whole title, place and notes (esphome.screen_calendar, op "calendar_event").
+                    features.add("calendar_detail");
                     // live: a P4 that streams (live_view.h): a camera tile set to Live gets pace 0 and streams on the
                     // glass, and ESP Screens makes Live the default for camera tiles here.
                     if (live_view::available()) features.add("live");
@@ -759,6 +783,16 @@ api:
                     // cover, so ESP Screens sends a cover group's covers (`covers`, cover_groups.py) with its state.
                     #ifdef SD_MOD_COVER_GROUPS
                     features.add("group_covers");
+                    #endif
+                    // text_card (firmware 0.58.0, module text_card, docs/TEXT_TILE.md): the template tile draws the rows Home
+                    // Assistant rendered, so ESP Screens offers it and sends its rows (`md`); its caps say how many and how much.
+                    #ifdef SD_MOD_TEXT_CARD
+                    features.add("text_card");
+                    #endif
+                    // light_presets (module light_presets, docs/LIGHT_PRESETS.md): a light's tile and card draw the round keys of
+                    // its presets, so ESP Screens sends the controls presets and brightness_presets; another screen gets the slider.
+                    #ifdef SD_MOD_LIGHT_PRESETS
+                    features.add("light_presets");
                     #endif
                     auto sizes = root["tile_sizes"].to<JsonArray>();
                     for (const auto &size : page_protocol::TILE_SIZES)
@@ -1455,14 +1489,15 @@ font:
   # The top bar's Wi-Fi item (firmware 0.38.0): four bars down to one and struck through, at the size of the bar's icons.
   # A font of their own, so the three fonts of the tile icons carry none of them. And the battery item's icons that the
   # tile icons lack (firmware 0.41.0, battery_status::icon): the charging ones per ten percent, the charging outline and
-  # the alert outline. Its level icons, battery-unknown and the full charging one are tile icons already.
+  # the alert outline. Its level icons, battery-unknown and the full charging one are tile icons already. And the mark of
+  # a squeezed live tile (speedometer-slow, runtime_tiles live_badge).
   - file: "${FONT_DIR}/materialdesignicons-webfont.ttf"
     id: materialdesign_icons_status
     size: ${FONT_ICON_MINI_SIZE}
     bpp: ${FONT_ICON_BPP}
     glyphs: ["\U000F092E", "\U000F091F", "\U000F0922", "\U000F0925", "\U000F0928",
              "\U000F089C", "\U000F0086", "\U000F0087", "\U000F0088", "\U000F089D",
-             "\U000F0089", "\U000F089E", "\U000F008A", "\U000F008B", "\U000F089F", "\U000F10CD"]
+             "\U000F0089", "\U000F089E", "\U000F008A", "\U000F008B", "\U000F089F", "\U000F10CD", "\U000F0F86"]
 
   # The large icon of a card that takes the whole page (firmware 0.2.62+): the domain icons only,
   # so the flash stays free for other things; a chosen icon outside this set keeps its usual size.
@@ -1784,6 +1819,19 @@ switch:
       - lambda: 'settings_screen::set("home_on_standby", 1);'
     turn_off_action:
       - lambda: 'settings_screen::set("home_on_standby", 0);'
+  # Debug mode: the whole log while on, warnings and errors alone while off (settings_screen.h says why). Beside the
+  # screen's other diagnostics in Home Assistant; the same value as the row under This screen on the glass.
+  - platform: template
+    id: setting_debug_mode
+    name: "Debug mode"
+    icon: "mdi:bug-outline"
+    entity_category: diagnostic
+    restore_mode: DISABLED
+    lambda: return settings_screen::debug_mode != 0;
+    turn_on_action:
+      - lambda: 'settings_screen::set_debug_mode(1);'
+    turn_off_action:
+      - lambda: 'settings_screen::set_debug_mode(0);'
   - platform: template
     id: setting_swipe_pages
     name: "Swipe between pages"
@@ -2723,6 +2771,7 @@ script:
 # (components/smart_display).
 smart_display:
   language: ${LANGUAGE}
+  camera_orientation: ${CAMERA_ORIENTATION}
 
 # HA blueprint transport; never publishes the JSON command as an HA state.
 text:

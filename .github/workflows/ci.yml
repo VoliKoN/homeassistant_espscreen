@@ -76,13 +76,21 @@ jobs:
     # Nine boards since 0.3.6: the add-on's ESPHome builds took just under 30 minutes and ran past it on a slow runner.
     # A build without its build folder (a source file added or removed) took 40 minutes for min_version on 09-26.
     # Twenty-one boards without a cache take about four minutes each: the add-on's ESPHome ran past 60 minutes at 0.4.84.
-    timeout-minutes: 120
+    # 31 boards without a cache take about 2.7 hours (release 0.4.91, 2026-10-30: 23 in two hours, the eight new boards
+    # never reached); a cancelled job keeps no cache, so the next run starts cold too.
+    timeout-minutes: 240
     strategy:
       fail-fast: false
       matrix:
-        # The ESPHome the add-on ships, and the oldest one the packages promise (`min_version` in packages/core.yaml):
-        # every screen builds from main with whichever its owner has (docs/RELEASING.md, "ESPHome versions").
-        esphome: [add-on, min_version]
+        # The ESPHome the add-on ships, the oldest one the packages promise (`min_version` in packages/core.yaml), and
+        # the newest release, which ESPHome Device Builder installs by itself: every screen builds from main with
+        # whichever its owner has (docs/RELEASING.md, "ESPHome versions"). The newest is a warning, not a gate: a
+        # change of ESPHome's own (an internal that went away, 2026.10) is fixed in the next release, not by holding it.
+        esphome: [add-on, min_version, latest]
+        include:
+          - esphome: latest
+            warn_only: true
+    continue-on-error: ${{ matrix.warn_only || false }}
     steps:
       # The whole history, so the build can compare with the last commit it built (--affected below).
       - uses: actions/checkout@v4
@@ -93,13 +101,18 @@ jobs:
         with:
           job: firmware (${{ matrix.esphome }})
       - uses: actions/setup-python@v5
+        id: python
         with:
           python-version: "3.13"
       - name: ESPHome version
         id: esphome
+        env:
+          GH_TOKEN: ${{ github.token }}  # the newest release's tag comes from gh
         run: |
           if [ "${{ matrix.esphome }}" = add-on ]; then
             version=$(sed -n 's|^FROM ghcr.io/esphome/esphome:||p' screen_manager/Dockerfile)
+          elif [ "${{ matrix.esphome }}" = latest ]; then
+            version=$(gh release view --repo esphome/esphome --json tagName --jq .tagName)
           else
             version=$(sed -n 's/^  min_version: //p' packages/core.yaml)
           fi
@@ -111,6 +124,10 @@ jobs:
         uses: ./.github/actions/apt-install
         timeout-minutes: 20
         with: { command: "ccache --version", packages: ccache }
+      # Both caches below are keyed to the runner's image and its Python as well: a build folder remembers the absolute
+      # path of the Python it was configured with (CMake's ninja under /opt/hostedtoolcache/Python/<version>), and when
+      # GitHub moves ubuntu-latest to a new image or Python that path is gone. Restored on an unchanged commit, such a
+      # cache failed every board at the CMake step, night after night (ubuntu-latest's move to 26.04, October 2026).
       # ESP-IDF, its tools and ccache's cache (ESPHome 2026.7+ keeps them in ~/.cache/esphome) and PlatformIO's
       # toolchains (ESPHome before 2026.7): any older copy of the same ESPHome will do.
       - uses: actions/cache@v4
@@ -118,9 +135,9 @@ jobs:
           path: |
             ~/.cache/esphome
             ~/.platformio
-          key: firmware-tools-${{ runner.os }}-esphome-${{ steps.esphome.outputs.version }}-${{ hashFiles('checkout/cyd.yaml', 'checkout/guition.yaml', 'packages/**', 'components/**') }}
+          key: firmware-tools-${{ runner.os }}-${{ env.ImageOS }}-py${{ steps.python.outputs.python-version }}-esphome-${{ steps.esphome.outputs.version }}-${{ hashFiles('checkout/cyd.yaml', 'checkout/guition.yaml', 'packages/**', 'components/**') }}
           restore-keys: |
-            firmware-tools-${{ runner.os }}-esphome-${{ steps.esphome.outputs.version }}-
+            firmware-tools-${{ runner.os }}-${{ env.ImageOS }}-py${{ steps.python.outputs.python-version }}-esphome-${{ steps.esphome.outputs.version }}-
       # The names of the files the builds compile. Before 2026.7 ESPHome builds through PlatformIO, which lists a
       # build's sources once: a build folder from before a .cpp was added links without it (undefined reference).
       - name: Source files
@@ -130,9 +147,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .esphome/check
-          key: firmware-build-${{ runner.os }}-esphome-${{ steps.esphome.outputs.version }}-${{ steps.sources.outputs.hash }}-${{ hashFiles('checkout/cyd.yaml', 'checkout/guition.yaml', 'packages/**', 'components/**') }}
+          key: firmware-build-${{ runner.os }}-${{ env.ImageOS }}-py${{ steps.python.outputs.python-version }}-esphome-${{ steps.esphome.outputs.version }}-${{ steps.sources.outputs.hash }}-${{ hashFiles('checkout/cyd.yaml', 'checkout/guition.yaml', 'packages/**', 'components/**') }}
           restore-keys: |
-            firmware-build-${{ runner.os }}-esphome-${{ steps.esphome.outputs.version }}-${{ steps.sources.outputs.hash }}-
+            firmware-build-${{ runner.os }}-${{ env.ImageOS }}-py${{ steps.python.outputs.python-version }}-esphome-${{ steps.esphome.outputs.version }}-${{ steps.sources.outputs.hash }}-
       # Only the boards that can have changed since the last commit this same build succeeded on
       # (tools/affected_boards.py --build-keys, docs/BOARD_RELEASES.md): a cancelled or failed run's commits are
       # included. Every board at night, by hand, or without such a commit.

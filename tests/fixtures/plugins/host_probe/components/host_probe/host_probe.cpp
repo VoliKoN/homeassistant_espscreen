@@ -345,7 +345,6 @@ void HostProbe::before_update() {
 }
 void HostProbe::on_cards_closed() { ESP_LOGI(TAG, "cards_closed"); }
 void HostProbe::on_alert() { ESP_LOGI(TAG, "alert"); }
-void HostProbe::on_touch() { ESP_LOGI(TAG, "touch"); }
 void HostProbe::on_press() { ESP_LOGI(TAG, "press"); }
 void HostProbe::on_step(const tessera::Step &step) { ESP_LOGI(TAG, "step %d%s", step.direction, step.edge ? " edge" : ""); }
 
@@ -426,6 +425,11 @@ void HostProbe::on_message(JsonObjectConst message) {
   if (std::string(what) == "wake") {
     ESP_LOGI(TAG, "wake");
     tessera::wake(this);
+    return;
+  }
+  // {"do": "camera_turn"}: how far the screen's camera turns its picture (plugin API 0.19), 0 on a board without one.
+  if (std::string(what) == "camera_turn") {
+    ESP_LOGI(TAG, "camera_turn=%d", tessera::camera_turn());
     return;
   }
   // {"do": "popup"} (or "popup_self", one that closes itself on a tap), {"do": "popup_close"}: plugin API 0.18.

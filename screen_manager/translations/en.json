@@ -159,7 +159,8 @@
       "microphone": "Microphone",
       "media_player": "Volume",
       "wake_when_moved": "Wake when moved",
-      "doorbell": "Doorbell",
+      "backlight_pwm": "Backlight PWM",
+      "dimmest_level": "Dimmest level",
       "dark_mode": "Dark mode",
       "auto_standby": "Auto standby",
       "standby_after": "Standby after",
@@ -192,6 +193,7 @@
       "hours_minutes": "{h} h {m}",
       "wifi": "Wi-Fi",
       "tessera": "Tessera",
+      "debug_mode": "Debug mode",
       "plugins": "Plugins",
       "microphone_gain": "Microphone gain",
       "automatic_gain": "Automatic gain",
@@ -199,7 +201,12 @@
     },
     "doorbell": {
       "sound_on": "Sound on",
-      "sound_off": "Sound off"
+      "sound_off": "Sound off",
+      "door": "Door",
+      "door_confirm": "Tap again to open",
+      "door_sent": "Sent",
+      "talk": "Talk",
+      "coming_soon": "Coming soon"
     },
     "tile": {
       "tap_to_open": "Tap to open",
@@ -218,7 +225,8 @@
       "color": "Color",
       "color_temperature": "Color temperature",
       "brightness": "Brightness",
-      "waiting": "Waiting..."
+      "waiting": "Waiting...",
+      "presets": "Presets"
     },
     "effects": {
       "effect": "Effect",
@@ -700,7 +708,8 @@
         "firmware_first": "Install screen firmware {version} or newer first for these tiles.",
         "entity_gone": "A chosen entity no longer exists. Look up the new entity.",
         "ids_too_long": "These tiles' entity IDs are too long together to fit in one message to the screen; remove a few tiles.",
-        "favorite_play": "Choose what this favourite plays."
+        "favorite_play": "Choose what this favourite plays.",
+        "text_template": "A template tile needs a template of at most 4000 characters."
       },
       "top_bar": {
         "invalid": "Invalid top bar; refresh the management page.",
@@ -871,6 +880,7 @@
         "layout_conflict": "Layout changed in another editor; reload and reconcile the draft",
         "adaptation": "Screen grid changed; explicit layout adaptation is required",
         "normalization": "Tile options need normalization before saving the page document",
+        "on_tile": "Page {page}, tile “{tile}”: {problem}",
         "ambiguous_tile": "Tile event has an ambiguous source; specify its page",
         "save_first": "Save a page document before saving document settings",
         "destination_exists": "Destination screen already has a saved layout",
@@ -967,6 +977,12 @@
         "retry": "Tessera didn't take the report just now. Try again in a minute, or download it.",
         "offline": "Tessera can't be reached from here. Download the report instead.",
         "invalid": "Tessera refused the report. Download it and attach it to a GitHub issue instead."
+      },
+      "automations": {
+        "not_allowed": "Home Assistant did not let the app save automations. The app needs an administrator's access.",
+        "refused": "Home Assistant refused the automation: {reason}",
+        "not_ours": "That automation was not made by Tessera, so the app leaves it alone.",
+        "invalid": "This automation cannot be saved ({part})."
       }
     },
     "status": {
@@ -1037,7 +1053,9 @@
         },
         "light": {
           "toggle": "On/off switch",
-          "brightness": "Brightness slider"
+          "brightness": "Brightness slider",
+          "presets": "Presets",
+          "brightness_presets": "Brightness slider and presets"
         },
         "fan": {
           "toggle": "On/off switch",
@@ -1165,9 +1183,13 @@
           "label": "Wake when moved",
           "hint": "The screen wakes from standby when someone picks it up, moves it or knocks on it. It feels the screen itself, not someone walking past."
         },
-        "doorbell": {
-          "label": "Doorbell",
-          "hint": "When a doorbell in Home Assistant rings, this screen wakes, chimes and opens its camera live with sound. Off leaves this screen alone, for example a bedroom at night."
+        "backlight_pwm": {
+          "label": "Backlight PWM",
+          "hint": "How fast the backlight switches on and off to dim. 150 Hz dims every unit of this board, but some whine below 20 kHz: choose 20 kHz when yours whines, 15 kHz when 20 kHz does not dim it evenly."
+        },
+        "dimmest_level": {
+          "label": "Dimmest level",
+          "hint": "The lowest the backlight goes, as a share of its full power. Raise it when the screen stays black or flickers at its lowest brightness."
         },
         "microphone_gain": {
           "label": "Microphone gain",
@@ -1432,7 +1454,8 @@
         "nightstand": "Bedside clock",
         "page": "Go to page {page}",
         "map": "Map",
-        "energy": "Energy"
+        "energy": "Energy",
+        "text": "Template"
       },
       "identify": {
         "title": "This is {name}",
@@ -1503,6 +1526,56 @@
         "directory": "Folder",
         "music": "Music"
       }
+    },
+    "doorbell": {
+      "fields": {
+        "camera": {
+          "label": "Camera",
+          "help": "The camera entity of the doorbell. A screen that streams (an ESP32-P4) shows it live with its sound; any other screen shows its picture in an alert. Required."
+        },
+        "title": {
+          "label": "Title",
+          "help": "What the screen calls the doorbell, at the top of its view and as the alert's title. Empty takes the camera's name."
+        },
+        "screen": {
+          "label": "Screen",
+          "help": "Which screens get the ring: a device name (such as kitchen-screen), the name Home Assistant shows, or a room. A list reaches several. Leave it out for every screen. A name that matches no screen sends nothing."
+        },
+        "timeout": {
+          "label": "Timeout",
+          "help": "Seconds the ring stays when nobody touches it, {min} to {max}. Empty is {default}. A touch keeps it open."
+        },
+        "keep_minutes": {
+          "label": "Keep missed",
+          "help": "Minutes a ring nobody answered stays in the top bar of the screens with its view, counted from the ring, 1 to {most}. Empty or 0: until someone opens it."
+        },
+        "sound": {
+          "label": "Sound",
+          "help": "Whether the doorbell's own sound plays at once when it rings, where the screen has a speaker. Empty or true: the view opens with Sound on. false: it opens quiet (a studio, a bedroom), and a tap on Sound turns it on."
+        },
+        "chime": {
+          "label": "Chime",
+          "help": "Whether the screen plays its chime when it rings, where it has a speaker. Empty or true: it chimes. false: it rings without one, and the view opens all the same."
+        },
+        "lock": {
+          "label": "Lock",
+          "help": "A lock entity the view's door key unlocks after a second tap; the key shows its state. A lock that asks for a code needs a default code in Home Assistant (the lock's settings). Leave it out for no door key."
+        },
+        "door_action": {
+          "label": "Door action",
+          "help": "Instead of a lock: a Home Assistant action the door key performs after a second tap, such as script.open_gate or button.press. `door_data` gives its fields (entity_id, ...)."
+        },
+        "door_data": {
+          "label": "Door data",
+          "help": "The fields of `door_action`, such as entity_id."
+        }
+      },
+      "endings": {
+        "answered": "Someone touched it: answered, and closed on the other screens",
+        "closed": "Its close key, or something else that closed it",
+        "missed": "Nobody touched it before its timeout",
+        "seen": "A missed ring was opened again from the top bar"
+      }
     }
   },
   "editor": {
@@ -1529,10 +1602,11 @@
     "nav": {
       "new_screen": "New screen",
       "firmware": "Firmware & USB",
-      "alerts": "Alerts",
+      "events": "Events",
       "settings": "Settings",
       "new_screen_detail": "Connect and install",
-      "plugins": "Plugins"
+      "plugins": "Plugins",
+      "manual": "Manual"
     },
     "api": {
       "failed": "That didn't work. Refresh the page and try again."
@@ -1987,7 +2061,11 @@
       "refresh": {
         "label": "Refresh",
         "seconds": "Every {n} s",
-        "live": "Live"
+        "live": "Live",
+        "paused": "Live paused",
+        "cap": "This screen plays {n} cameras live at once; the others show a picture every 15 seconds. With two cameras, each one runs more smoothly than with four.",
+        "cap_one": "This screen plays one camera live at a time; the others show a picture every 15 seconds.",
+        "streams": "{used} of {most} live streams in use, across all screens. A camera beyond them shows a picture every 15 seconds."
       },
       "picture": {
         "fit": {
@@ -2069,6 +2147,39 @@
         "room_hint": "The screen draws them where the tile has room for them (firmware 0.57.0 or newer): under the name on a single tile, beside it on a double-width one. Where they don't fit, the tile looks as it does without them.",
         "tilt": "Slat tilt",
         "tilt_hint": "Adds the supported slat slider or tilt buttons when there is enough room. On smaller tiles, use the detail view. Your open/close selection stays unchanged."
+      },
+      "presets": {
+        "label": "Presets",
+        "preset": "Preset {n}",
+        "swatch_aria": "Preset {n}, brightness {b}%",
+        "white": "White",
+        "colour": "Color",
+        "level": "Brightness only",
+        "white_shade": "White shade",
+        "kelvin": "{k} K",
+        "hue": "Hue",
+        "degrees": "{h}°",
+        "saturation": "Saturation",
+        "brightness": "Brightness",
+        "percent": "{n}%",
+        "use_light": "Use the light's current state",
+        "use_light_off": "Turn the light on to take its brightness and color.",
+        "add": "Add a preset",
+        "add_first": "Add your first preset",
+        "levels": "Show brightness on presets",
+        "levels_hint": "Writes each preset's brightness small in its circle. A preset of brightness only always shows it.",
+        "hint": "A tap on a preset sets the light to it in one go; the ring marks the one the light shows. Click one to change it, drag to reorder.",
+        "hint_empty": "Up to four round keys, like the favorite colors in Home Assistant, each with its own brightness. A new one starts from what the light shows now.",
+        "own": "Own setting",
+        "device": "Lamp's own preset",
+        "effect": "Effect",
+        "search": "Search",
+        "none_found": "Nothing found",
+        "device_kind": "Kind",
+        "device_preset": "Preset",
+        "device_playlist": "Playlist",
+        "device_hint": "A preset of the lamp itself sets its own color, effect and brightness.",
+        "swatch_aria_named": "Preset {n}, {name}"
       },
       "tap": {
         "label": "On tap",
@@ -2322,6 +2433,58 @@
         "none": "No controls",
         "never": "Don't show again",
         "done": "Done"
+      },
+      "text": {
+        "title": "Template",
+        "hint": "Write text with Home Assistant templates in it, as in Developer tools › Template. Home Assistant fills it in, and the screen shows the result and keeps it up to date. When the result is empty, the tile disappears.",
+        "manual": "How to write a template",
+        "field": "Template",
+        "placeholder": "Type text, or {'{{'} to read a state…",
+        "keys": {
+          "space": "Space",
+          "complete": "complete",
+          "next": "next field",
+          "comment": "comment"
+        },
+        "result": "On the screen",
+        "bytes": "{n} of {of} bytes",
+        "empty": "The result is empty: the screen shows nothing here.",
+        "access": "The template runs in Home Assistant with the Tessera app's access, so it can read every entity.",
+        "markup": {
+          "label": "Markup",
+          "heading": "Heading",
+          "bullet": "Bullet",
+          "table": "Table",
+          "bold": "Bold",
+          "good": "Green text",
+          "alert": "Red text",
+          "accent": "Blue text"
+        },
+        "complete": {
+          "now": "now",
+          "state": "State: {state}"
+        },
+        "examples": {
+          "title": "Start from an example:",
+          "lights": "Lights on",
+          "open": "Open doors and windows",
+          "weather": "Weather",
+          "lights_heading": "Lights on",
+          "all_off": "All lights are off",
+          "open_heading": "Open",
+          "now": "Now",
+          "humidity": "Humidity"
+        },
+        "listen": {
+          "label": "Updates when",
+          "time": "the time changes",
+          "none": "Reads no entity: it only changes when you change the template.",
+          "all": "Reads every state: Home Assistant renders it again at most once a minute. Name the entities or a domain (states.light) to make it follow at once."
+        },
+        "lint": {
+          "unknown": "{id} is not in Home Assistant",
+          "replace": "Replace with {id}"
+        }
       }
     },
     "precision": {
@@ -2977,6 +3140,14 @@
         "change": "Change Wi-Fi and install again",
         "failed": "Tessera can't add {name} to Home Assistant by itself. Add it yourself below."
       },
+      "known": {
+        "title": "This board is already in Home Assistant as {name}",
+        "text": "Home Assistant keeps one ESPHome device per board (its MAC address), so {new} cannot be added while {name} is there. Install {name} again, or replace it: after the firmware is on the board, {name} leaves Home Assistant with its entities and {new} takes its place.",
+        "reinstall": "Install {name} again",
+        "replace": "Replace {name} with {new}",
+        "replaced": "{name} was removed from Home Assistant; {new} takes its place.",
+        "go_firmware": "Under Firmware & USB, pick the profile of {name} and “Install from this browser”."
+      },
       "memory": {
         "low_title": "Little memory free on the Home Assistant machine",
         "low": "{free} of memory is free, so the firmware builds with fewer compilers at a time ({jobs} instead of {cores}). That takes longer, but it fits.",
@@ -2996,8 +3167,6 @@
       "waits_turn": "Another screen is being built now. This one waits its turn and starts by itself right after."
     },
     "alerts": {
-      "eyebrow": "Alerts · cheatsheet",
-      "title": "A full-screen notification, from an automation.",
       "intro": "Every screen has the {action} action. It places a card over everything, wakes the screen, and keeps the backlight at normal brightness until someone taps the button or the timeout runs out. Home Assistant itself shows no explanation or dropdowns for ESPHome actions; everything you can fill in is listed here.",
       "loading": "The cheatsheet is still loading; one moment.",
       "example": {
@@ -3007,7 +3176,6 @@
       },
       "sections": "Sections",
       "nav": {
-        "try": "Try it",
         "screens": "Your screens",
         "howto": "In an automation",
         "all": "All screens",
@@ -3021,10 +3189,6 @@
         "choice": "Two buttons"
       },
       "try": {
-        "text": "Send one alert now, with the same fields an automation sends. The screen shows the card and, with blinking on, flashes its backlight.",
-        "screen": "Screen",
-        "all": "All screens ({ready} ready)",
-        "not_ready": "{name} · not ready",
         "title": "Title",
         "subtitle": "Subtitle",
         "icon": "Icon",
@@ -3036,10 +3200,6 @@
         "sending": "Sending…",
         "send": "Send alert",
         "sent_all": "Sent to {n} screen. | Sent to {n} screens.",
-        "sent_to": "Sent to {name}.",
-        "sent_one": "Sent to the screen.",
-        "skipped": "1 skipped (offline or old firmware). | {n} skipped (offline or old firmware).",
-        "left_empty": "Left empty: {fields}.",
         "nothing": "No screen could show it: check that a screen is online with firmware {version} or newer."
       },
       "white": "White (default)",
@@ -3153,7 +3313,80 @@
         "text": "Add {second} for a second button on the left of the first, so the person at the screen can choose, such as Not now and Open. {first_color} and {second_color} give a button a color of its own, green for yes and red for no. Which answer goes on which side is yours to choose: the first button is always on the right.",
         "event": "Through the event every one of these fields is optional, and {second_action} with {second_data} runs an action from the second button, as {action} does from the first. A screen with firmware older than {version} shows the alert with its one button.",
         "direct": "Calling a screen directly? Its action {choice} takes the fields of show_alert plus these three; the second button ends the alert with {ending}."
-      }
+      },
+      "wizard": {
+        "camera": "Camera (optional)",
+        "no_camera": "No camera",
+        "screens_hint": "None chosen: every screen that can show an alert.",
+        "description": "Made in Tessera's Events: an alert on the screens.",
+        "title": "New alert automation",
+        "with_picture": "Shows the camera's picture",
+        "without_picture": "Shows the alert without a picture",
+        "summary": {
+          "says": "Says",
+          "buttons": "Buttons"
+        },
+        "steps": {
+          "trigger": {
+            "title": "What starts it?",
+            "help": "Pick what makes the alert appear: a sensor that turns on, a toggle helper, a button or an event. Using it in an automation you already have? Then you can skip this step."
+          },
+          "words": {
+            "title": "What does it say?",
+            "help": "A short title and a line under it. You see the card as the screen draws it."
+          },
+          "look": {
+            "title": "How does it look?",
+            "help": "An icon, a color, a camera picture if you like, and whether it blinks."
+          },
+          "screens": {
+            "title": "Which screens?",
+            "help": "Pick the screens that show it, and how long it stays."
+          },
+          "try": {
+            "title": "Try it",
+            "help": "Send it once now, exactly as the automation will. Look at your screens."
+          },
+          "add": {
+            "title": "Finish",
+            "help": "Make it an automation of its own, or copy the action into an automation you already have."
+          },
+          "buttons": {
+            "title": "Which buttons?",
+            "help": "One button, or two for a choice. Each can do something in Home Assistant when it is pressed, or only close the alert."
+          }
+        },
+        "buttons": {
+          "one": "One button",
+          "one_detail": "OK, Coming, Seen: it closes the alert and can do one thing.",
+          "two": "Two buttons",
+          "two_detail": "A choice, such as Open and Not now, each with its own action.",
+          "first": "Right button",
+          "second": "Left button",
+          "second_example": "Not now",
+          "color": "Color",
+          "own_color": "Its own color",
+          "does": "When pressed",
+          "only_close": "Only closes the alert",
+          "no_actions": "This entity has no action that needs nothing more. Pick another.",
+          "closes": "closes the alert",
+          "only": "The button"
+        },
+        "try_action": "Careful: pressing a button with an action really performs it, also now.",
+        "route": {
+          "event": "Sent as the event {event}: the one way that carries a camera, a button's action and a choice of screens. The app gives each screen the alert in the form its firmware knows.",
+          "one_button": "{screens}: firmware older than {version}, shows only the right button.",
+          "action": "The app performs a button's action once, on whichever screen it is pressed. After the timeout or a new alert nothing happens.",
+          "no_picture": "{screens}: shows the alert without the camera's picture."
+        }
+      },
+      "hero": {
+        "title": "An alert on your screens",
+        "text": "A card over everything on the screen, with a button: when someone is at the door, the washing is done or a window is left open. The wizard walks you through it and adds the automation to Home Assistant.",
+        "create": "Create an alert automation",
+        "empty": "No alert automation yet. Create one above and it shows up here."
+      },
+      "reference": "Write it yourself"
     },
     "override": {
       "eyebrow": "Advanced · local override",
@@ -3194,6 +3427,8 @@
       "calendar_free": "Free"
     },
     "pages": {
+      "repaired": "Page {page}, tile “{tile}”: took out what did not fit ({what}).",
+      "repaired_tile": "Page {page}: took the tile “{tile}” off, it did not fit any more.",
       "mode": "Editor mode",
       "simple": "Simple",
       "advanced": "Advanced",
@@ -3325,8 +3560,7 @@
       "comment_label": "Anything else? (optional)",
       "comment_hint": "Please leave out personal details, logs, passwords and API keys.",
       "report_title": "Want it fixed?",
-      "report_text": "Open an issue on GitHub. Your board, the versions and what you told us are already filled in. Add a log and we can look into it, and ask you about it.",
-      "report_open": "Open a GitHub issue",
+      "report_text": "Send a report: Tessera collects the board, the versions, the logs and the last crash, shows them to you first, and sends them only when you agree. Or read what to do when something doesn't work.",
       "add_details": "Add details",
       "done": "Done",
       "settings_title": "Feedback",
@@ -3359,7 +3593,9 @@
         "addon": "The Tessera version: {version}",
         "nothing_else": "Nothing else: no name, account, entities, logs or Home Assistant settings. Each screen shares under its own random key."
       },
-      "privacy": "Privacy"
+      "privacy": "Privacy",
+      "report_send": "Send a report",
+      "report_manual": "Read the troubleshooting guide"
     },
     "webflash": {
       "target": "Install from this browser (Chrome or Edge)",
@@ -3551,9 +3787,20 @@
       "donated": "I already donated",
       "thanks": "Thank you! This won't ask again."
     },
+    "funding": {
+      "title": "Looking for funding",
+      "body": "I have a day job that pays the bills, and it comes first. Tessera keeps getting bigger, and I simply don't have the time it needs. To keep it alive, I need funding: so I can give it the time it deserves, or hire someone to help. If you can help, send me an email.",
+      "mail": "Email me",
+      "later": "Not now"
+    },
     "plugins": {
       "title": "Plugins",
       "intro": "Extras for your screens: tiles to put on a page, something more the whole screen can do, or hardware on the board. A plugin is built into a screen's firmware, so you choose per screen which ones it gets.",
+      "risk": {
+        "title": "Plugins are at your own risk",
+        "text": "Every plugin takes some of a screen's memory and processor time. A few go well together, but many at once (a voice assistant, a Bluetooth proxy and a camera, say) can fill the memory and make a screen slow, freeze or restart. You can try it, but add one or two at a time and check that the screen stays stable. When it starts acting up, take the newest ones off first.",
+        "many": "{screen} runs {n} plugins after this build. That many can make a screen unstable: if it acts up, take some off."
+      },
       "search": "Search by name, maker or what it does",
       "filter": "Show",
       "from_tessera": "From Tessera",
@@ -3763,7 +4010,8 @@
         "keep": "Keep it",
         "keep_named": "Keep {name}",
         "minutes": "Each build takes a few minutes.",
-        "off_set": "Set aside to come off"
+        "off_set": "Set aside to come off",
+        "risk": "At your own risk: every plugin takes memory, and too many can make a screen unstable."
       },
       "maker": {
         "title": "Make a plugin of your own",
@@ -4142,6 +4390,173 @@
       },
       "failed_title": "The report could not be made",
       "try_again": "Try again"
+    },
+    "events": {
+      "eyebrow": "Events · from Home Assistant",
+      "intro": "What an automation in Home Assistant can fire at your screens. You choose the trigger, the screens and what they show.",
+      "alerts": "Alerts",
+      "doorbell": "Doorbell",
+      "wizard": {
+        "suggested": "Your doorbells:",
+        "none": "No entity found",
+        "pick_trigger": "Pick what starts it",
+        "yaml": "Show the automation as YAML",
+        "kind": {
+          "doorbell": "Starts when this doorbell rings (Home Assistant's Doorbell rang).",
+          "event": "Starts every time this event fires.",
+          "on": "Starts when this turns on.",
+          "press": "Starts every time this is pressed."
+        },
+        "back": "Back",
+        "next": "Next",
+        "done": "Done",
+        "other": "Something else",
+        "other_detail": "Any sensor, switch, helper, button or event of yours",
+        "every_screen": "Every screen",
+        "summary": {
+          "starts": "Starts on",
+          "screens": "Screens",
+          "title": "Name in Home Assistant"
+        },
+        "domain": {
+          "binary_sensor": "A sensor: from off to on, for example when it detects someone.",
+          "switch": "A switch: when someone turns it on.",
+          "input_boolean": "A toggle helper: when it turns on, for example from another automation."
+        },
+        "finish": {
+          "label": "How do you want to use it?",
+          "automation": "Create the automation",
+          "automation_detail": "Tessera adds it to Home Assistant, starting from what you picked in step 1.",
+          "needs_trigger": "Pick what starts it in step 1 first.",
+          "action": "Use it in an automation of your own",
+          "action_detail": "Copy only the action and paste it into an automation you already have.",
+          "paste": "In Home Assistant, open your automation, add an action, choose Edit in YAML in its menu and paste this.",
+          "copy": "Copy YAML"
+        }
+      },
+      "install": {
+        "add": "Add to Home Assistant",
+        "saving": "Adding…",
+        "saved": "Added. It works right away, no restart needed.",
+        "open": "Open in Home Assistant",
+        "hint": "It is called \"{title}\" in Home Assistant's automations, where you can change it further.",
+        "listed": "From Tessera in Home Assistant",
+        "remove": "Remove",
+        "remove_confirm": "Remove \"{name}\" from Home Assistant?",
+        "on": "On",
+        "off": "Off"
+      }
+    },
+    "doorbell": {
+      "intro": "Someone rings, and your screens show the door. An automation fires the event with the doorbell's camera: a P4 screen wakes, chimes and opens the camera live with its sound; any other screen shows its picture in an alert. Any doorbell works, whatever starts the automation.",
+      "example": {
+        "title": "Front door",
+        "when": "Just now",
+        "sound": "Sound on"
+      },
+      "try": {
+        "send": "Ring",
+        "views": "Opened live on {n} screen. | Opened live on {n} screens.",
+        "alerts": "Shown as an alert on {n} screen. | Shown as an alert on {n} screens.",
+        "nothing": "No screen showed it. Is the screen online, and its camera a camera entity?"
+      },
+      "no_camera": "No camera",
+      "fields": {
+        "title": "Title",
+        "timeout": "Timeout (seconds)",
+        "keep": "Keep a missed ring in the top bar"
+      },
+      "screens": {
+        "view": "Live with sound",
+        "picture": "Alert with picture",
+        "plain": "Alert without picture"
+      },
+      "after": {
+        "title": "Afterwards",
+        "text": "Once per ring the app fires {answered} when someone answered it on a screen, or {missed} when nobody did. Both carry the camera and the title; answered also names the screen.",
+        "dismiss": "To close a ring on every screen, for example when the door opens:"
+      },
+      "yaml": {
+        "missed_alias": "Missed doorbell to my phone",
+        "missed_message": "Someone rang the doorbell",
+        "description": "Made in Tessera's Events: a doorbell's ring on the screens."
+      },
+      "wizard": {
+        "title": "New doorbell automation",
+        "camera_hint": "A P4 screen streams it live with sound when the camera has sound; other screens show its picture.",
+        "screens_hint": "None chosen: every screen.",
+        "limits": "Not every doorbell can do everything: sound comes only when the camera's stream has it. Talking back comes later.",
+        "more_cameras": "Another camera…",
+        "timeout_hint": "How long a ring stays open when nobody touches the screen. Empty: the default.",
+        "summary": {
+          "camera": "Camera",
+          "door": "Door"
+        },
+        "steps": {
+          "rings": {
+            "title": "What rings?",
+            "help": "Pick what tells Home Assistant someone is at the door. Your doorbells come first; any sensor, button or event works too. Using it in an automation you already have? Then you can skip this step."
+          },
+          "camera": {
+            "title": "Which camera?",
+            "help": "The camera the screens show when it rings. Usually the doorbell's own camera."
+          },
+          "door": {
+            "title": "A door to open?",
+            "help": "The ring's view can have a key that opens the door after a second tap: a lock, or another action such as a script or a gate's button. You can leave it out."
+          },
+          "screens": {
+            "title": "Which screens?",
+            "help": "Pick the screens that show the ring. Each one says what it can do with it."
+          },
+          "name": {
+            "title": "Name and timeout",
+            "help": "The title on the screen, and how long a ring stays open. You can leave both empty."
+          },
+          "try": {
+            "title": "Try it",
+            "help": "Ring once now, exactly as the automation will. Look at your screens."
+          },
+          "add": {
+            "title": "Finish",
+            "help": "Make it an automation of its own, or copy the action into an automation you already have."
+          }
+        },
+        "door": {
+          "none": "No door key",
+          "lock": "A lock",
+          "action": "Another action",
+          "pick_lock": "Pick a lock…",
+          "pick_action": "Pick what it opens…",
+          "code": "This lock asks for a code: the key only appears when the lock has a default code in Home Assistant (the lock's settings)."
+        },
+        "sound": {
+          "label": "Hear the doorbell at once",
+          "hint": "The ring opens with the doorbell's sound on. Turn this off for a quiet place, such as a studio: the sound then waits for a tap on Sound."
+        },
+        "chime": {
+          "label": "Chime when it rings",
+          "hint": "The screen plays a door chime when someone rings. Turn this off if you would rather not hear the ding-dong every time."
+        },
+        "keep": {
+          "minutes": "{n} min",
+          "hours": "{n} h",
+          "open": "Until someone opens it",
+          "hint": "A ring nobody answered stays in the top bar of the screens for this long after it rang, with how long ago it was. A tap on it opens the doorbell again."
+        }
+      },
+      "hero": {
+        "title": "Your doorbell on your screens",
+        "text": "Someone rings, and your screens show who is at the door: live with sound on a P4 screen, as a picture or an alert on the others. The wizard walks you through it and adds the automation to Home Assistant.",
+        "create": "Create a doorbell automation",
+        "empty": "No doorbell automation yet. Create one above and it shows up here."
+      },
+      "by_hand": {
+        "title": "Write the automation yourself"
+      }
+    },
+    "drawer": {
+      "resize": "Resize the settings: drag, or use the arrow keys; double-click to reset"
     }
   }
 }

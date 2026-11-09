@@ -13,7 +13,7 @@ import secrets
 
 from i18n import t
 import tile_icons
-from core import (entity_id, plugin_entity, plugin_tile, FIRMWARE_MAX_PAGES, FIRMWARE_MAX_TILES, HEADER_MAX_ITEMS, KEY_HOLDERS, STORE_MAX_BAR_ITEMS, STORE_MAX_PAGES,
+from core import (BUILTIN, entity_id, plugin_entity, plugin_tile, FIRMWARE_MAX_PAGES, FIRMWARE_MAX_TILES, HEADER_MAX_ITEMS, KEY_HOLDERS, STORE_MAX_BAR_ITEMS, STORE_MAX_PAGES,
                   STORE_MAX_TILES, Grid, is_key, span_of,
                   span_offered, placed, header_items, page_target, tile_size, validate_header, validate_layout)
 
@@ -30,6 +30,8 @@ APPEARANCE = {
     "mapLook": "look",
     # How the energy card shows power along a line: running dots or calm lines (catalogue/screen.yaml `energy`).
     "energyFlow": "flow",
+    # The template tile (docs/TEXT_TILE.md): its template, as typed. Home Assistant renders it; it never reaches a screen.
+    "textTemplate": "template",
     # A calendar card (firmware 0.56.0, calendar_feed.py): its look, its calendars and filters, how far it looks, when an
     # event starts soon and its full screen's first view. The calendars and filters stay in the app.
     "calendarStyle": "style", "calendarEntities": "calendars", "calendarPlaces": "places", "calendarWords": "words",
@@ -44,7 +46,9 @@ APPEARANCE = {
 # A favourite (app 0.4.42) keeps what it plays (`play`, Home Assistant's own ids) and on which speaker (`speaker`), and
 # since app 0.4.84 its own shuffle and repeat.
 INTERACTION = {"tap": "tap", "inline": "inline", "controls": "controls", "action": "action", "guard": "guard", "play": "play", "speaker": "speaker",
-               "shuffle": "shuffle", "repeat": "repeat", "tilt_open": "tilt_open"}
+               "shuffle": "shuffle", "repeat": "repeat", "tilt_open": "tilt_open",
+               # A light's presets (module light_presets, light_presets.py): a brightness with a white shade or a colour each.
+               "presets": "presets", "preset_levels": "preset_levels"}
 
 
 class LayoutError(ValueError):
@@ -216,7 +220,10 @@ def _entity(content, page_indexes, home):
         return entity
     if content["kind"] == "builtin":
         _object(content, {"kind", "name"}, {"kind", "name"})
-        if content["name"] not in ("clock", "nightstand", "settings", "map", "energy"):
+        # Every built-in tile the app knows (core.BUILTIN), a page's link apart: it is "navigation" below. A hand-kept
+        # list here forgot the template tile (GitHub #358).
+        if not isinstance(content["name"], str) or content["name"].startswith("page_") \
+                or "screen." + content["name"] not in BUILTIN:
             raise LayoutError(t('addon.errors.layout.unsupported'))
         return "screen." + content["name"]
     if content["kind"] == "navigation":
@@ -487,8 +494,14 @@ def validate_document(data, grid):
     checked = validate_layout(flat, grid=grid)
     # The legacy validator sorts by slot and normalizes documented defaults.
     # Incompatible size/action combinations must not escape into a document.
-    if checked["title"] != data["title"] or checked["tiles"] != flat["tiles"]:
+    if checked["title"] != data["title"]:
         raise LayoutError(t('addon.errors.pages.normalization'))
+    if checked["tiles"] != flat["tiles"]:
+        # The tile that is refused is named, with its page, so the person can find it (and change or delete it).
+        shown = {tile["slot"]: tile for tile in checked["tiles"]}
+        tile = next((tile for tile in flat["tiles"] if shown.get(tile["slot"]) != tile), flat["tiles"][0])
+        raise LayoutError(t('addon.errors.pages.on_tile', page=tile["slot"] // (grid.columns * grid.rows) + 1,
+                            tile=tile.get("name") or tile["entity"], problem=t('addon.errors.pages.normalization')))
     return deepcopy(data)
 
 

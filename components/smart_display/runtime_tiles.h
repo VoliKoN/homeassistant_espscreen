@@ -1,6 +1,8 @@
 #pragma once
 #include <cmath>
+#include <atomic>
 #include <cstring>
+#include <string_view>
 #include "runtime_model.h"
 #ifdef ESP_SCREEN_HOST
 #include "host_shims.h"
@@ -21,6 +23,9 @@
 #endif
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
+#endif
+#ifdef USE_LOGGER
+#include "esphome/components/logger/logger.h"
 #endif
 #endif
 #include "header_bar.h"
@@ -47,7 +52,11 @@
 #include "history_view.h"
 #include "camera_view.h"
 #include "picture_fetch.h"
+#include "live_spots.h"
+#include "pressure.h"
 #include "live_view.h"
+#include "hw.h"
+#include "boot_trial.h"
 #include "kept_pages.h"
 #include "tile_memory.h"
 #include "wifi_status.h"
@@ -60,6 +69,9 @@
 #include "picture_motion.h"
 #include "energy_view.h"
 #include "calendar_view.h"
+#ifdef SD_MOD_TEXT_CARD
+#include "module_text_card_view.h"
+#endif
 #include "meter_view.h"
 #include "module_vacuum_tile.h"
 #ifdef SD_MOD_DOORBELL
@@ -97,9 +109,20 @@ using settings_screen::auto_home_seconds;
 using settings_screen::page_buttons;
 inline esphome::ESPPreferenceObject rotation_preference;
 inline esphome::ESPPreferenceObject buttons_preference;
+inline esphome::ESPPreferenceObject home_button_preference;  // the home button in the top bar (0x48425431, 0.60.0+)
 inline esphome::ESPPreferenceObject swipe_preference;
 inline esphome::ESPPreferenceObject home_preference;
 inline esphome::ESPPreferenceObject dark_preference;
+inline esphome::ESPPreferenceObject debug_preference;
+// Debug mode (settings_screen.h): the logger at the level the firmware is built with while it is on, warnings and
+// errors alone while it is off. At boot and after every change of a setting. The host build (tools/render) keeps its
+// level: it has no glass to flash and its driver reads the INFO lines.
+inline void apply_debug_mode() {
+#if defined(USE_LOGGER) && !defined(ESP_SCREEN_HOST) && !defined(USE_HOST)
+  if (esphome::logger::global_logger != nullptr)
+    esphome::logger::global_logger->set_log_level(settings_screen::debug_mode ? ESPHOME_LOG_LEVEL : ESPHOME_LOG_LEVEL_WARN);
+#endif
+}
 // The grid chosen for each way the glass hangs (firmware 0.53.0+, regrid), lying down first.
 struct GridChoice { uint8_t columns[2], rows[2]; };
 inline esphome::ESPPreferenceObject grid_preference;
@@ -205,6 +228,8 @@ inline int wanted_page = 0;
 inline uint64_t previous_page_id = 0;
 inline bool had_previous_page = false;
 inline uint32_t history_view_id = 0, options_view_id = 0, camera_view_id = 0, cover_view_id = 0, vacuum_map_view_id = 0;
+// A tap on a short calendar event (calendar_view.cpp): the question asked last.
+inline uint32_t calendar_view_id = 0;
 // A player's library (firmware 0.24.0+): the folder asked for last, and the covers of its page.
 inline uint32_t library_view_id = 0, library_art_view_id = 0;
 inline void cancel_layout_input(bool invalidate_widgets = true);
@@ -403,6 +428,7 @@ inline void history_received();
 // Camera images full screen and on an alert (firmware 0.2.57+, the Guition binds them; see the end of this file).
 inline void camera_open(const std::string &entity, const std::string &name, int map_index = -1, const std::string &focus = "");
 inline void camera_answer(const std::string &view, const std::string &entity, const std::string &url, uint32_t number);
+inline void camera_link_now(const std::string &url);
 inline bool camera_supported();
 // Every picture goes one way (picture_loader.h; see the end of this file): an owner says what it wants, and draws what
 // picture_of() has for its key.
@@ -512,6 +538,7 @@ inline void load_settings() {
   home_preference = esphome::global_preferences->make_preference<HomeTimeout>(0x484F4D31);
   dark_preference = esphome::global_preferences->make_preference<uint32_t>(0x44524B31);
   buttons_preference = esphome::global_preferences->make_preference<uint32_t>(0x50474231);
+  debug_preference = esphome::global_preferences->make_preference<uint32_t>(0x44424731);
   numbers_preference = esphome::global_preferences->make_preference<uint32_t>(0x4E554D31);
   uint32_t numbers_saved=0;
   if(numbers_preference.load(&numbers_saved))screen_text_numbers(numbers_saved);
@@ -521,6 +548,13 @@ inline void load_settings() {
   if(dark_preference.load(&dark_saved))settings_screen::dark_mode=dark_saved==1;
   uint32_t buttons_saved=1;
   if(buttons_preference.load(&buttons_saved))page_buttons=buttons_saved!=0;
+  // The home button (0.2.122+) had no record of its own until 0.60.0, so a screen forgot it was off (GitHub #319).
+  home_button_preference=esphome::global_preferences->make_preference<uint32_t>(0x48425431);
+  uint32_t house_saved=1;
+  if(home_button_preference.load(&house_saved))settings_screen::home_button=house_saved!=0;
+  uint32_t debug_saved=0;
+  if(debug_preference.load(&debug_saved))settings_screen::debug_mode=debug_saved==1;
+  apply_debug_mode();
   HomeTimeout home;
   if(home_preference.load(&home) && home.seconds>=30 && home.seconds<=3600){
     auto_home=home.enabled?1:0;auto_home_seconds=(int32_t)home.seconds;
@@ -553,6 +587,10 @@ inline void persist_settings() {
   dark_preference.save(&dark);
   uint32_t buttons = page_buttons ? 1 : 0;
   buttons_preference.save(&buttons);
+  uint32_t house = settings_screen::home_button ? 1 : 0;
+  home_button_preference.save(&house);
+  uint32_t debug = settings_screen::debug_mode ? 1 : 0;
+  debug_preference.save(&debug);
   uint32_t turned = (uint32_t) rotation;
   rotation_preference.save(&turned);
 }
@@ -592,6 +630,10 @@ struct Widgets {
   // a slider or a toggle. Objects are rebuilt only when the control set changes.
   lv_obj_t *panel{}; std::string panel_mode; bool panel_dirty=false, panel_full=false, panel_tall=false; uint8_t panel_pair=0; int panel_w=0; uint16_t panel_layout_w=0,panel_layout_h=0;
   std::array<lv_obj_t *,3> keys{}, key_icons{}; std::array<int,3> key_commands{}; std::array<std::string,3> key_args; std::array<int,3> key_checked{};
+#ifdef SD_MOD_LIGHT_PRESETS
+  // A light's presets on its panel (module light_presets): a round key each, the presets they were made for and their size.
+  std::array<lv_obj_t *,light_presets::MAX> dots{}; const void *dots_of=nullptr; int dots_size=0;
+#endif
   // A thermostat's mode bar as its panel ("Mode", firmware 0.19.0): its segments, on the panel's track (pill).
   std::array<lv_obj_t *,climate_tile::SEGMENTS> segments{};
   lv_obj_t *pill{}, *pill_value{}, *knob{}, *control_slider{}; int knob_on=-1;
@@ -616,6 +658,10 @@ struct Widgets {
   energy_view::View *energy{};
   // A calendar card's plan (firmware 0.56.0+, calendar_view.cpp); it goes with the card's extra layer.
   calendar_view::View *calendar{};
+#ifdef SD_MOD_TEXT_CARD
+  // A template tile's plan (module text_card, firmware 0.58.0+, module_text_card.cpp); it goes with the card's extra layer.
+  text_card_view::View *text{};
+#endif
   // A sensor's meter (firmware 0.56.0+, meter_view.cpp); it goes with the card's extra layer.
   meter_view::View *meter{};
 #ifdef SD_MOD_VACUUM_CARD
@@ -968,14 +1014,14 @@ inline bool action(const std::string &service, const std::string &entity, const 
   return watched;
 }
 inline bool action_template(const std::string &service, const std::string &entity, const std::string &key, const std::string &value,
-                            bool busy = true);
+                            bool busy = true, const std::string &key2 = "", const std::string &value2 = "");
 // One wish's turn (docs/OPTIMISTIC.md): it goes out when it is ready, its old value comes back when Home Assistant
 // leaves it as it was, and a slow one says so. Run at a tap, at an answer, at a report and by the clock.
 inline void wish_run(optimistic::Wish &w, uint32_t now) {
   switch (optimistic::tick(w, now)) {
     case optimistic::Outcome::SEND:
-      optimistic::sent(w, w.rendered ? action_template(w.service, w.target, w.key, w.value, false)
-                                     : action(w.service, w.target, w.key, w.value, true, "", "", false));
+      optimistic::sent(w, w.rendered ? action_template(w.service, w.target, w.key, w.value, false, w.key2, w.value2)
+                                     : action(w.service, w.target, w.key, w.value, true, w.key2, w.value2, false));
       break;
     case optimistic::Outcome::REVERT: wish_revert(w, false, false); break;
     default:
@@ -1009,7 +1055,7 @@ inline void remote_key(const std::string &entity, const std::string &command) { 
 // travel as text (firmware 0.3.9+, the lamp page of a light group).
 // Returns whether Home Assistant will answer it; `busy` as for action().
 inline bool action_template(const std::string &service, const std::string &entity, const std::string &key, const std::string &value,
-                            bool busy) {
+                            bool busy, const std::string &key2, const std::string &value2) {
   if (!fresh() || !valid_entity(entity)) return false;
   esphome::api::HomeassistantActionRequest request;
   request.service = esphome::StringRef(service);
@@ -1018,11 +1064,17 @@ inline bool action_template(const std::string &service, const std::string &entit
   target.key = esphome::StringRef("entity_id");
   target.value = esphome::StringRef(entity);
   request.data.push_back(target);
-  request.data_template.init(1);
+  request.data_template.init(1 + !key2.empty());
   esphome::api::HomeassistantServiceMap entry;
   entry.key = esphome::StringRef(key);
   entry.value = esphome::StringRef(value);
   request.data_template.push_back(entry);
+  if (!key2.empty()) {
+    esphome::api::HomeassistantServiceMap second;
+    second.key = esphome::StringRef(key2);
+    second.value = esphome::StringRef(value2);
+    request.data_template.push_back(second);
+  }
   const bool watched = send_action(request, entity, true, busy);
   ESP_LOGI("runtime_action", "Sent service=%s entity=%s %s", service.c_str(), entity.c_str(), key.c_str());
   return watched;
@@ -1112,11 +1164,13 @@ inline void picture_ask(const picture_question::Question &q, const char *kind, c
   // The values live until the request is sent: the request holds references to them.
   picture_question::Fields data = {{"inbox", inbox}, {"session", protocol_key(transfer.lease)}, {"rev", layout_rev}};
   if (app_reads_questions) {
-    // A P4 decodes JPEG in hardware (live_view::STILLS_JPEG): its question says so, and the app picks the format per
-    // picture, a photo as JPEG and a drawn map as BMP (docs/PICTURES.md, "Formats").
+    // A screen whose engine takes a format whole (a P4 decodes JPEG in hardware, picture_engine::whole_formats) names
+    // it first in its question, and the app picks the format per picture, a photo as JPEG and a drawn map as BMP
+    // (docs/PICTURES.md, "Formats").
     picture_question::Question asked = q;
-    if (live_view::STILLS_JPEG && std::find(asked.formats.begin(), asked.formats.end(), "jpeg") == asked.formats.end())
-      asked.formats.insert(asked.formats.begin(), "jpeg");
+    for (const auto &format : picture_engine::whole_formats())
+      if (std::find(asked.formats.begin(), asked.formats.end(), format) == asked.formats.end())
+        asked.formats.insert(asked.formats.begin(), format);
     data.emplace_back("n", std::to_string(picture_numbers.ask(kind, entity, own)));
     data.emplace_back("q", picture_question::json(asked));
   } else {
@@ -1240,6 +1294,55 @@ inline const Lamp *wish_lamp(const Tile &t, const std::string &item) {
   for (const auto &l : t.extra().lamps) if (l.entity == item) return &l;
   return nullptr;
 }
+#ifdef SD_MOD_LIGHT_PRESETS
+// The light as its presets read it: on, its brightness in percent, and its white shade or its colour.
+inline light_presets::Light preset_light(const Tile &t) {
+  light_presets::Light l;
+  l.on = t.state == "on";
+  l.level = std::isfinite(t.brightness) ? std::clamp((int) std::lround(t.brightness * 100.0f / 255.0f), 1, 100) : 100;
+  l.white = t.white; l.kelvin = t.kelvin; l.hue = t.hue; l.saturation = t.saturation;
+  // Its effect and its device's settings as they stand (the effects page's rows), for a preset that names them.
+  const auto &x = t.extra();
+  l.effect = x.effect;
+  for (const auto &r : x.option_rows) l.now.push_back({r.entity, r.current, NAN});
+  for (const auto &r : x.number_rows) l.now.push_back({r.entity, effects_page::number_text(r.value), r.value});
+  return l;
+}
+// The preset the light shows now, or -1: a group's lamp by lamp where the screen has its lamps (light_presets::Lamp),
+// any other light by its own state.
+inline int preset_lit(const Tile &t) {
+  if (!t.presets) return -1;
+  const auto &lamps = t.extra().lamps;
+  if (lamps.empty()) return light_presets::shown(*t.presets, preset_light(t));
+  std::array<light_presets::Lamp, MAX_LAMPS> each{};
+  size_t n = 0;
+  for (const auto &l : lamps) {
+    if (n == each.size()) break;
+    auto &e = each[n++];
+    e.on = l.on; e.unavailable = l.unavailable; e.dims = l.dimmable; e.color = l.color; e.temperature = l.temperature;
+    e.level = l.level; e.hue = l.hue; e.saturation = l.saturation; e.kelvin = l.temperature ? l.kelvin : 0;
+  }
+  return light_presets::group_shown(*t.presets, each.data(), n, preset_light(t));
+}
+// The preset a tap set on its way, or -1: one of its wishes (its colour and brightness, its effect, a setting) is still
+// live, so Home Assistant has not reported it yet. Its key turns a spinner in the ring's place until it has.
+inline int preset_pending(const Tile &t) {
+  if (!t.presets) return -1;
+  const auto on_way = [&](optimistic::Field field, const std::string &want, const std::string &item = "") {
+    const auto *w = wishes.find(t.entity, field, item);
+    return w && w->want == want;
+  };
+  for (unsigned n = 0; n < t.presets->count; ++n) {
+    const auto &p = t.presets->items[n];
+    bool busy = (p.level && on_way(optimistic::Field::PRESET, light_presets::value(p))) ||
+                (!p.effect.empty() && on_way(optimistic::Field::EFFECT, p.effect));
+    for (const auto &s : p.settings)
+      busy = busy || on_way(s.is_number() ? optimistic::Field::ROW_NUMBER : optimistic::Field::ROW_OPTION, s.text, s.entity);
+    if (busy) return (int) n;
+  }
+  return -1;
+}
+#endif
 inline std::string wish_read(const Tile &t, optimistic::Field field, const std::string &item = "") {
   using F = optimistic::Field;
   const auto &x = t.extra();
@@ -1270,6 +1373,14 @@ inline std::string wish_read(const Tile &t, optimistic::Field field, const std::
     case F::MUTED: return t.muted ? "1" : "0";
     case F::HUE: return std::to_string(t.saturation ? t.hue : 0);
     case F::KELVIN: return std::to_string(t.kelvin);
+    case F::PRESET: {
+#ifdef SD_MOD_LIGHT_PRESETS
+      const auto l = preset_light(t);
+      return light_presets::read(l, tile_controls::light_colour(t), light_presets::Preset::WHITE);
+#else
+      return {};
+#endif
+    }
   }
   return {};
 }
@@ -1314,8 +1425,28 @@ inline void wish_write(Tile &t, optimistic::Field field, const std::string &valu
     case F::SHUFFLE: t.edit_extra().media_shuffle = value.empty() ? -1 : value == "1" ? 1 : 0; break;
     case F::REPEAT: t.edit_extra().media_repeat = value; break;
     case F::MUTED: t.muted = value == "1"; break;
-    case F::HUE: t.hue = number; t.saturation = 100; t.has_hs_color = true; break;
-    case F::KELVIN: t.kelvin = number; t.saturation = 0; break;
+    case F::HUE: t.hue = number; t.saturation = 100; t.has_hs_color = true; t.white = false; break;
+    case F::KELVIN: t.kelvin = number; t.saturation = 0; t.white = true; break;
+    case F::PRESET: {
+#ifdef SD_MOD_LIGHT_PRESETS
+      // As Home Assistant reports it after light.turn_on: on at the brightness, in the white shade or the colour.
+      const auto p = light_presets::parse(value);
+      if (p.level == 0) { t.state = "off"; break; }
+      t.state = "on"; t.brightness = p.level * 255.0f / 100.0f;
+      if (p.kind == light_presets::Preset::WHITE) { t.kelvin = p.kelvin; t.saturation = 0; t.white = true; }
+      if (p.kind == light_presets::Preset::COLOUR) { t.hue = p.hue; t.saturation = p.saturation; t.has_hs_color = true; t.white = false; }
+      // A group's lamps as Home Assistant carries the call out, lamp by lamp: each on, at the brightness if it dims, in the
+      // white shade or the colour where it can show it (light/helper.py); what a lamp makes of the rest Home Assistant says.
+      if (auto *x = t.extra_ptr()) for (auto &l : x->lamps) {
+        if (l.unavailable) continue;
+        l.on = true;
+        if (l.dimmable) l.level = p.level;
+        if (p.kind == light_presets::Preset::WHITE && l.temperature) { l.kelvin = p.kelvin; l.saturation = 0; }
+        if (p.kind == light_presets::Preset::COLOUR && l.color) { l.hue = p.hue; l.saturation = p.saturation; l.kelvin = 0; }
+      }
+#endif
+      break;
+    }
   }
 }
 // Every tile and the open card of the entity show `value`; drawn after the event that asked, whose key a redraw may delete.
@@ -1363,12 +1494,12 @@ inline void wish_watch(lv_timer_t *);
 // `rendered`: the action's value is one Home Assistant renders (a lamp's hs_color list).
 inline void wish(Tile &t, optimistic::Field field, const std::string &value, const std::string &service,
                  const std::string &key = "", const std::string &data = "", const std::string &target = "",
-                 const std::string &item = "", bool rendered = false) {
+                 const std::string &item = "", bool rendered = false, const std::string &key2 = "", const std::string &value2 = "") {
   if (!fresh() || !valid_entity(t.entity) || service.empty()) return;
   auto &w = wishes.slot(t.entity, field, item);
   optimistic::want(w, t.entity, !target.empty() ? target : !item.empty() ? item : t.entity, field, wish_read(t, field, item), value,
                    esphome::millis(), 0, item);
-  w.service = service; w.key = key; w.value = data; w.rendered = rendered;
+  w.service = service; w.key = key; w.value = data; w.rendered = rendered; w.key2 = key2; w.value2 = value2;
   for (size_t i = 0; i < model.count; ++i) if (model.tiles[i].entity == t.entity) { model.tiles[i].refused_at = 0; model.tiles[i].unanswered = false; }
   ESP_LOGI("wish", "%s%s%s: '%s' (was '%s')", t.entity.c_str(), item.empty() ? "" : " ", item.c_str(), value.c_str(), w.before.c_str());
   wish_show(t.entity, field, value, item);
@@ -1406,6 +1537,28 @@ inline bool toggle_tap(const Tile &t, const std::string &service) {
   const auto d = t.domain();
   return service == d + ".toggle" && (d == "light" || d == "switch" || d == "input_boolean" || d == "fan" || d == "automation" || d == "remote");
 }
+#ifdef SD_MOD_LIGHT_PRESETS
+// A preset's key: the light to its brightness and its white shade or colour at once, shown on every tile and the open card
+// of the light before Home Assistant answers (Field::PRESET), as one light.turn_on whose values Home Assistant renders.
+// Its effect and its device's settings each go as the light's effects page sends them (effects_page.h): the effect as
+// light.turn_on, a select's option and a number's value as the row's own action, each a wish shown at once. A preset of the
+// lamp itself is its settings alone.
+inline void preset_wish(Tile &t, const light_presets::Preset &p) {
+  if (t.domain() != "light" || !t.available() || !p.valid()) return;
+  if (p.level) {
+    const auto colour = light_presets::colour_data(p);
+    wish(t, optimistic::Field::PRESET, light_presets::value(p), "light.turn_on", "brightness_pct", std::to_string(p.level), "", "", true,
+         colour.key2, colour.value2);
+  }
+  if (!p.effect.empty()) wish(t, optimistic::Field::EFFECT, p.effect, "light.turn_on", "effect", p.effect);
+  for (const auto &s : p.settings) {
+    if (s.is_number())
+      wish(t, optimistic::Field::ROW_NUMBER, s.text, "number.set_value", "value", s.text, "", s.entity);
+    else
+      wish(t, optimistic::Field::ROW_OPTION, s.text, "select.select_option", "option", s.text, "", s.entity);
+  }
+}
+#endif
 inline void toggle_wish(Tile &t) {
   const bool on = t.state != "on";
   wish(t, optimistic::Field::ON_OFF, on ? "on" : "off", t.domain() + (on ? ".turn_on" : ".turn_off"));
@@ -1537,7 +1690,7 @@ inline void set(lv_obj_t *slider, bool on, int from, int to) {
   if (!timer) timer = lv_timer_create(tick, FRAME, nullptr);
 }
 }  // namespace travel_stripe
-// `closed`: the slider holds the closed share (a standing blind, a tile's strip), else the open share or the tilt.
+// `closed`: the slider holds the closed share (every position slider, standing or lying, and a tile's strip), else the tilt.
 inline void travel_look(lv_obj_t *slider, const Tile &t, bool tilt, bool closed) {
   if (!slider) return;
   const bool on = t.travelling() && t.travel.tilt == tilt;
@@ -1649,7 +1802,6 @@ inline lv_obj_t *captured_slider=nullptr;
 inline bool slider_changed=false;
 inline int slider_held=0;
 inline void slider_event(lv_event_t *e);
-inline int cover_bar_raw(lv_obj_t *slider,bool tilt);
 inline void commit_slider(unsigned i,int raw,bool tilt=false){
   if(i>=model.count || !fresh())return;auto &t=model.tiles[i];if(!t.available() || t.waiting(esphome::millis()))return;
   float value=std::clamp(raw,0,1000)/1000.0f;auto d=t.domain();
@@ -1762,7 +1914,7 @@ inline void slider_event(lv_event_t *e){
     if(index<model.count&&model.tiles[index].row_span()>1&&!model.tiles[index].full)
       for(const auto &w:widgets)if(w.control_slider==slider&&!tile_controls::panel_available(model.tiles[index]))return;
     if(changed && screen_input::touch_guard.accept_slider(esphome::millis(),200+index))
-      commit_slider(index,cover_strip?cover_bar_raw(slider,tilt):lv_slider_get_value(slider),tilt);
+      commit_slider(index,lv_slider_get_value(slider),tilt);
   }
 }
 inline void show_detail(unsigned index);
@@ -1945,15 +2097,6 @@ inline lv_obj_t *detail_text(lv_obj_t *parent,const std::string &text,int x,int 
 }
 inline lv_obj_t *detail_text(lv_obj_t *parent,const std::string &text,int x,int y,int width,const lv_font_t *font,lv_text_align_t align,theme::Role role){
   return detail_text(parent,text,x,y,width,font,align,theme::hex(role));
-}
-// "30%", "30% · 1.7 mm" or "1.7 mm": whatever the provider reports; empty when dry.
-inline std::string rain_text(float chance,float mm,bool with_mm){
-  if(std::isfinite(chance) && chance>=0){
-    if(with_mm && std::isfinite(mm) && mm>=0.05f)return screen_text::percent((int)std::lround(chance))+" · "+screen_text::with_unit(screen_text::decimal(mm,1),"mm");
-    return screen_text::percent((int)std::lround(chance));
-  }
-  if(std::isfinite(mm) && mm>=0.05f)return screen_text::decimal(mm,mm<10?1:0)+" mm";
-  return "";
 }
 inline std::string degrees(float value){ if(!std::isfinite(value))return "--"; char b[16];snprintf(b,sizeof(b),"%.0f°",value);return b; }
 inline lv_obj_t *detail_card(int x,int y,int w,int h){
@@ -2690,9 +2833,9 @@ inline lv_obj_t *cover_slider(lv_obj_t *parent,int x,int y,int w,int h,float val
 }
 inline void slider_handle(lv_obj_t *slider,int width,int height);
 // The same two lying across a card one bar high (firmware 0.57.0), as Home Assistant's cover-position and
-// cover-tilt-position tile features: the position fills from the left by how far the cover is open, with the white
-// handle of every tile bar (slider_handle); the tilt keeps its slats and its accent handle. A lying position slider holds
-// the open share, so its value is turned around before it goes out (cover_bar_raw).
+// cover-tilt-position tile features: the position fills from the left by how far the cover is closed (Home Assistant's
+// slider is `inverted`), so a closed cover is a full bar, as the standing slider and the tile's strip are; the white
+// handle of every tile bar (slider_handle); the tilt keeps its slats and its accent handle.
 inline lv_obj_t *cover_bar(lv_obj_t *parent,int x,int y,int w,int h,float value,bool tilt,lv_event_cb_t callback,void *user,bool middle=false){
   lv_obj_t *slider=nullptr;
   if(tilt)slider=cover_paint::tilt_bar(parent,x,y,w,h,value,middle);
@@ -2705,18 +2848,12 @@ inline lv_obj_t *cover_bar(lv_obj_t *parent,int x,int y,int w,int h,float value,
     lv_obj_set_style_radius(slider,2,LV_PART_KNOB);lv_obj_add_style(slider,theme::style(theme::Paint::knob),LV_PART_KNOB);
     lv_obj_set_style_bg_opa(slider,LV_OPA_COVER,LV_PART_KNOB);
     slider_handle(slider,w,h);
-    lv_slider_set_value(slider,std::isfinite(value)?(int)std::lround(std::clamp(value,0.0f,100.0f)*10):0,LV_ANIM_OFF);
+    lv_slider_set_value(slider,std::isfinite(value)?(int)std::lround((100.0f-std::clamp(value,0.0f,100.0f))*10):0,LV_ANIM_OFF);
   }
   overlay_card::touchable(slider,h);
   lv_obj_remove_flag(slider,LV_OBJ_FLAG_GESTURE_BUBBLE);lv_obj_set_ext_click_area(slider,0);
   lv_obj_add_event_cb(slider,callback,LV_EVENT_ALL,user);
   return slider;
-}
-// What a cover slider's value means for cover_position_action: a lying position bar holds the open share, every
-// other the closed share (or the tilt).
-inline int cover_bar_raw(lv_obj_t *slider,bool tilt){
-  const int raw=lv_slider_get_value(slider);
-  return !tilt&&lv_obj_get_width(slider)>lv_obj_get_height(slider)?1000-std::clamp(raw,0,1000):raw;
 }
 // A row of pill keys with an icon each, as the climate card's modes. A key that cannot move the cover further
 // is drawn disabled and left out of the keys the card enables again once Home Assistant answers.
@@ -3155,9 +3292,23 @@ inline void light_icon_paint(lv_obj_t *glyph,const Tile &t,const CardPart &part)
                                                           :(on?tile_controls::accent(t):theme::hex(theme::ICON_OFF))));
 }
 inline void light_value_paint(lv_obj_t *value,const Tile &t,const CardPart &){label(value,light_value_text(t));}
+#ifdef SD_MOD_LIGHT_PRESETS
+// A light's presets, drawn by module_light_presets.cpp (a compilation unit of its own): a tile's panel, the colour card's
+// row or column and the dimming card's row (docs/LIGHT_PRESETS.md).
+struct PanelMetrics;
+int preset_panel(Widgets &w, const Tile &t, const PanelMetrics &m, bool taller, int content_w, int content_h, int fill, int &panel_h);
+void colour_presets_paint(const Tile &t);
+int colour_column();
+bool colour_beside();
+void colour_presets_draw(lv_obj_t *card, bool beside, int top, int bottom, int y);
+void light_card_presets(const Tile &t, int x, int y, int width, int height, bool left);
+#endif
 // What decides the light card's parts: whether it dims. On and off, the level and the colour are painted.
 inline uint32_t light_card_shape(const Tile &t){
   Fingerprint f;f.add(t.entity);f.write('|');f.write(tile_controls::light_dims(t)?'d':'s');
+#ifdef SD_MOD_LIGHT_PRESETS
+  f.write(t.presets?(char)('0'+t.presets->count):'-');
+#endif
   return f.value;
 }
 inline void render_light_detail(Tile &t,bool large,int width,int height,int columns) {
@@ -3167,7 +3318,13 @@ inline void render_light_detail(Tile &t,bool large,int width,int height,int colu
   const lv_font_t *icons=tile_icon_font();
   const auto m=light_metrics(large);
   const bool dims=tile_controls::light_dims(t);
-  const auto l=light_card::layout(m,width,height,columns,dims);
+  int presets_h=0;
+#ifdef SD_MOD_LIGHT_PRESETS
+  // A light's presets (module light_presets): a row under it all, or under the value where the card stands in two columns.
+  const bool presets=t.domain()=="light"&&dims&&t.presets&&t.presets->count;
+  if(presets)presets_h=light_presets::card_key();
+#endif
+  const auto l=light_card::layout(m,width,height,columns,dims,presets_h);
   detail_placed=true;   // the layout has already put every part where the glass has room for it
   // The big value says what the state line would have said, so the card draws no second one.
   if(detail_status){lv_obj_add_flag(detail_status,LV_OBJ_FLAG_HIDDEN);detail_status=nullptr;}
@@ -3210,6 +3367,9 @@ inline void render_light_detail(Tile &t,bool large,int width,int height,int colu
   if(!l.caption.empty()&&dims&&t.domain()=="light")
     detail_text(detail_root,tr(txt::light_brightness),l.caption.x,l.caption.y,l.caption.w,text,
                 l.columns==2?LV_TEXT_ALIGN_LEFT:LV_TEXT_ALIGN_CENTER,theme::hex(theme::SUBTLE));
+#ifdef SD_MOD_LIGHT_PRESETS
+  if(presets&&!l.presets.empty())light_card_presets(t,l.presets.x,l.presets.y,l.presets.w,l.presets.h,l.columns==2);
+#endif
   card_shaped(t,light_card_shape);
 }
 // ---- Climate card (firmware 0.2.80): one computed card on every board ----
@@ -3295,13 +3455,6 @@ inline void climate_paint_ends(const Tile &t){
     lv_obj_set_style_bg_color(climate_ends[i],chosen?lv_color_hex(range_tint(end)):theme::color(theme::CARD),0);
   }
   if(climate_now_mark&&std::isfinite(t.current))lv_obj_set_x(climate_now_mark,range_x(t,t.current)-ui::px(2)/2);
-}
-inline void climate_end_event(lv_event_t *e){
-  if(detail_index>=model.count)return;
-  auto &t=model.tiles[detail_index];
-  t.range_end=(uint8_t)(uintptr_t)lv_event_get_user_data(e);
-  climate_paint_ends(t);
-  refresh_tile(detail_index);   // the tile's chip says the same end
 }
 // One step of a range's chosen end, never past the other end: the number follows the finger at once, tick() sends both
 // ends after a short pause.
@@ -5742,7 +5895,7 @@ inline const char *icon_for(const Tile &tile) {
   if (d == "timer") return "\U000F051B";
   if (d == "person") return "\U000F0004";
   // The map tile's marker (firmware 0.21.0) only shows while its picture is on its way.
-  if (d == "screen") return tile.is_settings() ? "\U000F0493" : tile.is_page() ? "\U000F0054" : tile.entity == "screen.map" ? "\U000F034E" : tile.is_energy() ? "\U000F140B" : "\U000F0150";
+  if (d == "screen") return tile.is_settings() ? "\U000F0493" : tile.is_page() ? "\U000F0054" : tile.entity == "screen.map" ? "\U000F034E" : tile.is_energy() ? "\U000F140B" : tile.is_text() ? "\U000F0279" : "\U000F0150";
   if (d == "camera" || d == "image") return "\U000F07AE";
   if (d == "alarm_control_panel") return alarm_panel::icon(tile.state);
   if (d == "lock") return lock_icon(tile);
@@ -5867,6 +6020,12 @@ inline void colour_commits() {
     if (i >= 0) commit_slider(static_cast<unsigned>(i), light_controls::clamp(percent, 1, 100) * 10);
   };
 }
+#ifdef SD_MOD_LIGHT_PRESETS
+// The colour card's presets (module light_presets, module_light_presets.cpp draws them): the light's tile's, kept while
+// the card is open, and their keys.
+inline std::shared_ptr<const light_presets::Presets> colour_presets;
+inline std::array<lv_obj_t *, light_presets::MAX> colour_dots{};
+#endif
 // The card drawn anew, for `title` with the values `v`: the page under it covers the glass and takes every press, so
 // nothing leaks through to the tiles and the page keys (firmware 0.2.82); the card inside keeps a hand's width and
 // stands in the middle, like every other card.
@@ -5884,6 +6043,21 @@ inline void colour_draw(const std::string &title, const light_controls::Values &
   lv_obj_set_height(card, lv_pct(100));
   lv_obj_remove_flag(card, LV_OBJ_FLAG_SCROLLABLE);
   overlay_card::frame(card, overlay_card::controls);
+  int rows_width = overlay_card::content_width();
+#ifdef SD_MOD_LIGHT_PRESETS
+  // The presets beside the rows take a column at their right, the card as much wider as the glass has room for; else a
+  // fourth row the three share the room with.
+  const bool beside = !light_controls::demo && colour_beside();
+  light_controls::extra = !light_controls::demo && colour_presets && colour_presets->count && !beside ? 1 : 0;
+  if (beside) {
+    const int column = colour_column() + ui::px(ui::large() ? 12 : 5);
+    const int whole = std::min(overlay_card::screen_width(), rows_width + column);
+    rows_width = whole - column;
+    const int side = (overlay_card::screen_width() - whole) / 2;
+    lv_obj_set_style_pad_left(card, side, 0);
+    lv_obj_set_style_pad_right(card, side, 0);
+  }
+#endif
   // Every page's top bar (detail_bar): the back key, the name, and at the right the sparkles key and the lamps key,
   // where the light has effects or modes on its device (a WLED's palette, preset, speed) or is a group with lamps.
   colour_bar = detail_bar::make(card, title, {detail_bar::BACK, colour_back}, {"\U000F0674", colour_effects}, {"\U000F1253", colour_lamps});
@@ -5892,19 +6066,39 @@ inline void colour_draw(const std::string &title, const light_controls::Values &
   shown(colour_bar.right[1], group_page::offered(colour_entity));
   if (light_controls::demo) lv_obj_add_flag(colour_bar.back, LV_OBJ_FLAG_HIDDEN);
   detail_bar::place(card, colour_bar);
-  light_controls::setup(card, small_font, overlay_card::content_width(), overlay_card::screen_height(), mini_icon_font);
+  light_controls::setup(card, small_font, rows_width, overlay_card::screen_height(), mini_icon_font);
   colour_commits();
-  light_controls::place(v);
+  const int below = light_controls::place(v);
   light_controls::paint(v, true);
+#ifdef SD_MOD_LIGHT_PRESETS
+  if (!light_controls::demo) {
+    // The rows' block: from the first that shows to the end of the last.
+    int top = below;
+    // Read from the styles place() set: the coordinates follow only at LVGL's next layout pass.
+    for (auto &row : light_controls::rows)
+      if (row.box && !lv_obj_has_flag(row.box, LV_OBJ_FLAG_HIDDEN)) top = std::min(top, (int) lv_obj_get_style_y(row.box, LV_PART_MAIN));
+    colour_presets_draw(card, beside, top, below - light_controls::row_gap, below);
+    const int i = colour_index();
+    if (i >= 0) colour_presets_paint(model.tiles[i]);
+  }
+#else
+  (void) below;
+#endif
   lv_obj_move_foreground(colour_root);
 }
 inline void colour_open(Tile &t) {
   colour_entity = t.entity;
+#ifdef SD_MOD_LIGHT_PRESETS
+  colour_presets = t.presets;
+#endif
   colour_draw(t.name.empty() ? t.entity : t.name, colour_values(t));
 }
 inline void colour_close() {
   if (colour_root) { lv_obj_delete(colour_root); colour_root = nullptr; light_controls::forget(); }
   colour_entity.clear();
+#ifdef SD_MOD_LIGHT_PRESETS
+  colour_presets.reset(); colour_dots.fill(nullptr);
+#endif
 }
 // A new state of the light while its card is open: the sliders follow it, one under a finger is left alone. A light that
 // gained or lost a colour mode is laid out again, unless a finger is on the card.
@@ -5917,6 +6111,9 @@ inline void colour_updated(const Tile &t) {
     return;
   }
   light_controls::paint(v, false);
+#ifdef SD_MOD_LIGHT_PRESETS
+  colour_presets_paint(t);
+#endif
 }
 // A change of look while the card is open: drawn again in place.
 inline void colour_restyle() {
@@ -6438,6 +6635,9 @@ inline void end_extra(Widgets &w) {
     if(w.energy)energy_view::release(w);
     if(w.calendar)calendar_view::release(w);
     if(w.meter)meter_view::release(w);
+#ifdef SD_MOD_TEXT_CARD
+    if(w.text)text_card_view::release(w);
+#endif
 #ifdef SD_MOD_VACUUM_CARD
     if(w.vacuum_face)vacuum_face::release(w);
 #endif
@@ -7434,6 +7634,9 @@ inline void end_panel(Widgets &w) {
   if(!w.panel_mode.empty()){
     lv_obj_clean(w.panel);w.keys.fill(nullptr);w.key_icons.fill(nullptr);w.key_checked.fill(-1);w.segments.fill(nullptr);
     w.pill=w.pill_value=w.knob=w.control_slider=nullptr;w.knob_on=-1;w.panel_mode.clear();
+#ifdef SD_MOD_LIGHT_PRESETS
+    w.dots.fill(nullptr);w.dots_of=nullptr;w.dots_size=0;
+#endif
   }
 }
 inline void control_event(lv_event_t *e);
@@ -7526,209 +7729,8 @@ inline void stepper_keys(Widgets &w,int width,int height,const lv_font_t *text_f
 // `standing`: the height of a player's volume standing at the right of its card (volume_playback on a card wider than
 // high, render_tall draws it among the card's parts): the panel holds the keys alone; -1 the keys alone, without room
 // for the volume; 0 lays the volume over the keys.
-inline int layout_panel(Widgets &w,const Tile &t,bool large,int content_w,int content_h,int standing=0) {
-  std::string mode=tile_controls::panel_kind(t);
-  // A full card that draws its setpoint and mode keys as rows (render_tall) takes the taller card's control sizes.
-  const bool taller=t.row_span()>1 && (!w.full || tile_controls::climate_modes_selected(t));
-  // A full-page card fills the glass whatever the grid under it, so its keys follow the room the card has on the glass:
-  // large keys once its content runs 56 mm along its longer side, the way the keys stand in a row. Before (firmware
-  // 0.35.0) the height of one cell decided, so more rows chosen (a 10.1-inch with eight) gave the whole page the small
-  // keys. Every board keeps what it had: the CYD's card (at most 51 mm) the small keys, every other the large.
-  PanelMetrics m=w.full?panel_metrics_full(std::max(content_w,content_h)>=ui::mm(56)):panel_metrics(large);
-  if(taller){
-    m.key_h=std::max(ui::touch_min(),ui::px(large?48:34));m.key_w=m.key_h;
-    if(t.domain()=="media_player"){m.key_h=media_tall_key(m.key_h,content_h);m.key_w=m.key_h;}
-    m.pill_w=std::min(content_w,ui::control_max_width());m.pill_key=m.key_h;
-    m.slider_h=m.key_h;m.toggle_h=m.key_h;m.ext=0;
-    if(mode=="toggle"){
-      const auto toggle=tall_tile::toggle(content_w,m.toggle_h);
-      if(toggle.empty()){hide_panel(w);return 0;}
-      m.toggle_w=toggle.w;
-    }
-    m.slider_w=std::max(ui::touch_min(),m.pill_w-m.key_h-m.gap);
-    // A resized panel is rebuilt once, not on each live state update.
-    if(w.panel_layout_w!=content_w||w.panel_layout_h!=content_h){end_panel(w);w.panel_mode.clear();}
-    w.panel_layout_w=content_w;w.panel_layout_h=content_h;
-  }
-  const int knob_pad=taller?ui::px(large?4:3):4;
-  const lv_font_t *icon_font=w.full?w.icon_font:mini_icon_font?mini_icon_font:w.icon_font;
-  const lv_font_t *text_font=control_font?control_font:w.title_font;
-  auto d=t.domain();
-  // A wide card's controls fill every cell after its first (rest_content_width); a card over the whole page
-  // keeps the wide sizes of panel_metrics_full, centred under it. A row of keys divides that room between three
-  // of them, and never takes a key above the size the look gives it.
-  // A full card's sizes are the look's, but its glass can be narrower than they are (a small screen standing up):
-  // every width stays inside the card, and a key never below the touch minimum.
-  if(w.full){
-    m.pill_w=std::min(m.pill_w,content_w);
-    m.slider_w=std::min(m.slider_w,std::max(ui::touch_min(),content_w-m.key_h-m.gap));
-    m.toggle_w=std::min(m.toggle_w,content_w);
-  }
-  const int fill=(w.full||taller)?m.pill_w:rest_content_width(w);
-  // That room follows the card's width (GitHub #250): a slot that showed a card of another width builds its parts again,
-  // as a taller card does when it is resized.
-  if(!w.full&&!taller){
-    if(w.panel_layout_w!=fill){end_panel(w);w.panel_mode.clear();}
-    w.panel_layout_w=fill;w.panel_layout_h=0;
-  }
-  const int keys_room=w.full?content_w:fill;
-  const int key_w=std::min(m.key_w,std::max(ui::touch_min(),(keys_room-2*m.gap)/3));
-  // A player's volume shares that room with its mute key; every other slider takes it whole.
-  const int track=(w.full||taller)?(mode=="volume"?m.slider_w:m.pill_w):(mode=="volume"?std::max(ui::touch_min(),fill-m.gap-m.key_h):fill);
-  // A player's volume over its playback keys (volume_playback) on a taller card: one panel, the slider a row above.
-  const bool pair=taller&&mode=="playback"&&tile_controls::media_volume_selected(t);
-  const int pair_w=pair?std::max(3*key_w+2*m.gap,m.pill_w):0;
-  // 1: the volume over the keys, 2: standing at the card's right, 3: no room for it, the keys alone.
-  const uint8_t pair_form=!pair?0:standing>0?2:standing<0?3:1;
-  auto make_slider=[&](int width,int h){
-    auto *slider=lv_slider_create(w.panel);w.control_slider=slider;
-    lv_obj_remove_flag(slider,LV_OBJ_FLAG_GESTURE_BUBBLE);lv_obj_remove_flag(slider,LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(slider,width,h);
-    lv_obj_set_style_pad_all(slider,0,LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(slider,LV_OPA_COVER,LV_PART_MAIN);lv_obj_set_style_bg_opa(slider,LV_OPA_COVER,LV_PART_INDICATOR);
-    // The handle is a short white bar inside the fill, like Home Assistant's slider.
-    lv_obj_set_style_radius(slider,2,LV_PART_KNOB);lv_obj_add_style(slider,theme::style(theme::Paint::knob),LV_PART_KNOB);lv_obj_set_style_bg_opa(slider,LV_OPA_COVER,LV_PART_KNOB);
-    slider_handle(slider,width,h);
-    lv_obj_set_style_border_width(slider,0,LV_PART_KNOB);lv_obj_set_style_shadow_width(slider,0,LV_PART_KNOB);
-    lv_obj_set_ext_click_area(slider,m.ext+2);
-    lv_obj_add_event_cb(slider,slider_event,LV_EVENT_ALL,(void*)(uintptr_t)w.index);
-  };
-  if(!w.panel){w.panel=panel_obj(w.tile,false);}
-  if(w.panel_mode!=mode || w.panel_full!=w.full || w.panel_tall!=taller || w.panel_pair!=pair_form){
-    end_panel(w);w.panel_mode=mode;w.panel_full=w.full;w.panel_tall=taller;w.panel_pair=pair_form;w.panel_dirty=true;
-    if(tile_controls::is_key_row(mode)){
-      for(unsigned n=0;n<3;++n){panel_key(w,n,w.panel,m,key_w,m.key_h,false);panel_icon(w,n,icon_font);}
-      // Standing at the card's right (form 2), the volume is one of the card's own parts (render_tall, media_standing).
-      if(pair_form==1)make_slider(pair_w,m.slider_h);
-    }else if(mode=="mode"){
-      // Drawn per render (draw_mode_bar): the track and a segment per mode, as many as its width holds.
-    }else if(mode=="setpoint"||mode=="stepper"){
-      w.pill=panel_obj(w.panel,false);lv_obj_set_size(w.pill,fill,m.key_h+2);
-      lv_obj_set_style_radius(w.pill,LV_RADIUS_CIRCLE,0);lv_obj_set_style_bg_opa(w.pill,LV_OPA_COVER,0);
-      panel_key(w,0,w.pill,m,m.pill_key,m.key_h+2,true);panel_icon(w,0,icon_font);lv_label_set_text(w.key_icons[0],tile_controls::glyph::MINUS);
-      panel_key(w,1,w.pill,m,m.pill_key,m.key_h+2,true);panel_icon(w,1,icon_font);lv_label_set_text(w.key_icons[1],tile_controls::glyph::PLUS);
-      // Holding -/+ keeps stepping (LVGL repeats while pressed); one call goes out after the finger rests.
-      for(unsigned n=0;n<2;++n)lv_obj_add_event_cb(w.keys[n],control_event,LV_EVENT_LONG_PRESSED_REPEAT,(void*)(uintptr_t)((&w-widgets.data())*16+n));
-      lv_obj_set_pos(w.keys[0],0,0);lv_obj_set_pos(w.keys[1],fill-m.pill_key,0);
-      w.pill_value=lv_label_create(w.pill);lv_obj_remove_flag(w.pill_value,LV_OBJ_FLAG_CLICKABLE);
-      lv_obj_set_style_text_font(w.pill_value,text_font,0);lv_obj_set_style_text_align(w.pill_value,LV_TEXT_ALIGN_CENTER,0);
-      lv_label_set_long_mode(w.pill_value,LV_LABEL_LONG_CLIP);
-      // A thermostat's range (firmware 0.19.0): in the number's place the end the -/+ move, its heat or cool icon before
-      // the temperature, on the pill as a single temperature stands there; a tap switches it and lights it up while
-      // the finger is down. The third key of the panel, on the panel above the pill, so the pill's own children stay.
-      if(t.domain()=="climate"){
-        panel_key(w,2,w.panel,m,m.pill_key,m.key_h,true);panel_icon(w,2,icon_font);
-        auto *value=lv_label_create(w.keys[2]);lv_obj_remove_flag(value,LV_OBJ_FLAG_CLICKABLE);
-        set_color(w.keys[2],LV_STYLE_BG_COLOR,theme::color(theme::STEPPER_KEY),LV_STATE_PRESSED);
-        lv_obj_add_flag(w.keys[2],LV_OBJ_FLAG_HIDDEN);
-      }
-      lv_obj_set_size(w.pill_value,std::max(1,fill-2*m.pill_key),lv_font_get_line_height(text_font));
-      lv_obj_set_pos(w.pill_value,m.pill_key,(m.key_h+2-lv_font_get_line_height(text_font))/2);
-      w.key_commands[0]=tile_controls::STEP_DOWN;w.key_commands[1]=tile_controls::STEP_UP;
-    }else if(tile_controls::is_slider(mode)){
-      make_slider(track,m.slider_h);
-      if(mode=="volume"){panel_key(w,0,w.panel,m,m.key_h,m.key_h,false);panel_icon(w,0,icon_font);w.key_commands[0]=tile_controls::MEDIA_MUTE;}
-    }else if(mode=="toggle"){
-      panel_key(w,0,w.panel,m,m.toggle_w,m.toggle_h,false);lv_obj_set_style_radius(w.keys[0],LV_RADIUS_CIRCLE,0);
-      w.knob=panel_obj(w.keys[0],false);lv_obj_set_size(w.knob,m.toggle_h-2*knob_pad,m.toggle_h-2*knob_pad);lv_obj_set_y(w.knob,knob_pad);
-      lv_obj_set_style_radius(w.knob,LV_RADIUS_CIRCLE,0);lv_obj_set_style_bg_opa(w.knob,LV_OPA_COVER,0);lv_obj_add_style(w.knob,theme::style(theme::Paint::knob),0);
-      w.key_commands[0]=tile_controls::TOGGLE;
-    }else if(mode=="run"){
-      const char *text=tile_controls::run_label(d);
-      lv_point_t size;lv_text_get_size(&size,text,text_font,0,0,LV_COORD_MAX,LV_TEXT_FLAG_EXPAND);
-      panel_key(w,0,w.panel,m,std::max(m.key_w*3/2,(int)size.x+2*m.run_pad),m.key_h,false);lv_obj_set_style_radius(w.keys[0],LV_RADIUS_CIRCLE,0);
-      panel_icon(w,0,text_font);lv_label_set_text(w.key_icons[0],text);
-      w.key_commands[0]=tile_controls::RUN;
-    }else{end_panel(w);return 0;}
-  }
-  // Per-render contents: which keys, their icons and states; then the panel size and place.
-  int panel_w=0,panel_h=m.key_h;uint32_t now=esphome::millis();
-  auto set_checked=[&](unsigned n,bool checked){
-    if(w.key_checked[n]==(int)checked)return;w.key_checked[n]=checked;
-    if(checked)lv_obj_add_state(w.keys[n],LV_STATE_CHECKED);else lv_obj_remove_state(w.keys[n],LV_STATE_CHECKED);
-    if(w.key_icons[n])lv_obj_set_style_text_color(w.key_icons[n],checked?theme::color(theme::ON_ACCENT):w.panel_text,0);
-  };
-  auto set_disabled=[&](unsigned n,bool disabled){if(disabled)lv_obj_add_state(w.keys[n],LV_STATE_DISABLED);else lv_obj_remove_state(w.keys[n],LV_STATE_DISABLED);};
-  if(tile_controls::is_key_row(mode)){
-    std::array<tile_controls::Key,3> keys;unsigned count=tile_controls::keys_for(t,keys,now);
-    // With the volume above them, the keys stand centred under its slider, a row lower.
-    const bool volume=pair_form==1&&(t.supported&tile_controls::feature::MEDIA_VOLUME_SET);
-    const int row_w=count?count*key_w+(count-1)*m.gap:0;
-    const int key_x=volume?(pair_w-row_w)/2:0,key_y=volume?m.slider_h+m.gap:0;
-    for(unsigned n=0;n<3;++n){
-      if(n>=count){lv_obj_add_flag(w.keys[n],LV_OBJ_FLAG_HIDDEN);w.key_commands[n]=tile_controls::NONE;continue;}
-      lv_obj_remove_flag(w.keys[n],LV_OBJ_FLAG_HIDDEN);lv_obj_set_pos(w.keys[n],key_x+n*(key_w+m.gap),key_y);
-      label(w.key_icons[n],keys[n].icon);center_icon(w.key_icons[n]);w.key_commands[n]=keys[n].command;w.key_args[n]=keys[n].arg;
-      // The active mode key carries the accent; "off" stays neutral grey.
-      if(keys[n].checked && w.key_checked[n]!=1)lv_obj_set_style_bg_color(w.keys[n],keys[n].arg=="off"?theme::color(theme::OFF):w.panel_accent,LV_STATE_CHECKED);
-      set_checked(n,keys[n].checked);set_disabled(n,keys[n].disabled);
-    }
-    panel_w=row_w;
-    if(pair_form==1&&w.control_slider){
-      set_hidden(w.control_slider,!volume);
-      if(volume){
-        lv_obj_set_pos(w.control_slider,0,0);
-        // Keep the dragged value while the command is under way; HA's report takes over afterwards.
-        travel_look(w.control_slider,t,false,true);if(!lv_obj_has_state(w.control_slider,LV_STATE_PRESSED) && !(t.pending && !t.confirmed))lv_slider_set_value(w.control_slider,slider_value(t),LV_ANIM_OFF);
-        panel_w=pair_w;panel_h=key_y+m.key_h;
-      }
-    }
-  }else if(mode=="mode"){
-    // A thermostat's modes (firmware 0.19.0): the bar under its -/+ in "Temperature and mode", with the same rule for
-    // how many fit (climate_tile::bar_room) and the same modes (climate_bar_keys). Over the card's reach on a card of
-    // more than one row or the whole page, a finger per segment beside the name on a card of one row.
-    const auto cm=bar_metrics(m,large);
-    const bool stretches=w.full||taller;
-    const int reach=std::min(keys_room,ui::control_max_width());
-    std::array<tile_controls::Key,climate_tile::SEGMENTS> modes;
-    const int room=climate_tile::bar_room(cm,reach,(int)tile_controls::climate_bar_keys(t,modes));
-    panel_w=climate_tile::bar_width(cm,reach,room,stretches);panel_h=cm.touch;
-    if(panel_w)draw_mode_bar(w,t,w.panel,w.pill,w.segments.data(),{0,0,panel_w,panel_h},room,cm,large);
-  }else if(mode=="setpoint"||mode=="stepper"){
-    float shown=std::isfinite(t.edit_value)?t.edit_value:tile_controls::edit_target(t);
-    std::string suffix=tile_controls::thermostat(t)?tile_controls::setpoint_suffix(t):screen_text::unit_suffix(t.unit);
-    // A range: the chip says the chosen end (range_chip); the number keeps it too, which the tall form measures by.
-    const float step=tile_controls::edit_step(t);
-    label(w.pill_value,tile_controls::format_value(tile_controls::climate_range(t)?tile_controls::range_end(t,t.range_end):shown,step,suffix.c_str()));
-    panel_w=fill;panel_h=m.key_h+2;
-    if(!taller)stepper_keys(w,fill,panel_h,text_font,&t);
-  }else if(tile_controls::is_slider(mode)){
-    bool has_slider=mode!="volume" || (t.supported & tile_controls::feature::MEDIA_VOLUME_SET);
-    if(has_slider){
-      lv_obj_remove_flag(w.control_slider,LV_OBJ_FLAG_HIDDEN);lv_obj_set_pos(w.control_slider,0,(panel_h-m.slider_h)/2);
-      // Keep the dragged value while the command is under way; HA's report takes over afterwards.
-      travel_look(w.control_slider,t,false,true);if(!lv_obj_has_state(w.control_slider,LV_STATE_PRESSED) && !(t.pending && !t.confirmed))lv_slider_set_value(w.control_slider,slider_value(t),LV_ANIM_OFF);
-      panel_w=track;
-    }else lv_obj_add_flag(w.control_slider,LV_OBJ_FLAG_HIDDEN);
-    if(mode=="volume"){
-      bool has_mute=t.supported & tile_controls::feature::MEDIA_VOLUME_MUTE;
-      if(has_mute){
-        lv_obj_remove_flag(w.keys[0],LV_OBJ_FLAG_HIDDEN);lv_obj_set_pos(w.keys[0],panel_w?panel_w+m.gap:0,0);
-        label(w.key_icons[0],t.muted?tile_controls::glyph::MUTED:tile_controls::glyph::VOLUME);
-        if(t.muted && w.key_checked[0]!=1)lv_obj_set_style_bg_color(w.keys[0],w.panel_accent,LV_STATE_CHECKED);
-        set_checked(0,t.muted);panel_w+=(panel_w?m.gap:0)+m.key_h;
-      }else lv_obj_add_flag(w.keys[0],LV_OBJ_FLAG_HIDDEN);
-    }
-  }else if(mode=="toggle"){
-    bool on=t.state=="on";
-    if(on && w.key_checked[0]!=1)lv_obj_set_style_bg_color(w.keys[0],w.panel_accent,LV_STATE_CHECKED);
-    set_checked(0,on);
-    if(w.knob_on!=(int)on){w.knob_on=on;lv_obj_set_x(w.knob,on?m.toggle_w-m.toggle_h+knob_pad:knob_pad);}
-    panel_w=m.toggle_w;panel_h=m.toggle_h;
-  }else if(mode=="run"){
-    // The requested width: a key created in this pass has no coordinates before LVGL's layout.
-    panel_w=lv_obj_get_style_width(w.keys[0],LV_PART_MAIN);
-  }
-  (void)now;
-  if(!panel_w){hide_panel(w);return 0;}
-  // A panel shown again kept the colours of the card it last served.
-  if(lv_obj_has_flag(w.panel,LV_OBJ_FLAG_HIDDEN)){lv_obj_remove_flag(w.panel,LV_OBJ_FLAG_HIDDEN);w.panel_dirty=true;}
-  lv_obj_set_size(w.panel,panel_w,panel_h);
-  if(w.full||taller)lv_obj_set_pos(w.panel,std::max(0,(content_w-panel_w)/2),std::max(0,content_h-panel_h));
-  else lv_obj_set_pos(w.panel,content_w-panel_w,std::max(0,(content_h-panel_h)/2));
-  w.panel_w=panel_w+m.text_gap;
-  return w.panel_w;
-}
+// Compiled on its own (tile_panel.cpp): on Xtensa main.cpp's literal pool is at the edge of its reach.
+int layout_panel(Widgets &w,const Tile &t,bool large,int content_w,int content_h,int standing=0);
 // Colours follow the card palette; called with the rest of the palette when it changes.
 inline void style_panel(Widgets &w,const Tile &t,lv_color_t accent,lv_color_t text) {
   if(!w.panel || w.panel_mode.empty())return;
@@ -7758,6 +7760,9 @@ inline void style_panel(Widgets &w,const Tile &t,lv_color_t accent,lv_color_t te
     set_color(w.control_slider,LV_STYLE_BG_COLOR,fill,LV_PART_INDICATOR);
     slider_bar(w.control_slider,slider_bar_shown(t,on));
   }
+#ifdef SD_MOD_LIGHT_PRESETS
+  if(t.presets)for(unsigned n=0;n<light_presets::MAX&&n<t.presets->count;++n)light_presets::paint(w.dots[n],t.presets->items[n]);
+#endif
   if(w.knob){set_color(w.keys[0],LV_STYLE_BG_COLOR,theme::color(theme::PANEL_TOGGLE_OFF));set_color(w.keys[0],LV_STYLE_BG_COLOR,theme::color(theme::PANEL_TOGGLE_OFF_PRESSED),LV_STATE_PRESSED);}
 }
 inline void control_event(lv_event_t *e) {
@@ -8089,7 +8094,9 @@ inline void cover_tile_key_event(lv_event_t *e){
     if(!enabled||!screen_input::touch_guard.accept(esphome::millis(),600+tag))return;
     cover_swapped[w.index]^=1;w.cached_active=-1;refresh_tile(w.index);return;
   }
-  if(!enabled||!fresh()||!t.available()||t.waiting(esphome::millis())||!tile_controls::cover_tilt_selected(t))return;
+  // The cards of this layout: the tilt cards and, since the one-row cards (0.57.0), the 1x1 with buttons or a
+  // position, whose keys answered nothing while this asked for the slats alone (GitHub #363).
+  if(!enabled||!fresh()||!t.available()||t.waiting(esphome::millis())||!cover_row_card(t))return;
   std::array<tile_controls::Key,3> keys;
   const unsigned group=part/3,count=group==1?tile_controls::cover_tilt_keys(t,keys):group==2?tile_controls::cover_keys(t,keys):tile_controls::keys_for(t,keys);
   if(part%3>=count||keys[part%3].disabled)return;
@@ -8134,9 +8141,9 @@ inline void render_cover_tile(Widgets &w,const Tile &t,const cover_tile::Layout 
       auto *&slider=w.parts[2+i];
       if(!slider)slider=g.lying?cover_bar(w.extra,g.control.x,g.control.y,g.control.w,g.control.h,value,i,slider_event,nullptr,t.tilt_middle)
                                :cover_slider(w.extra,g.control.x,g.control.y,g.control.w,g.control.h,value,i,slider_event,nullptr,t.tilt_middle);
-      if(captured_slider!=slider)lv_slider_set_value(slider,std::isfinite(value)?(int)std::lround((i||g.lying?value:100-value)*10):(i?500:0),LV_ANIM_OFF);
+      if(captured_slider!=slider)lv_slider_set_value(slider,std::isfinite(value)?(int)std::lround((i?value:100-value)*10):(i?500:0),LV_ANIM_OFF);
       if(ready)lv_obj_remove_state(slider,LV_STATE_DISABLED);else lv_obj_add_state(slider,LV_STATE_DISABLED);
-      travel_look(slider,t,i==1,i!=1&&!g.lying);
+      travel_look(slider,t,i==1,i!=1);
     }else{
       std::array<tile_controls::Key,3> keys;
       const unsigned count=i==1?tile_controls::cover_tilt_keys(t,keys):i==2?tile_controls::cover_keys(t,keys):tile_controls::keys_for(t,keys);
@@ -8289,6 +8296,15 @@ inline void media_standing(Widgets &w,const Tile &t,int x,int y,int width,int he
   if(!lv_obj_has_state(s,LV_STATE_PRESSED) && !(t.pending && !t.confirmed))lv_slider_set_value(s,slider_value(t),LV_ANIM_OFF);
   lv_obj_remove_flag(s,LV_OBJ_FLAG_HIDDEN);
 }
+// A light's presets on a card of one cell (module light_presets): its heading over a row of the keys, as a taller card
+// has its controls under its name.
+inline bool preset_cell(const Widgets &w,const Tile &t){
+#ifdef SD_MOD_LIGHT_PRESETS
+  return !w.wide&&!w.full&&t.row_span()==1&&t.domain()=="light"&&tile_controls::panel_kind(t)=="presets";
+#else
+  (void)w;(void)t;return false;
+#endif
+}
 inline bool render_tall(Widgets &w,const Tile &t,bool selected,int width,int height) {
   selected=selected&&tile_controls::panel_available(t);
   const bool large=ui::large();const int gap=ui::px(large?8:4);
@@ -8311,6 +8327,15 @@ inline bool render_tall(Widgets &w,const Tile &t,bool selected,int width,int hei
       if(tall_tile::layout(both).fits)m=both;else standing=-1;
     }
   }
+#ifdef SD_MOD_LIGHT_PRESETS
+  // A light's slider with its presets under it: two rows, the second as high as the keys.
+  if(selected&&tile_controls::panel_kind(t)=="brightness_presets"&&t.presets){
+    auto both=m;both.row_heights={touch+2,light_presets::tile_key()+2*light_presets::ring()};both.row_count=2;
+    if(tall_tile::layout(both).fits)m=both;
+  }
+  // The presets alone: a row as high as their keys and the ring round one, on a card of one cell and on a taller one.
+  if(selected&&tile_controls::panel_kind(t)=="presets")m.row_heights={light_presets::tile_key()+2*light_presets::ring(),0};
+#endif
   auto cover_metrics=m;cover_metrics.row_count=0;
   const auto cover_base=tall_tile::layout(cover_metrics);
   auto cover=cover_tile_layout(t,cover_base.body,touch,gap,m.state_h);
@@ -8323,7 +8348,7 @@ inline bool render_tall(Widgets &w,const Tile &t,bool selected,int width,int hei
     const auto side=cover_tile_layout(t,{width/2+gap,0,width-width/2-gap,height},touch,gap,m.state_h);
     if(side.fits&&(!cover.fits||side.tier>cover.tier)){cover=side;beside=true;}
   }
-  if((w.full||t.row_span()==1)&&!cover.fits&&!tile_controls::climate_modes_selected(t)){if(w.extra_mode=="cover_tilt")hide_extra(w);return false;}
+  if((w.full||t.row_span()==1)&&!cover.fits&&!tile_controls::climate_modes_selected(t)&&!preset_cell(w,t)){if(w.extra_mode=="cover_tilt")hide_extra(w);return false;}
   if(cover.fits){selected=false;m.row_count=0;}
   auto l=tall_tile::layout(m);
   // An unusual override can leave too little physical room for the selection.
@@ -8521,7 +8546,10 @@ inline bool render_tall(Widgets &w,const Tile &t,bool selected,int width,int hei
   }else if(!t.builtin() && fresh() && t.available()){
     const std::string value=d=="light"?light_value_text(t):card_status(t,true);
     const lv_font_t *font=w.value_font;
-    for(const auto *candidate:{watch_value_font,w.title_font,w.value_font})
+    // A light's percentage that cannot take the large face (its slider and presets under it) steps down to the controls'
+    // regular face, never the bold name's: a value, not a heading.
+    const lv_font_t *second=d=="light"&&control_font?control_font:w.title_font;
+    for(const auto *candidate:{watch_value_font,second,w.value_font})
       if(candidate&&face_covers(candidate,value)&&tall_tile::fits_text(body,text_width(value,candidate),lv_font_get_line_height(candidate))){font=candidate;break;}
     if(text(0,value,font,{0,body.y+std::max(0,(body.h-static_cast<int>(lv_font_get_line_height(font)))/2),width,body.h},LV_TEXT_ALIGN_CENTER))
       drop_repeat(value);
@@ -8792,12 +8820,12 @@ inline void render_slot(size_t slot) {
   // its head (mini below), and so does a wide card too narrow for a panel.
   const bool taller=t.row_span()>1 && !w.full;
   const bool inline_panel=(w.wide||taller) && !w.full && t.inline_control=="slider" && !tile_controls::inline_kind(d).empty();
-  bool with_panel=(w.wide||taller) && !t.builtin() && !watch && fresh() && t.available() &&
+  bool with_panel=(w.wide||taller||preset_cell(w,t)) && !t.builtin() && !watch && fresh() && t.available() &&
                   (inline_panel || (!t.controls.empty() && t.inline_control!="slider"));
   // A panel needs its own width plus the icon and some name; a narrow wide card stays a plain card. What it
   // needs is what it takes: the cells its controls fill (layout_panel), or the toggle and the run key their own
   // width.
-  if(with_panel && !w.full && !taller){
+  if(with_panel && !w.full && !taller && w.wide){
     const bool lt=ui::large();
     const PanelMetrics pm=panel_metrics(lt);
     const std::string kind=tile_controls::panel_kind(t);
@@ -8837,7 +8865,13 @@ inline void render_slot(size_t slot) {
 #else
   constexpr bool vacuum=false;
 #endif
-  bool custom=clock||forecast||sunpath||bedside||energy||plugin||calendar||meter||vacuum;
+  // The template tile (module text_card, firmware 0.58.0+) draws the rows Home Assistant rendered, on any size.
+#ifdef SD_MOD_TEXT_CARD
+  bool text=t.is_text();
+#else
+  constexpr bool text=false;
+#endif
+  bool custom=clock||forecast||sunpath||bedside||energy||plugin||calendar||meter||vacuum||text;
   if(!large_tile)pad_vertical(w.tile,watch||custom||graph?2:4);
   // A big value that stepped up to the setpoint's digits (the watch block below) keeps them until that block
   // decides again, so a card is not restyled twice a render.
@@ -8883,6 +8917,14 @@ inline void render_slot(size_t slot) {
     lap(swipe_profile::GEOMETRY);
     calendar_view::render(w,t,content_w,content_h);
     lap(swipe_profile::CUSTOM);
+#ifdef SD_MOD_TEXT_CARD
+  }else if(text){
+    lv_obj_add_flag(w.slider,LV_OBJ_FLAG_HIDDEN);hide_panel(w);lv_obj_add_flag(w.progress,LV_OBJ_FLAG_HIDDEN);
+    if(w.picture)lv_obj_add_flag(w.picture,LV_OBJ_FLAG_HIDDEN);
+    lap(swipe_profile::GEOMETRY);
+    text_card_view::render(w,t,content_w,content_h);
+    lap(swipe_profile::CUSTOM);
+#endif
   }else if(meter){
     lv_obj_add_flag(w.slider,LV_OBJ_FLAG_HIDDEN);hide_panel(w);lv_obj_add_flag(w.progress,LV_OBJ_FLAG_HIDDEN);
     if(w.picture)lv_obj_add_flag(w.picture,LV_OBJ_FLAG_HIDDEN);
@@ -8909,7 +8951,7 @@ inline void render_slot(size_t slot) {
     label(w.value,value);
     lap(swipe_profile::GEOMETRY);
   }else if((taller||(w.full&&(tile_controls::cover_tilt_selected(t)||tile_controls::climate_modes_selected(t)))||
-            (!w.full&&t.row_span()==1&&t.inline_control!="slider"&&cover_row_card(t)))&&!custom&&!watch&&!graph&&
+            (!w.full&&t.row_span()==1&&t.inline_control!="slider"&&(cover_row_card(t)||preset_cell(w,t))))&&!custom&&!watch&&!graph&&
      render_tall(w,t,with_panel,content_w,content_h)){
     lap(swipe_profile::GEOMETRY);
   }else if(w.full && !bedside){
@@ -9115,7 +9157,13 @@ inline void render_slot(size_t slot) {
                     (lock_tile&&lock_asking(t,false)?16:0)|(lock_tile?(int)(lock_panel::color(t.state)&0xFF)<<8:0);
   // An alarm panel's circle beats while it counts down or goes off, and springs once when it arms or disarms.
   if (d == "alarm_control_panel" || d == "lock" || w.alarm_look || w.alarm_mark) alarm_tile_look(slot, &t);
-  const uint32_t paint=t.background|(t.transparent?1u<<24:0);
+  // A template tile Home Assistant rendered empty hides its card as "Background: none" does (module text_card).
+#ifdef SD_MOD_TEXT_CARD
+  const bool bare=t.transparent||(t.is_text()&&text_card_view::empty(t));
+#else
+  const bool bare=t.transparent;
+#endif
+  const uint32_t paint=t.background|(bare?1u<<24:0);
   if (w.cached_active == palette_state && w.cached_paint == paint && !w.panel_dirty) { style_tall(w,t);ring_favorite(w,t);lap(swipe_profile::GEOMETRY); return; }
   w.cached_active = palette_state;w.cached_paint=paint;w.panel_dirty=false;
   // Home Assistant's colour for the state (tile_controls::accent), and a lamp's own colour while it is on.
@@ -9142,9 +9190,9 @@ inline void render_slot(size_t slot) {
   set_number(w.tile,LV_STYLE_BORDER_WIDTH,1);
   // "Background: none" hides only the card; geometry and padding stay identical, and the press still shows because
   // it lives on the PRESSED state: a shade of what the finger sees, the page there, the card everywhere else.
-  set_color(w.tile,LV_STYLE_BG_COLOR,lv_color_hex(theme::pressed(t.transparent ? theme::hex(theme::PAGE) : theme::surface(t.background))),LV_STATE_PRESSED);
-  set_number(w.tile,LV_STYLE_BG_OPA,t.transparent&&!letterboxed(w) ? LV_OPA_TRANSP : LV_OPA_COVER);
-  set_number(w.tile,LV_STYLE_BORDER_OPA,t.transparent ? LV_OPA_TRANSP : LV_OPA_COVER);
+  set_color(w.tile,LV_STYLE_BG_COLOR,lv_color_hex(theme::pressed(bare ? theme::hex(theme::PAGE) : theme::surface(t.background))),LV_STATE_PRESSED);
+  set_number(w.tile,LV_STYLE_BG_OPA,bare&&!letterboxed(w) ? LV_OPA_TRANSP : LV_OPA_COVER);
+  set_number(w.tile,LV_STYLE_BORDER_OPA,bare ? LV_OPA_TRANSP : LV_OPA_COVER);
   set_color(w.tile,LV_STYLE_BORDER_COLOR,lv_color_hex(theme::outline(t.background)));
   set_color(w.circle,LV_STYLE_BG_COLOR,circle_color);
   set_color(w.icon,LV_STYLE_TEXT_COLOR,icon_color);
@@ -10358,6 +10406,9 @@ inline void drop_card(Widgets &w) {
   if (w.energy) energy_view::release(w);
   if (w.calendar) calendar_view::release(w);
   if (w.meter) meter_view::release(w);
+#ifdef SD_MOD_TEXT_CARD
+  if (w.text) text_card_view::release(w);
+#endif
 #ifdef SD_MOD_VACUUM_CARD
   if (w.vacuum_face) vacuum_face::release(w);
 #endif
@@ -10864,18 +10915,13 @@ inline void restyle() {
   if (detail_root && !lv_obj_has_flag(detail_root, LV_OBJ_FLAG_HIDDEN) && detail_tile()) show_detail(detail_index);
   media_library::restyle();
 }
-inline std::string vacuum_option(unsigned index) {
-  if (active_index < 0 || static_cast<size_t>(active_index) >= model.count) return {};
-  auto &tile = model.tiles[active_index];
-  const auto &speeds = tile.extra().fan_speeds;
-  return index < speeds.size() ? speeds[index] : "";
-}
 }
 
 // ---- Camera images (firmware 0.2.57+) ----
 // A camera or image tile, and an alert's image, open the camera full screen: the image as large as fits, the round back
 // key at the top left like on every card, the name beside it. ESP Screen Manager fetches the snapshot, sizes it for this
-// screen and serves it on its own port; camera_view::Feed decides when to ask for a link and when to load it again. The
+// screen and serves it on its own port; the loader decides when to ask for a link and when to load it again
+// (picture_loader.h, with the rhythm's constants of camera_view.h). The
 // board binds the two online_images (the full view and the alert's frame) through ImageHooks; a board without them (the
 // CYD) never opens the view. Nothing here exists while no camera is open, apart from the alert's small frame.
 namespace runtime_tiles {
@@ -10896,11 +10942,9 @@ struct ViewPicture {
   uint32_t every = camera_view::REFRESH_MS;
   bool once = false;   // the screensaver's cover: one picture, and a new track is another
   bool shown = false;  // a picture of it is on the glass
-  // Live on a P4 (live_view.h): a stream runs or is about to, its link waiting while the last stream ends, and the
-  // streams that failed for this opening (TRIES of them, and the view takes the stills of every board).
-  bool live = false;
-  live_view::Handle live_handle = -1;
-  uint8_t live_failures = 0;
+  // Live on a P4 (live_view.h, live_spots::ViewStream): a stream runs or is about to, its link waiting while the last
+  // stream ends, and the streams that failed for this opening (TRIES of them, and the view takes the stills of every board).
+  live_spots::ViewStream stream;
   void open(const std::string &e) { *this = ViewPicture{}; entity = e; }
   bool open() const { return !entity.empty(); }
 };
@@ -11020,7 +11064,7 @@ inline bool doorbell_holds() {
 }
 // Its bindings, for the YAML of every board: a lambda that holds a ${...} cannot hold an #ifdef (ESPHome reads it as a
 // template), so these take the module's place there. How a ring ended goes to ESP Screens (packages/core.yaml); the chime
-// plays on `speaker` and `enabled` reads the switch Doorbell under Extras (features/audio-player.yaml).
+// plays on `speaker` (features/audio-player.yaml).
 inline void doorbell_reports(std::function<void(const std::string &, const std::string &)> report) {
 #ifdef SD_MOD_DOORBELL
   doorbell::report = std::move(report);
@@ -11028,12 +11072,11 @@ inline void doorbell_reports(std::function<void(const std::string &, const std::
   (void) report;
 #endif
 }
-template<class Speaker> inline void doorbell_audio(Speaker *speaker, std::function<bool()> enabled) {
+template<class Speaker> inline void doorbell_audio(Speaker *speaker) {
 #ifdef SD_MOD_DOORBELL
   doorbell::bind_speaker(speaker);
-  doorbell::enabled = std::move(enabled);
 #else
-  (void) speaker; (void) enabled;
+  (void) speaker;
 #endif
 }
 
@@ -11609,13 +11652,33 @@ inline live_view::Rect live_area() {
 // A camera opened by itself (not a map, an image or the screensaver), on a board that streams, until its streams
 // failed TRIES times for this opening.
 inline bool live_wanted() {
-  if (!live_view::available() || !camera.open() || camera.entity.rfind("camera.", 0) != 0 || camera_map_index >= 0 ||
-      saver_camera || camera.live_failures >= live_view::TRIES)
+  if (!live_view::full_view() || !camera.open() || camera.entity.rfind("camera.", 0) != 0 || camera_map_index >= 0 ||
+      saver_camera || !camera.stream.may() || boot_trial::on(esphome::millis()))
     return false;
   const auto area = live_area();
   return !drawn_over(camera_root, area.x, area.y, area.w, area.h);
 }
 inline uint32_t camera_opened_at = 0;  // when the view opened, for the log of a live camera's first picture
+inline bool camera_ram_watched = false;  // the lowest internal RAM is watched from the view's opening (camera_ram_low)
+// The lowest internal RAM since the view opened, in KB, and the watch ends; -1 when none ran.
+inline bool camera_ram_watch() {
+#ifdef USE_ESP32
+  return heap_caps_monitor_local_minimum_free_size_start() == ESP_OK;
+#else
+  return false;
+#endif
+}
+inline int camera_ram_low() {
+  if (!camera_ram_watched) return -1;
+  camera_ram_watched = false;
+#ifdef USE_ESP32
+  const size_t low = heap_caps_get_minimum_free_size(MALLOC_CAP_INTERNAL);
+  heap_caps_monitor_local_minimum_free_size_stop();
+  return static_cast<int>(low / 1024);
+#else
+  return -1;
+#endif
+}
 // The camera's sound: on, until someone mutes it; muted stays muted for every camera until the screen starts again.
 inline bool camera_muted = false;
 inline lv_obj_t *camera_sound_key = nullptr;
@@ -11638,7 +11701,7 @@ inline void camera_sound_show() {
   lv_obj_set_pos(camera_sound_key, slot.x, slot.y);
   lv_obj_add_event_cb(camera_sound_key, [](lv_event_t *) {
     camera_muted = !camera_muted;
-    live_view::mute(camera.live_handle, camera_muted);
+    live_view::mute(camera.stream.handle, camera_muted);
     camera_sound_glyph();
   }, LV_EVENT_SHORT_CLICKED, nullptr);
 }
@@ -11670,49 +11733,79 @@ inline void camera_warm(bool on) {
   lv_obj_set_pos(camera_warm_spinner, slot.x + (slot.w - size) / 2, slot.y + (slot.h - size) / 2);
   lv_obj_remove_flag(camera_warm_spinner, LV_OBJ_FLAG_HIDDEN);
 }
-inline void live_begin(const std::string &url) {
-  ESP_LOGI("camera", "live link %u ms after the camera opened", (unsigned) (esphome::millis() - camera_opened_at));
-  camera.live = true;
-  camera.live_handle = live_view::open(url, live_area(), live_view::Look{}, live_view::has_speaker());
-  if (camera.live_handle >= 0) {
-    if (camera_muted) live_view::mute(camera.live_handle, true);
+inline void live_tiles_halt();
+// The full view's link while the streams of the page under it end (live_view::ending), and since when; live_tick opens
+// it once they are gone.
+inline std::string live_link_waiting;
+inline uint32_t live_link_waiting_at = 0;
+// A stream that will not end by then: the view opens beside it, where the engine holds a second (a P4). An S3 holds one
+// (picture_engine::limits().streams): its view waits on, showing the stills meanwhile, as one opened beside a tile's
+// took a tester's Guition 4848S040 down (2026-10-30).
+constexpr uint32_t LIVE_LINK_WAIT_MS = 2000;
+inline bool live_link_may_open(uint32_t now) {
+  return !live_view::ending() || (live_view::beside() && now - live_link_waiting_at >= LIVE_LINK_WAIT_MS);
+}
+inline void live_begin(const std::string &link) {
+  // Its own copy: live_tick hands it live_link_waiting itself, which is cleared below. Opened with the cleared one, the
+  // view asked ":80", failed, and its next try came 10 s later: 11 s from a tap on a live tile to its picture full
+  // screen (0.4.91 and 0.4.92, docs/open-issues/full-view-first-link-empty-host.md).
+  const std::string url = link;
+  const uint32_t now = esphome::millis();
+  if (live_link_waiting.empty()) ESP_LOGI("camera", "live link %u ms after the camera opened", (unsigned) (now - camera_opened_at));
+  // The live tiles and places of the page under the view stop before the view's stream exists, not at the next
+  // drawing (live_stop_covered): a tile's task could still copy its picture into the frame buffer after LVGL had drawn
+  // the view over the page, and a band of it stayed under the view's top bar until the view's first picture (2026-10-24,
+  // the reTerminal D1001, two live tiles). A page under a full view never streams anyway.
+  live_tiles_halt();
+  // And the view's stream opens once theirs are gone, never beside them: one connection at a time (live_view::ending).
+  if (live_view::ending()) {
+    if (live_link_waiting.empty()) live_link_waiting_at = now;
+    if (!live_link_may_open(now)) {
+      live_link_waiting = url;
+      return;
+    }
+    ESP_LOGW("camera", "the page's streams did not end in %u ms: the full view opens beside them", (unsigned) LIVE_LINK_WAIT_MS);
+  }
+  if (!live_link_waiting.empty()) {
+    ESP_LOGI("camera", "live link opened %u ms later, after the page's streams ended", (unsigned) (now - live_link_waiting_at));
+    live_link_waiting.clear();
+  }
+  // The view a ring opened (module doorbell) holds the speaker as the ring, which nothing takes it from; any other
+  // full view as a camera's sound, which the voice assistant may borrow and a ring takes (audio_owner.h).
+  audio_owner::Role role = audio_owner::Role::CAMERA_SOUND;
+#ifdef SD_MOD_DOORBELL
+  if (doorbell::shown()) role = audio_owner::Role::DOORBELL;
+#endif
+  camera.stream.opened(live_view::open(url, live_area(), live_view::Look{}, live_view::has_speaker(), role));
+  if (camera.stream.live) {
+    if (camera_muted) live_view::mute(camera.stream.handle, true);
     return;
   }
-  // No room for another stream, or no memory: the view takes the stills of every board.
-  camera.live = false;
-  camera.live_failures = live_view::TRIES;
+  // No room for another stream, or no memory: the view takes the stills of every board (ViewStream::opened).
+  ESP_LOGW("camera", "the full view could not stream (no room for another stream, or no memory): it shows stills");
   pictures_round();
 }
 
-// ---- Live tiles on a P4 (live_view.h, firmware dev) ----
+// ---- Live tiles and live places on a P4 (live_spots.h, live_view.h) ----
 // A camera tile set to Live (its pace 0) streams while it is on the glass, the pages stand still and nothing lies over
 // them: no card, no camera full screen, no settings, no alert, no screensaver. Otherwise, and until its first live
 // picture, it shows its last still, as a camera tile on every board does. Its pictures come plain at the card's size;
 // the screen lays the card's rounded corners, the shade and the name over each of them (live_view::compose), so the app
 // does nothing per picture a screen can do itself. Opening the camera full screen stops the tiles' streams; the app's
 // source of the camera keeps running a while, so the full view's first picture is there at once.
-struct LiveTile {
-  size_t index = 0;
-  std::string entity;
-  live_view::Rect room;  // the card on the glass when it asked
-  live_view::Handle handle = -1;
-  bool asked = false;    // its link is on its way
-  bool streaming = false;  // its first live picture is on the glass
-  uint32_t asked_at = 0;
-  uint8_t failures = 0;
-};
-inline std::vector<LiveTile> live_tiles;
-inline LiveTile *live_tile(size_t index) {
-  for (auto &l : live_tiles)
-    if (l.index == index) return &l;
-  return nullptr;
-}
-// Whether the loader leaves a tile's still alone: a live tile asking for its link (a still's question would make the
-// link's answer an earlier question's) or streaming (its still is under the live picture, and stays as it was).
-inline bool live_tile_active(size_t index) {
-  const auto *l = live_tile(index);
-  return l && (l->asked || l->handle >= 0);
-}
+// A plugin tile's place with a camera's address that the tile set live (plugin API 0.17, ui::live) streams the same
+// way: while it is on the glass, the page stands still and nothing lies over it, its stills under it until its first
+// live picture, into the place's room with the place's corners, filled or whole as its fit says, on the card's colour.
+// Asked only of an app that reads questions; the app checks that the camera is the tile's own entity. One writer on
+// the glass stays live_view: a plugin never draws a stream itself (docs/PICTURES.md, "For plugins").
+// What streams, asks, stops and gives up is one machine for both, live_spots::Spots; here is what it is bound to: which
+// spots may stream this round, their question, their look, and the stream itself.
+inline live_spots::Spots spots;
+// Whether a tile asked for its stream or streams: the loader leaves its still alone meanwhile (its still's question
+// would make the link's answer an earlier question's; streaming, its still is under the live picture and stays as it was).
+inline bool live_tile_active(size_t index) { return spots.active(static_cast<uint32_t>(index)); }
+// The answer to a live place's question is the one its number names.
+inline bool live_place_question(uint32_t number) { return spots.question(number); }
 inline bool page_clear() {
   return live_view::available() && tiles_seen() && !camera_visible() && !card_open() && !settings_screen::visible() &&
          !(alert_parts.card && lv_obj_is_visible(alert_parts.card)) && camera_view::settled(esphome::millis(), last_turn_ms);
@@ -11730,70 +11823,20 @@ inline live_view::Rect card_room(const Widgets &w) {
   return {static_cast<int>(a.x1), static_cast<int>(a.y1), static_cast<int>(lv_area_get_width(&a)),
           static_cast<int>(lv_area_get_height(&a))};
 }
-inline bool tile_ask(const Widgets &w, const Tile &t, tile_picture::Ask &a);
-// Asks the app for a live tile's stream: its picture's question (tile_picture::fields) with `live`, the card's size.
-inline void live_tile_ask(LiveTile &l, const Widgets &w, const Tile &t) {
-  tile_picture::Ask a;
-  if (inbox.empty() || !tile_ask(w, t, a)) return;
-  auto q = tile_question(a);
-  q.live_w = l.room.w;
-  q.live_h = l.room.h;
-  // A board with a speaker: the app takes the camera's sound along already, so the full view has it at once.
-  q.sound = live_view::has_speaker();
-  picture_ask(q, "live", t.entity, tile_questions.ask(l.index));
-  l.asked = true;
-  l.asked_at = esphome::millis();
-  ESP_LOGI("camera", "asked for tile %u live, %s at %dx%d", (unsigned) l.index, t.entity.c_str(), l.room.w, l.room.h);
+inline live_view::Rect object_room(const lv_obj_t *o) {
+  lv_area_t a;
+  lv_obj_get_coords(o, &a);
+  return {static_cast<int>(a.x1), static_cast<int>(a.y1), static_cast<int>(lv_area_get_width(&a)),
+          static_cast<int>(lv_area_get_height(&a))};
 }
-inline void live_tile_stop(LiveTile &l) {
-  if (l.handle >= 0) live_view::close(l.handle);
-  l.handle = -1;
-  l.asked = l.streaming = false;
-}
-// Every live tile stops at once: a page turns, a card opens over them. They start again on a round with the page clear.
-struct LivePlace;
-inline void live_places_halt();
-inline void live_tiles_halt() {
-  for (auto &l : live_tiles) live_tile_stop(l);
-  live_tiles.clear();
-  live_places_halt();
-}
-// Every round of the pictures (250 ms): what streams, what stops, what asks.
-inline void live_places_round(bool clear, uint32_t now);
-inline void live_tiles_round() {
-  const bool clear = page_clear() && model.ready();
-  const uint32_t now = esphome::millis();
-  live_places_round(clear, now);
-  // What streams but is not wanted any more, or moved, stops; a tile that is not wanted forgets its failures too.
-  for (auto it = live_tiles.begin(); it != live_tiles.end();) {
-    bool keep = false;
-    if (clear && it->index < model.count)
-      each_card([&](Widgets &w) {
-        if (w.index == it->index && live_tile_wanted(w, model.tiles[w.index]) && card_room(w) == it->room) keep = true;
-      });
-    if (keep) { ++it; continue; }
-    live_tile_stop(*it);
-    it = live_tiles.erase(it);
-  }
-  if (!clear) return;
+// Every live place of the plugin tiles on the glass: `each(card, place, camera, contain)`.
+inline void live_places_each(const std::function<void(Widgets &, lv_obj_t *, const std::string &, bool)> &each) {
   each_card([&](Widgets &w) {
-    if (w.index >= model.count) return;
-    const Tile &t = model.tiles[w.index];
-    if (!live_tile_wanted(w, t)) return;
-    LiveTile *l = live_tile(w.index);
-    if (!l) {
-      live_tiles.push_back(LiveTile{});
-      l = &live_tiles.back();
-      l->index = w.index;
-      l->entity = t.entity;
-      l->room = card_room(w);
-    }
-    if (l->failures >= live_view::TRIES || l->handle >= 0) return;
-    // An answer that does not come is asked for again.
-    if (l->asked && now - l->asked_at >= camera_view::ASK_AGAIN_MS) l->asked = false;
-    if (!l->asked && (!l->asked_at || now - l->asked_at >= camera_view::GAP_MS)) live_tile_ask(*l, w, t);
+    if (!w.plugin || !w.tile || w.index >= model.count || !on_glass(w)) return;
+    plugin_host::live_places(w, [&](lv_obj_t *place, const std::string &camera, bool contain) { each(w, place, camera, contain); });
   });
 }
+inline bool tile_ask(const Widgets &w, const Tile &t, tile_picture::Ask &a);
 // The loader a live tile or place turns in its top right corner while its camera's stills show, until it is live
 // (live_view.h, "Until it is live"): the firmware's spinner, its ring the camera's track and its arc Home Assistant's
 // blue, a little smaller than a loading card's, on a round shade.
@@ -11805,184 +11848,250 @@ inline void live_loader(live_view::Look &look) {
   look.loader_ring = live_view::rgb565(theme::hex(theme::CAMERA_TRACK));
   look.loader_turn = live_view::rgb565(theme::ha::RAIN);
 }
-// The app's answer to a live tile's question: its stream, laid out as its card.
-inline void live_tile_answer(size_t index, const std::string &url) {
-  LiveTile *l = live_tile(index);
-  if (!l || !l->asked) return;
-  l->asked = false;
-  Widgets *card = nullptr;
-  each_card([&](Widgets &w) { if (w.index == index && index < model.count && live_tile_wanted(w, model.tiles[index])) card = &w; });
-  if (!card || !page_clear()) return;
-  const Tile &t = model.tiles[index];
-  live_view::Look look;
-  look.tile = true;
-  look.contain = url.find("fit=contain") != std::string::npos;
-  look.radius = lv_obj_get_style_radius(card->tile, LV_PART_MAIN);
-  look.ground = live_view::rgb565(theme::hex(theme::PAGE));
-  look.fade = t.overlay;
-  live_loader(look);
-  // The name as LVGL draws it on the card (style_tall's ink, the tile's font), copied by the stream.
-  lv_draw_buf_t *name = nullptr;
+// The mark of a squeezed live tile (docs/PLATFORM_PLAN.md 4.10): speedometer-slow in white on a round dark chip where
+// the loader turns (live_view::loader_spot), drawn once by LVGL off the glass and copied by the stream (Look::badge),
+// which lays it over its pictures while the governor squeezes the live tiles. Nullptr without the glyph or snapshots;
+// the caller destroys it after live_view::open.
+inline constexpr uint32_t SQUEEZED_GLYPH = 0xF0F86;  // speedometer-slow, in the status font (packages/core.yaml)
+inline lv_draw_buf_t *live_badge(live_view::Look &look, int card_w, int card_h) {
 #if LV_USE_SNAPSHOT
-  if (t.overlay && card->title && !lv_obj_has_flag(card->title, LV_OBJ_FLAG_HIDDEN))
-    name = lv_snapshot_take(card->title, LV_COLOR_FORMAT_ARGB8888);
-  if (name) {
-    lv_area_t at;
-    lv_obj_get_coords(card->title, &at);
-    // A snapshot holds what the label draws beyond its box too, as much on every side.
-    const int32_t ext = std::max<int32_t>(0, (static_cast<int32_t>(name->header.w) - lv_area_get_width(&at)) / 2);
-    look.name = reinterpret_cast<const uint32_t *>(name->data);
-    look.name_w = name->header.w;
-    look.name_h = name->header.h;
-    look.name_stride = name->header.stride / 4;
-    look.name_x = at.x1 - ext - l->room.x;
-    look.name_y = at.y1 - ext - l->room.y;
-  }
-#endif
-  l->handle = live_view::open(url, l->room, look);
-#if LV_USE_SNAPSHOT
-  if (name) lv_draw_buf_destroy(name);
-#endif
-  // No room for another stream, or no memory: this tile keeps its stills.
-  if (l->handle < 0) l->failures = live_view::TRIES;
-}
-// ---- Live places of a plugin tile (plugin API 0.17, ui::live) ----
-// A plugin tile's place with a camera's address that the tile set live streams as a camera tile set to Live does: while
-// it is on the glass, the page stands still and nothing lies over it, its stills under it until its first live picture.
-// The stream lies in the place's room, with the place's corners, filled or whole as its fit says, on the card's colour.
-// Asked only of an app that reads questions; the app checks that the camera is the tile's own entity. One writer on the
-// glass stays live_view: a plugin never draws a stream itself (docs/PICTURES.md, "For plugins").
-struct LivePlace {
-  const lv_obj_t *place = nullptr;
-  size_t index = 0;
-  std::string entity;
-  bool contain = false;
-  live_view::Rect room;
-  live_view::Handle handle = -1;
-  bool asked = false;
-  uint32_t asked_at = 0, number = 0;
-  uint8_t failures = 0;
-};
-inline std::vector<LivePlace> live_places;
-inline uint32_t live_place_numbers = 0;
-inline live_view::Rect object_room(const lv_obj_t *o) {
-  lv_area_t a;
-  lv_obj_get_coords(o, &a);
-  return {static_cast<int>(a.x1), static_cast<int>(a.y1), static_cast<int>(lv_area_get_width(&a)),
-          static_cast<int>(lv_area_get_height(&a))};
-}
-inline LivePlace *live_place(const lv_obj_t *place) {
-  for (auto &l : live_places)
-    if (l.place == place) return &l;
+  int x = 0, y = 0;
+  lv_font_glyph_dsc_t glyph;
+  if (!header_status_font || !live_view::loader_spot(look, card_w, card_h, x, y) ||
+      !lv_font_get_glyph_dsc(header_status_font, &glyph, SQUEEZED_GLYPH, 0))
+    return nullptr;
+  lv_obj_t *off = lv_obj_create(nullptr);  // a screen never shown: the chip is drawn for the snapshot alone
+  lv_obj_t *chip = lv_obj_create(off);
+  lv_obj_remove_style_all(chip);
+  lv_obj_set_size(chip, look.loader, look.loader);
+  lv_obj_set_style_radius(chip, LV_RADIUS_CIRCLE, 0);
+  lv_obj_set_style_bg_color(chip, lv_color_black(), 0);
+  lv_obj_set_style_bg_opa(chip, LV_OPA_60, 0);
+  lv_obj_t *icon = lv_label_create(chip);
+  lv_obj_set_style_text_font(icon, header_status_font, 0);
+  lv_obj_set_style_text_color(icon, lv_color_white(), 0);
+  lv_label_set_text(icon, tile_icon::utf8(SQUEEZED_GLYPH).c_str());
+  lv_obj_center(icon);
+  lv_obj_update_layout(off);
+  lv_draw_buf_t *drawn = lv_snapshot_take(chip, LV_COLOR_FORMAT_ARGB8888);
+  lv_obj_delete(off);
+  if (!drawn) return nullptr;
+  look.badge = reinterpret_cast<const uint32_t *>(drawn->data);
+  look.badge_w = drawn->header.w;
+  look.badge_h = drawn->header.h;
+  look.badge_stride = drawn->header.stride / 4;
+  look.badge_x = x;
+  look.badge_y = y;
+  return drawn;
+#else
   return nullptr;
+#endif
 }
-// The answer to a live place's question is the one its number names.
-inline bool live_place_question(uint32_t number) {
-  for (const auto &l : live_places)
-    if (l.asked && l.number == number) return true;
-  return false;
+// A live tile's name as the card lays it over its picture (render_camera_card): the tile's font, left, at the bottom of
+// the card's content, in the picture's ink. Drawn once by LVGL off the glass and copied by the stream (Look::name), not
+// taken from the card's own label: a card that had no still yet stands in its plain layout, its name in the page's ink
+// halfway up, and that copy lay dark over every live picture (2026-10-28, a wallbox). Nullptr without a name or
+// snapshots; the caller destroys it after live_view::open.
+inline lv_draw_buf_t *live_name(live_view::Look &look, const Widgets &card, const live_view::Rect &room) {
+#if LV_USE_SNAPSHOT
+  if (!card.title || !card.title_font) return nullptr;
+  const char *text = lv_label_get_text(card.title);
+  if (!text || !*text) return nullptr;
+  lv_area_t content;
+  lv_obj_get_content_coords(card.tile, &content);
+  const int32_t w = lv_area_get_width(&content), h = lv_font_get_line_height(card.title_font);
+  lv_obj_t *off = lv_obj_create(nullptr);  // a screen never shown: the name is drawn for the snapshot alone
+  lv_obj_t *label = lv_label_create(off);
+  lv_obj_set_style_text_font(label, card.title_font, 0);
+  lv_obj_set_style_text_color(label, theme::color(theme::CAMERA_INK), 0);
+  lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_LEFT, 0);
+  lv_label_set_long_mode(label, LV_LABEL_LONG_DOT);
+  lv_obj_set_size(label, w, h);
+  lv_label_set_text(label, text);
+  lv_obj_update_layout(off);
+  lv_draw_buf_t *drawn = lv_snapshot_take(label, LV_COLOR_FORMAT_ARGB8888);
+  lv_obj_delete(off);
+  if (!drawn) return nullptr;
+  // A snapshot holds what the label draws beyond its box too, as much on every side.
+  const int32_t ext = std::max<int32_t>(0, (static_cast<int32_t>(drawn->header.w) - w) / 2);
+  look.name = reinterpret_cast<const uint32_t *>(drawn->data);
+  look.name_w = drawn->header.w;
+  look.name_h = drawn->header.h;
+  look.name_stride = drawn->header.stride / 4;
+  look.name_x = content.x1 - ext - room.x;
+  look.name_y = content.y2 + 1 - h - ext - room.y;
+  return drawn;
+#else
+  return nullptr;
+#endif
 }
-inline void live_place_stop(LivePlace &l) {
-  if (l.handle >= 0) live_view::close(l.handle);
-  l.handle = -1;
-  l.asked = false;
+// A tile's spot: its card's room on the glass. A place's: the place's room, its camera and its fit.
+inline live_spots::Spot tile_spot(const Widgets &w, const Tile &t) {
+  live_spots::Spot spot;
+  spot.kind = live_spots::Kind::TILE;
+  spot.index = static_cast<uint32_t>(w.index);
+  spot.entity = t.entity;
+  spot.room = card_room(w);
+  return spot;
 }
-inline void live_places_halt() {
-  for (auto &l : live_places) live_place_stop(l);
-  live_places.clear();
+inline live_spots::Spot place_spot(const Widgets &w, const lv_obj_t *place, const std::string &camera, bool contain,
+                                   const live_view::Rect &room) {
+  live_spots::Spot spot;
+  spot.kind = live_spots::Kind::PLACE;
+  spot.index = static_cast<uint32_t>(w.index);
+  spot.place = place;
+  spot.entity = camera;
+  spot.contain = contain;
+  spot.room = room;
+  return spot;
 }
-// Every live place of the plugin tiles on the glass: `each(card, place, camera, contain)`.
-inline void live_places_each(const std::function<void(Widgets &, lv_obj_t *, const std::string &, bool)> &each) {
-  each_card([&](Widgets &w) {
-    if (!w.plugin || !w.tile || w.index >= model.count || !on_glass(w)) return;
-    plugin_host::live_places(w, [&](lv_obj_t *place, const std::string &camera, bool contain) { each(w, place, camera, contain); });
-  });
-}
-inline void live_place_ask(LivePlace &l, const Widgets &w, lv_obj_t *place) {
+inline uint32_t live_place_numbers = 0;
+// Asks the app for a spot's stream: a live tile's with its picture's question (tile_picture::fields) and `live`, the
+// card's size; a live place's with the question of its camera into the place's room. The question's number, or 0 when
+// nothing could be asked (the spot asks again next round).
+inline uint32_t live_spot_ask(const live_spots::Spot &spot) {
+  if (spot.kind == live_spots::Kind::TILE) {
+    Widgets *card = nullptr;
+    each_card([&](Widgets &w) { if (w.index == spot.index && w.tile && on_glass(w)) card = &w; });
+    if (!card || spot.index >= model.count) return 0;
+    const Tile &t = model.tiles[spot.index];
+    tile_picture::Ask a;
+    if (inbox.empty() || !tile_ask(*card, t, a)) return 0;
+    auto q = tile_question(a);
+    q.live_w = spot.room.w;
+    q.live_h = spot.room.h;
+    // A board with a speaker: the app takes the camera's sound along already, so the full view has it at once.
+    q.sound = live_view::has_speaker();
+    const uint32_t number = tile_questions.ask(spot.index);
+    picture_ask(q, "live", t.entity, number);
+    ESP_LOGI("camera", "asked for tile %u live, %s at %dx%d", (unsigned) spot.index, t.entity.c_str(), spot.room.w, spot.room.h);
+    return number;
+  }
+  if (spot.index >= model.count) return 0;
+  auto *place = const_cast<lv_obj_t *>(static_cast<const lv_obj_t *>(spot.place));
   picture_question::Question q;
   q.owner = picture_question::Owner::PLUGIN_TILE;
-  q.index = static_cast<int>(w.index);
-  q.key = model.tiles[w.index].entity;
-  q.sources = {picture_question::camera_source(l.entity)};
-  q.w = l.room.w;
-  q.h = l.room.h;
+  q.index = static_cast<int>(spot.index);
+  q.key = model.tiles[spot.index].entity;
+  q.sources = {picture_question::camera_source(spot.entity)};
+  q.w = spot.room.w;
+  q.h = spot.room.h;
   q.dark = theme::dark;
   picture_question::Place at;
-  at.w = l.room.w;
-  at.h = l.room.h;
+  at.w = spot.room.w;
+  at.h = spot.room.h;
   at.radius = lv_obj_get_style_radius(place, LV_PART_MAIN);
-  at.fit = l.contain ? picture_question::Fit::CONTAIN : picture_question::Fit::COVER;
+  at.fit = spot.contain ? picture_question::Fit::CONTAIN : picture_question::Fit::COVER;
   q.places = {at};
-  q.live_w = l.room.w;
-  q.live_h = l.room.h;
-  l.number = ++live_place_numbers;
-  picture_ask(q, "plive", l.entity, l.number);
-  l.asked = true;
-  l.asked_at = esphome::millis();
-  ESP_LOGI("camera", "asked for a live place of tile %u, %s at %dx%d", (unsigned) l.index, l.entity.c_str(), l.room.w, l.room.h);
+  q.live_w = spot.room.w;
+  q.live_h = spot.room.h;
+  const uint32_t number = ++live_place_numbers;
+  picture_ask(q, "plive", spot.entity, number);
+  ESP_LOGI("camera", "asked for a live place of tile %u, %s at %dx%d", (unsigned) spot.index, spot.entity.c_str(), spot.room.w, spot.room.h);
+  return number;
 }
-// With every round of the live tiles: what streams but is not wanted any more, moved or lies under something stops;
-// what is wanted asks, as a live tile does.
-inline void live_places_round(bool clear, uint32_t now) {
-  const bool may = clear && app_reads_questions;
-  for (auto it = live_places.begin(); it != live_places.end();) {
-    bool keep = false;
-    if (may)
-      live_places_each([&](Widgets &, lv_obj_t *place, const std::string &camera, bool contain) {
-        if (place == it->place && camera == it->entity && contain == it->contain && object_room(place) == it->room &&
-            !drawn_over(place, it->room.x, it->room.y, it->room.w, it->room.h))
-          keep = true;
-      });
-    if (keep) { ++it; continue; }
-    live_place_stop(*it);
-    it = live_places.erase(it);
-  }
-  if (!may) return;
-  live_places_each([&](Widgets &w, lv_obj_t *place, const std::string &camera, bool contain) {
-    lv_obj_update_layout(place);
-    const auto room = object_room(place);
-    if (room.w < 64 || room.h < 64 || drawn_over(place, room.x, room.y, room.w, room.h)) return;
-    LivePlace *l = live_place(place);
-    if (!l) {
-      live_places.push_back(LivePlace{});
-      l = &live_places.back();
-      l->place = place;
-      l->index = w.index;
-      l->entity = camera;
-      l->contain = contain;
-      l->room = room;
-    }
-    if (l->failures >= live_view::TRIES || l->handle >= 0) return;
-    if (l->asked && now - l->asked_at >= camera_view::ASK_AGAIN_MS) l->asked = false;
-    if (!l->asked && (!l->asked_at || now - l->asked_at >= camera_view::GAP_MS)) live_place_ask(*l, w, place);
-  });
-}
-// The app's answer to a live place's question: its stream, laid in the place. No stream (the camera is not the tile's
-// own, a screen that cannot stream it): the place keeps its stills.
-inline void live_place_answer(uint32_t number, const std::string &url) {
-  LivePlace *l = nullptr;
-  for (auto &each : live_places)
-    if (each.asked && each.number == number) l = &each;
-  if (!l) return;
-  l->asked = false;
-  if (!live_view::is_stream(url) || !page_clear()) {
-    if (!live_view::is_stream(url)) l->failures = live_view::TRIES;
-    return;
+// Opens a spot's stream as the app answered it: a tile's laid out as its card (the card's corners, the shade and the
+// name over each picture), a place's laid in the place. NOT_NOW when the card is gone or not wanted now.
+inline live_view::Handle live_spot_open(const live_spots::Spot &spot, const std::string &url) {
+  // The one stream an S3 holds is still ending (a full view that just closed): not now, the spot asks again in its turn
+  // instead of giving up for its stills.
+  if (live_view::ending() && !live_view::room_for_another()) return live_spots::Spots::NOT_NOW;
+  if (spot.kind == live_spots::Kind::TILE) {
+    Widgets *card = nullptr;
+    each_card([&](Widgets &w) { if (w.index == spot.index && spot.index < model.count && live_tile_wanted(w, model.tiles[spot.index])) card = &w; });
+    if (!card) return live_spots::Spots::NOT_NOW;
+    const Tile &t = model.tiles[spot.index];
+    live_view::Look look;
+    look.tile = true;
+    look.contain = url.find("fit=contain") != std::string::npos;
+    look.radius = lv_obj_get_style_radius(card->tile, LV_PART_MAIN);
+    look.ground = live_view::rgb565(theme::hex(theme::PAGE));
+    look.fade = t.overlay;
+    live_loader(look);
+    lv_draw_buf_t *name = t.overlay ? live_name(look, *card, spot.room) : nullptr;
+    if (name)
+      ESP_LOGI("camera", "live tile %u: its name %dx%d at %d,%d of the card's %dx%d", (unsigned) spot.index, (int) look.name_w,
+               (int) look.name_h, (int) look.name_x, (int) look.name_y, spot.room.w, spot.room.h);
+    lv_draw_buf_t *badge = live_badge(look, spot.room.w, spot.room.h);
+    const live_view::Handle handle = live_view::open(url, spot.room, look);
+#if LV_USE_SNAPSHOT
+    if (name) lv_draw_buf_destroy(name);
+    if (badge) lv_draw_buf_destroy(badge);
+#endif
+    return handle;
   }
   Widgets *card = nullptr;
-  each_card([&](Widgets &w) { if (w.index == l->index && w.plugin && on_glass(w)) card = &w; });
-  if (!card || l->index >= model.count) return;
-  const Tile &t = model.tiles[l->index];
+  each_card([&](Widgets &w) { if (w.index == spot.index && w.plugin && on_glass(w)) card = &w; });
+  if (!card || spot.index >= model.count) return live_spots::Spots::NOT_NOW;
+  const Tile &t = model.tiles[spot.index];
+  auto *place = const_cast<lv_obj_t *>(static_cast<const lv_obj_t *>(spot.place));
   live_view::Look look;
   look.tile = true;
   look.contain = url.find("fit=contain") != std::string::npos;
-  look.radius = lv_obj_get_style_radius(l->place, LV_PART_MAIN);
+  look.radius = lv_obj_get_style_radius(place, LV_PART_MAIN);
   look.ground = live_view::rgb565(t.transparent ? theme::hex(theme::PAGE) : theme::surface(t.background));
   look.fade = false;
   live_loader(look);
-  l->handle = live_view::open(url, l->room, look);
-  if (l->handle < 0) l->failures = live_view::TRIES;  // no room for another stream: its stills stay
+  return live_view::open(url, spot.room, look);
 }
+inline void live_spots_bind() {
+  if (spots.open) return;
+  spots.ask = live_spot_ask;
+  spots.open = live_spot_open;
+  spots.close = [](live_view::Handle handle) { live_view::close(handle); };
+  spots.log = [](const live_spots::Spot &spot, const char *what) {
+    ESP_LOGD("camera", "%s of tile %u, %s: %s", spot.kind == live_spots::Kind::TILE ? "the live tile" : "a live place",
+             (unsigned) spot.index, spot.entity.c_str(), what);
+  };
+}
+// Every live tile and place stops at once: a page turns, a card opens over them. They start again on a round with the
+// page clear.
+inline void live_tiles_halt() { spots.halt(); }
+// Every round of the pictures (250 ms): what streams, what stops, what asks.
+inline void live_tiles_round() {
+  live_spots_bind();
+  const uint32_t now = esphome::millis();
+  // A new firmware on trial streams nothing: the tiles keep their stills until it is confirmed (boot_trial.h).
+  const bool clear = page_clear() && model.ready() && !boot_trial::on(now);
+  spots.begin();
+  if (clear) {
+    // A plugin's live places (0.17), asked only of an app that reads questions.
+    if (app_reads_questions)
+      live_places_each([&](Widgets &w, lv_obj_t *place, const std::string &camera, bool contain) {
+        lv_obj_update_layout(place);
+        const auto room = object_room(place);
+        if (room.w < 64 || room.h < 64 || drawn_over(place, room.x, room.y, room.w, room.h)) return;
+        spots.want(place_spot(w, place, camera, contain, room));
+      });
+    // At most hw::caps().live_tiles camera tiles stream at once (the picture engine's, docs/PLATFORM_PLAN.md 4.1), the
+    // first by tile order; the rest keep their stills, which a live tile loads every 15 s anyway (its asker's `every`). The app gives those tiles
+    // the same count from the hello, and the editor says so on the fifth tile. Logged when the count of tiles left out
+    // changes, so the log says which page did it.
+    size_t streaming = 0, left_out = 0;
+    each_card([&](Widgets &w) {
+      if (w.index >= model.count) return;
+      const Tile &t = model.tiles[w.index];
+      if (!live_tile_wanted(w, t)) return;
+      if (streaming >= hw::caps().live_tiles) { ++left_out; return; }
+      ++streaming;
+      spots.want(tile_spot(w, t));
+    });
+    static size_t left_out_before = 0;
+    if (left_out != left_out_before) {
+      left_out_before = left_out;
+      if (left_out) ESP_LOGI("camera", "%u live tiles stream; %u more on the page keep their stills (at most %u at once)",
+                             (unsigned) streaming, (unsigned) left_out, (unsigned) hw::caps().live_tiles);
+    }
+  }
+  spots.end(now);
+}
+// The app's answer to a live tile's question: its stream, laid out as its card.
+inline void live_tile_answer(size_t index, const std::string &url) {
+  spots.answer(live_spots::Kind::TILE, static_cast<uint32_t>(index), url, page_clear());
+}
+// The app's answer to a live place's question: its stream, laid in the place. No stream (the camera is not the tile's
+// own, a screen that cannot stream it): the place keeps its stills.
+inline void live_place_answer(uint32_t number, const std::string &url) { spots.answer(number, url, page_clear()); }
 // The board's 50 ms interval (features/camera.yaml), beside the downloads' hand-off: what each stream did, and live tiles
 // stopped the moment something lies over their page (a card, the camera full screen, an alert, the settings).
 // Something came over a live picture (the update's progress, a toast, a sheet): it stops at once, and starts again once
@@ -11990,44 +12099,43 @@ inline void live_place_answer(uint32_t number, const std::string &url) {
 // also one the main loop does not run for, as ESPHome's update holds it and has its progress drawn at once (ota_draw,
 // lv_refr_now), where the live pictures went on over it (2026-10-10, the D1001).
 inline void live_stop_covered() {
-  if (live_tiles.empty() && live_places.empty() && !(camera_root && camera.live && camera.live_handle >= 0)) return;
+  if (spots.empty() && !(camera_root && camera.stream.live && camera.stream.handle >= 0)) return;
   lv_obj_update_layout(lv_layer_top());  // what was made just now has its place before it is asked for it
   lv_obj_update_layout(lv_layer_sys());
-  if ((!live_tiles.empty() || !live_places.empty()) && !page_clear()) live_tiles_halt();
-  for (auto &l : live_places) {
-    if (l.handle < 0) continue;
-    bool there = false;
-    live_places_each([&](Widgets &, lv_obj_t *place, const std::string &, bool) { if (place == l.place) there = true; });
-    auto *place = const_cast<lv_obj_t *>(l.place);
-    const bool moved = there && !(object_room(place) == l.room);
-    if (!there || moved || drawn_over(place, l.room.x, l.room.y, l.room.w, l.room.h)) {
-      ESP_LOGI("camera", "a live place of tile %u stops streaming: %s", (unsigned) l.index,
-               !there ? "it is gone" : moved ? "it moved" : drawn_over_by ? drawn_over_by : "nothing over it");
-      live_place_stop(l);
-      l.asked_at = esphome::millis();
+  if (!spots.empty() && !page_clear()) live_tiles_halt();
+  const uint32_t now = esphome::millis();
+  for (size_t i = 0; i < spots.all().size(); ++i) {
+    if (spots.all()[i].handle < 0) continue;
+    const live_spots::Spot spot = spots.all()[i].spot;  // its own copy: covered() changes the entry
+    if (spot.kind == live_spots::Kind::PLACE) {
+      bool there = false;
+      live_places_each([&](Widgets &, lv_obj_t *place, const std::string &, bool) { if (place == spot.place) there = true; });
+      auto *place = const_cast<lv_obj_t *>(static_cast<const lv_obj_t *>(spot.place));
+      const bool moved = there && !(object_room(place) == spot.room);
+      if (!there || moved || drawn_over(place, spot.room.x, spot.room.y, spot.room.w, spot.room.h)) {
+        const char *why = !there ? "it is gone" : moved ? "it moved" : drawn_over_by ? drawn_over_by : "nothing over it";
+        ESP_LOGI("camera", "a live place of tile %u stops streaming: %s", (unsigned) spot.index, why);
+        spots.covered(spot, now, why);
+      }
+      continue;
     }
-  }
-  for (auto &l : live_tiles) {
-    if (l.handle < 0) continue;
     Widgets *card = nullptr;
-    each_card([&](Widgets &w) { if (w.index == l.index && w.tile) card = &w; });
+    each_card([&](Widgets &w) { if (w.index == spot.index && w.tile) card = &w; });
     // Its picture lies at the room it asked for, on the glass: a card that moved (a page animated, a layout made anew)
     // leaves the picture where it was, so it stops before LVGL draws, and asks again from where the card is now.
-    const bool moved = card && !(card_room(*card) == l.room);
-    if (!card || moved || drawn_over(card->tile, l.room.x, l.room.y, l.room.w, l.room.h)) {
-      ESP_LOGI("camera", "tile %u stops streaming: %s", (unsigned) l.index,
-               moved ? "its card moved" : drawn_over_by ? drawn_over_by : "nothing over it");
-      live_tile_stop(l);
-      l.asked_at = esphome::millis();
+    const bool moved = card && !(card_room(*card) == spot.room);
+    if (!card || moved || drawn_over(card->tile, spot.room.x, spot.room.y, spot.room.w, spot.room.h)) {
+      const char *why = moved ? "its card moved" : drawn_over_by ? drawn_over_by : "nothing over it";
+      ESP_LOGI("camera", "tile %u stops streaming: %s", (unsigned) spot.index, why);
+      spots.covered(spot, now, why);
     }
   }
-  if (camera_root && camera.live && camera.live_handle >= 0) {
+  if (camera_root && camera.stream.live && camera.stream.handle >= 0) {
     const auto area = live_area();
     if (drawn_over(camera_root, area.x, area.y, area.w, area.h)) {
       ESP_LOGI("camera", "the camera stops streaming: %s over it", drawn_over_by ? drawn_over_by : "nothing");
-      live_view::close(camera.live_handle);
-      camera.live = false;
-      camera.live_handle = -1;
+      live_view::close(camera.stream.handle);
+      camera.stream.stopped();
       camera_warm(false);
       camera_sound_waiting = false;
     }
@@ -12040,13 +12148,31 @@ inline void live_tick() {
     lv_display_add_event_cb(lv_display_get_default(), [](lv_event_t *) { live_stop_covered(); }, LV_EVENT_REFR_START, nullptr);
   }
   live_stop_covered();
+  if (!live_link_waiting.empty()) {
+    const uint32_t now = esphome::millis();
+    static uint32_t told_at = 0;
+    if (!camera_root || !live_wanted() || camera.stream.live) {
+      live_link_waiting.clear();  // the view closed meanwhile
+    } else if (live_link_may_open(now)) {
+      live_begin(live_link_waiting);
+    } else if (now - live_link_waiting_at >= LIVE_LINK_WAIT_MS && told_at != live_link_waiting_at) {
+      told_at = live_link_waiting_at;
+      ESP_LOGW("camera", "the page's stream did not end in %u ms: the full view waits for it (one stream at once)",
+               (unsigned) LIVE_LINK_WAIT_MS);
+    }
+  }
   live_view::tick([](live_view::Handle handle, live_view::Event event) {
-    if (camera_root && camera.live && handle == camera.live_handle) {
+    if (camera_root && camera.stream.is(handle)) {
       if (event == live_view::Event::FIRST) {
-        ESP_LOGI("camera", "live: first picture %u ms after the camera opened", (unsigned) (esphome::millis() - camera_opened_at));
+        ESP_LOGI("camera", "live: first picture %u ms after the camera opened, internal RAM at least %d KB meanwhile",
+                 (unsigned) (esphome::millis() - camera_opened_at), camera_ram_low());
         camera.shown = true;
         camera_note_text("");  // the spinner goes; LVGL no longer draws there while the camera streams
         camera_warm(true);     // in the top bar until the camera is live (LIVE, at once for a picture that is)
+        // LVGL draws the whole glass once more, now that the picture lies in its spot and the keep-out holds it: the
+        // bands of the room around the picture, the top bar, and anything a live tile's last copy left under the view
+        // before it stopped (live_begin). The start's twin of the redraw at a full view's end (live_view::tick).
+        glass::redraw_all();
       } else if (event == live_view::Event::LIVE) {
         camera_warm(false);
         if (camera_sound_waiting) camera_sound_show();  // its place is free now
@@ -12057,38 +12183,15 @@ inline void live_tick() {
       } else if (event == live_view::Event::FAILED || event == live_view::Event::TURNED) {
         camera_warm(false);
         camera_sound_waiting = false;  // a new stream tells its sound again
-        // Asked again: a new stream for the glass as it is now, or after TRIES failures the stills.
-        if (event == live_view::Event::FAILED) ++camera.live_failures;
+        // Asked again: a new stream for the glass as it is now, or after TRIES failures the stills (ViewStream::ended).
         ESP_LOGI("camera", "live %s for %s", event == live_view::Event::FAILED ? "failed" : "turned", camera.entity.c_str());
-        camera.live = false;
-        camera.live_handle = -1;
+        camera.stream.ended(event);
         pictures_round();
       }
       return;
     }
-    for (auto &l : live_tiles) {
-      if (l.handle != handle) continue;
-      if (event == live_view::Event::FIRST) {
-        l.streaming = true;
-      } else if (event == live_view::Event::FAILED || event == live_view::Event::TURNED ||
-                 event == live_view::Event::ENDED) {
-        if (event == live_view::Event::FAILED) ++l.failures;
-        l.handle = -1;
-        l.streaming = false;
-        l.asked_at = esphome::millis();
-      }
-      return;
-    }
-    // A live place of a plugin tile (0.17): a stream that ended or failed is asked for again, TRIES times.
-    for (auto &l : live_places) {
-      if (l.handle != handle) continue;
-      if (event == live_view::Event::FAILED || event == live_view::Event::TURNED || event == live_view::Event::ENDED) {
-        if (event == live_view::Event::FAILED) ++l.failures;
-        l.handle = -1;
-        l.asked_at = esphome::millis();
-      }
-      return;
-    }
+    // A live tile or place (live_spots.h): its first picture, or a stream that ended, failed or turned.
+    spots.event(handle, event, esphome::millis());
   });
 }
 
@@ -12190,7 +12293,9 @@ inline void camera_close() {
   doorbell::closing();  // a ring's view says how it ended
 #endif
   // A live picture stops first: nothing of it writes the glass once LVGL draws the page there again.
-  live_view::close(camera.live_handle);
+  live_view::close(camera.stream.handle);
+  live_link_waiting.clear();
+  camera_ram_low();  // a view that never streamed ends its watch too
   lv_obj_delete(camera_root);
   camera_root = camera_picture = camera_note = camera_back = camera_title = camera_spinner = map_card_obj = nullptr;
   camera_sound_key = camera_warm_spinner = nullptr;  // they went with the view
@@ -12394,12 +12499,17 @@ inline void camera_open(const std::string &entity, const std::string &name, int 
   // The screensaver's photos (app 0.4.89) open the full view as a camera does, under the step's own name.
   if (!camera_supported() || (!valid_entity(entity) && entity != SAVER_PHOTOS)) return;
   camera_close();
+  // The view covers the page: its live tiles stop now, not at the next round, so their streams are gone before the
+  // view's asks for its own (a ring with four live tiles was refused once, PLATFORM_PLAN.md 4.9).
+  live_tiles_halt();
   camera_map_index = map_index;
   // Opened on someone (a person tile tapped): focused from the start, and Back closes the map at once.
   map_focus = focus;
   map_pinned = !focus.empty();
   camera.open(entity);
   camera_opened_at = esphome::millis();
+  // The lowest internal RAM from here to its first picture (said with it): the page's streams end and the view's starts.
+  camera_ram_watched = live_view::available() && camera_ram_watch();
   const int width = lv_display_get_horizontal_resolution(lv_display_get_default());
   const bool large = ui::large();
   // On the top layer: above the tiles, every card and an alert, which is there again after Back.
@@ -12430,6 +12540,8 @@ inline void camera_open(const std::string &entity, const std::string &name, int 
     doorbell::build(camera_root, name);
     camera_name = name;
     ESP_LOGI("camera", "open %s for a ring", entity.c_str());
+    // The stream the app made for this ring as the event came: open before the round, which then asks for nothing.
+    if (!doorbell::link().empty()) camera_link_now(doorbell::link());
     pictures_round();
     return;
   }
@@ -12494,9 +12606,91 @@ inline void camera_open(const std::string &entity, const std::string &name, int 
   pictures_round();
 }
 
+// ---- The governor (pressure.h, docs/PLATFORM_PLAN.md 4.10): what a busy screen gives up first ----
+inline pressure::Governor governor;
+// Signs that come from the log, on whichever task wrote the line (ESPHome hands every line at the screen's level, a
+// warning with Debug mode off too, to its listeners): only counted there, and turned into signs on the main loop.
+inline std::atomic<uint32_t> wake_word_resets{0}, loop_holds{0};
+inline uint32_t wake_word_seen = 0, loop_holds_seen = 0, glass_misses_seen = 0;
+// What the governor does, in words, for the "Pressure" sensor (core.yaml) and the log, once at every change.
+inline std::function<void(const std::string &)> pressure_told;
+inline std::string pressure_said;
+
+// One line of the log, on any task: micro_wake_word's "Not enough free bytes in ring buffer ... Resetting" (its
+// inference fell behind) and ESPHome's "<component> took a long time for an operation" (the main loop held up).
+inline void pressure_log(void *, uint8_t level, const char *tag, const char *line, size_t length) {
+  glass::note_log_line();  // every line written, for the panel watch (glass.h)
+  if (level > ESPHOME_LOG_LEVEL_WARN || tag == nullptr || line == nullptr) return;
+  const std::string_view text(line, length);
+  if (strcmp(tag, "micro_wake_word") == 0 && text.find("ring buffer") != std::string_view::npos)
+    wake_word_resets.fetch_add(1, std::memory_order_relaxed);
+  else if (strcmp(tag, "component") == 0 && text.find("took a long time") != std::string_view::npos)
+    loop_holds.fetch_add(1, std::memory_order_relaxed);
+}
+
+// The log's lines to pressure_log, through ESPHome's log listeners (the API's subscriptions use them too, so every
+// screen has them).
+inline void pressure_listen() {
+#if defined(USE_LOGGER) && defined(USE_LOG_LISTENERS) && !defined(ESP_SCREEN_HOST)
+#ifdef USE_API
+  // The API's slot and the governor's (smart_display/__init__.py asks for it): with fewer, ESPHome would drop this
+  // listener without a word, and the governor would see no wake word and no held-up loop (2026-10-28, a D1001).
+  static_assert(ESPHOME_LOG_MAX_LISTENERS >= 2, "the governor's log listener has no slot (logger.request_log_listener)");
+#endif
+  if (esphome::logger::global_logger != nullptr) esphome::logger::global_logger->add_log_callback(nullptr, pressure_log);
+#else
+  ESP_LOGW("pressure", "no log listeners in this build: the governor sees no wake word and no held-up loop");
+#endif
+}
+
+// The finger, from the touch panel's own path (touch_input) and the bench's: down, and whether it drags.
+inline void pressure_finger(bool down, bool dragging) { governor.touching(down, dragging, esphome::millis()); }
+
+inline std::string pressure_text() {
+  using namespace pressure;
+  if (governor.step() == 0 && !governor.touched() && !governor.heard()) return "normal";
+  static const char *const NAMES[WORKS] = {"glass", "voice", "doorbell", "live tiles", "own camera", "sensing", "background"};
+  std::string text;
+  for (int w = LIVE_TILES; w < WORKS; ++w) {
+    const uint8_t l = governor.level(static_cast<Work>(w));
+    if (!l) continue;
+    if (!text.empty()) text += ", ";
+    text += NAMES[w];
+    text += l == 1 ? " 1/2" : " 1/4";
+  }
+  if (text.empty()) return "normal";
+  text += governor.step() ? std::string(" (") + sign_name(governor.cause()) + ")"
+          : governor.touched() ? std::string(" (a finger)") : std::string(" (someone hears the microphone)");
+  return text;
+}
+
+// Four times a second, on the main loop: new signs from the panel and the log, the rest, the finger's drag, and the
+// levels for every task.
+inline void pressure_tick(uint32_t now) {
+  const uint32_t misses = glass::misses();
+  if (misses != glass_misses_seen) { glass_misses_seen = misses; governor.signal(pressure::GLASS_MISS, now); }
+  const uint32_t resets = wake_word_resets.load(std::memory_order_relaxed);
+  if (resets != wake_word_seen) { wake_word_seen = resets; governor.signal(pressure::WAKE_WORD_RESET, now); }
+  const uint32_t holds = loop_holds.load(std::memory_order_relaxed);
+  if (holds != loop_holds_seen) { loop_holds_seen = holds; governor.signal(pressure::SLOW_LOOP, now); }
+  // A slider held is a drag, whichever finger holds it (the touch panel's, or the bench's own pointer).
+  if (captured_slider) governor.touching(true, true, now);
+  governor.tick(now);
+  glass::note_finger(governor.touched());
+  for (int w = 0; w < pressure::WORKS; ++w)
+    pressure::shared[w].store(governor.level(static_cast<pressure::Work>(w)), std::memory_order_relaxed);
+  const std::string text = pressure_text();
+  if (text != pressure_said) {
+    pressure_said = text;
+    ESP_LOGW("pressure", "%s", text.c_str());
+    if (pressure_told) pressure_told(text);
+  }
+}
+
 // The board's interval (250 ms): the store lets go of what no card draws, every picture says what it wants and the
 // loader asks, loads and breaks off (pictures_round), and the screensaver follows.
 inline void camera_tick() {
+  pressure_tick(esphome::millis());
 #ifdef SD_MOD_DOORBELL
   doorbell::tick(esphome::millis());  // its chime, how long ago it rang, the close of a ring nobody answered
 #endif
@@ -12543,6 +12737,15 @@ inline void alert_clear() {
 inline std::string camera_tag();
 // The app's answer: a link, or "" when it has no picture. It goes to the picture that asked (picture_loader::answer), and
 // the round right after starts the download, rather than the next tick (firmware 0.2.73+): the answer is most of the wait.
+// A stream the app made before the view asked (a ring's, the op doorbell's `l`): opened at once in the view's room,
+// which the link learns from the open (?room=WxH), where asking for one took 1.3 s of a ring's 1.54 s to its first
+// picture (docs/PLATFORM_PLAN.md 4.9). A link that fails leaves the view to ask, as every view does.
+inline void camera_link_now(const std::string &url) {
+  if (!camera_root || camera.stream.live || !live_view::is_stream(url) || live_view::is_own(url) || !live_wanted()) return;
+  const auto room = live_area();
+  live_begin(url + (url.find('?') == std::string::npos ? "?" : "&") + "room=" + std::to_string(room.w) + "x" +
+             std::to_string(room.h));
+}
 inline void camera_answer(const std::string &view, const std::string &entity, const std::string &url, uint32_t number) {
   if (!camera_supported()) return;
   const uint32_t now = esphome::millis();
@@ -12555,7 +12758,7 @@ inline void camera_answer(const std::string &view, const std::string &entity, co
     if (!camera_root || camera.entity != entity || (view == "saver") != saver_camera) return;
     // A stream of pictures (live_view.h), for the view that asked for one; a still goes the way every picture goes.
     if (view == "full" && live_view::is_stream(url)) {
-      if (live_wanted() && !camera.live) live_begin(url);
+      if (live_wanted() && !camera.stream.live) live_begin(url);
       return;
     }
     loader.answer(camera_tag(), url, now);
@@ -12796,7 +12999,7 @@ inline void picture_done(picture_loader::Slot slot, bool ok, bool cached) {
 // ---- What every picture wants, each round ----
 inline void camera_want() {
   if (!camera_root || !camera.open() || !pictures_awake()) return;
-  if (camera.live) return;  // its pictures stream (live_view.h); the loader has nothing to fetch
+  if (camera.stream.live) return;  // its pictures stream (live_view.h); the loader has nothing to fetch
   picture_loader::Want w;
   w.key = camera_key();
   w.tag = camera_tag();
@@ -12865,7 +13068,8 @@ inline void card_picture_wants() {
   const bool seen = tiles_seen() && !card_open() && !camera_root;
   // Ahead only while the store has room to spare: over its budget a page out of sight lets its pictures go
   // (picture_away), and fetching them ahead again would only send them round.
-  const bool ahead = awake() && pictures_kept() && !prepare_busy() && pictures.size() < pictures.budget / 4 * 3;
+  const bool ahead = awake() && pictures_kept() && !prepare_busy() && pictures.size() < pictures.budget / 4 * 3 &&
+                     pressure::level_of(pressure::BACKGROUND) == 0;  // a busy screen fetches nothing ahead
   const bool tiles = tile_pictures_supported() && model.ready();
   each_card([&](Widgets &w) {
 #if LV_USE_IMAGE
@@ -13342,7 +13546,7 @@ inline lv_obj_t *saver_glass() {
 inline void saver_show() {
   saver_now = saver_next;
   // A plugin's face or step (plugin API 0.14): the plugin draws on the glass; the step's picture is a place of its own
-  // (saver:picture), loaded by the plugin host, so the full view stays closed.
+  // (step:), loaded by the plugin host, so the full view stays closed.
   if (saver_plugin_draws(saver_now)) {
     saver_pictures = camera_supported();
     // A face with the step's own picture under it (`backdrop`): the full view as Tessera's own face opens it, bare, and
@@ -13713,6 +13917,7 @@ inline void edge_release() {
 
 inline void pressed(int x, int y, int id, bool calibrating) {
   if (contact) contact(true);
+  pressure_finger(true, false);
   screen_input::touch_guard.begin(esphome::millis(), x, y, id);
   int sx = x, sy = y;
   screen_point(sx, sy);
@@ -13730,6 +13935,8 @@ inline void moved(int x, int y, int id, int state) {
   if (x == 0 && y == 0) return;
   screen_input::touch_guard.update(x, y, id);
   if (id != screen_input::touch_guard.contact()) return;
+  // Past a tap's reach it is a drag (a slider, a list, a page swipe): the live tiles give way too.
+  pressure_finger(true, screen_input::touch_guard.distance() > ui::touch_min() / 2);
   // Swiping in from an edge ("Swiping between pages"); the tap under the finger is consumed and LVGL waits for the
   // release. LVGL 9.5 sends no PRESSING to the input device, hence the touchscreen trigger.
   edge_move(x, y);
@@ -13737,6 +13944,7 @@ inline void moved(int x, int y, int id, int state) {
 
 inline void released() {
   if (contact) contact(false);
+  pressure_finger(false, false);
   touched_at = esphome::millis();
   edge_release();
 }

@@ -70,8 +70,14 @@ STEPS = ('identity', 'profile', 'crash', 'screen_log', 'ha_log', 'addon_log', 'b
 HA_LINE = re.compile(r'^(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d+) (\w+) \(([^)]*)\) \[([^\]]+)\] (.*)$')
 SCREEN_LOGGERS = ('homeassistant.components.esphome', 'aioesphomeapi', 'noiseprotocol', 'bleak_esphome')
 ADDRESS = re.compile(r'0x4[0-9a-fA-F]{7}')
-CRASH_LINE = re.compile(r'CRASH DETECTED ON PREVIOUS BOOT|^\s*(?:\[[^\]]*\]\s*)*(?:Reason|PC|EXCVADDR|MTVAL|BT\d+|Backtrace|MEPC|RA|Use)\s*:'
-                        r'|assert failed: 0x4|Guru Meditation|abort\(\) was called|Panic|rst:0x|Reset Reason|ELF file SHA256|Crashed core')
+# A log line's prefix is `[E][esp32.crash:437]:` on the screen (a colon after the brackets) and `[E][esp32.crash:437]`
+# in older logs and tests: the keyword follows either.
+CRASH_LINE = re.compile(r'CRASH DETECTED ON PREVIOUS BOOT|THE MAIN LOOP AT THE LAST TASK WATCHDOG|THE ESP_TIMER TASK AT THE LAST TASK WATCHDOG'
+                        r'|INTERNAL RAM ON PREVIOUS BOOT|ABORT ON PREVIOUS BOOT'
+                        r'|^\s*(?:\[[^\]]*\]\s*)*:?\s*(?:Reason|PC|EXCVADDR|MTVAL|BT\d+|LOOP\d+|TIMER\d+|Backtrace|MEPC|RA|Use|Lowest|Failed|Details|AT\d+)\s*:'
+                        r'|assert failed: 0x4|Guru Meditation|abort\(\) was called|Panic|rst:0x|Reset Reason|ELF file SHA256|Crashed core'
+                        # The last PPA calls of the previous boot (ppa_trace.h): the one that never came back is the stop.
+                        r'|The last PPA calls of the previous boot|\[ppa_guard[^\]]*\]:?\s*#\d+ at \d+ ms')
 RESET_LINE = re.compile(r'Reset Reason:\s*(.+?)\s*$')
 REASON_LINE = re.compile(r'Reason:\s*(.+?)\s*$')
 ELF_LINE = re.compile(r'ELF file SHA256:\s*([0-9a-f]+)')
@@ -262,13 +268,48 @@ class LogBuffer(logging.Handler):
             self.lines.append(self.format(record))
 
 
-async def screen_log(host, key, seconds, *, port=API_PORT, dump_config=True, level='DEBUG', limit=LINES_MAX, name='tessera'):
+DEBUG_SWITCH = 'debug_mode'  # the object id of the screen's Debug mode switch (packages/core.yaml)
+
+
+async def _maybe(result):
+    """aioesphomeapi's commands return nothing in some versions and a coroutine in others."""
+    if asyncio.iscoroutine(result) or isinstance(result, asyncio.Future):
+        await result
+
+
+async def debug_on(client, wait=2.0):
+    """Turn the screen's Debug mode on for a read of its log: a screen logs its warnings and errors alone while it is
+    off (settings_screen.h), and the report wants every line. The switch's key when this turned it on, so the caller
+    turns it off again, else None: a screen without the switch (firmware before it), or one already in Debug mode."""
+    entities, _ = await client.list_entities_services()
+    switch = next((e for e in entities if getattr(e, 'object_id', '') == DEBUG_SWITCH and type(e).__name__ == 'SwitchInfo'), None)
+    if switch is None:
+        return None
+    state = asyncio.get_running_loop().create_future()
+
+    def on_state(update):
+        if getattr(update, 'key', None) == switch.key and not state.done():
+            state.set_result(bool(getattr(update, 'state', False)))
+
+    client.subscribe_states(on_state)
+    with contextlib.suppress(asyncio.TimeoutError):
+        if await asyncio.wait_for(state, wait):
+            return None
+    await _maybe(client.switch_command(switch.key, True))
+    return switch.key
+
+
+async def screen_log(host, key, seconds, *, port=API_PORT, dump_config=True, level='DEBUG', limit=LINES_MAX, name='tessera',
+                     debug=False):
     """Up to `seconds` of a screen's log over the native API, from the first line (ESPHome's kept crash record goes to
-    the first subscriber after a reboot, then the config dump with the reset reason). (lines, device_info or None)."""
+    the first subscriber after a reboot, then the config dump with the reset reason). (lines, device_info or None).
+    `debug`: the screen's Debug mode on for the read and back as it was after it, so the log has every line and not
+    only the warnings and errors a screen keeps to otherwise."""
     from aioesphomeapi import APIClient, LogLevel
     client = APIClient(host, port, None, noise_psk=key or None, client_info=f'ESP Screen Manager {name}')
     lines, info = [], None
     done = asyncio.Event()
+    turned_on = None
 
     def on_log(message):
         text = message.message.decode('utf-8', 'replace') if isinstance(message.message, bytes) else str(message.message)
@@ -283,10 +324,18 @@ async def screen_log(host, key, seconds, *, port=API_PORT, dump_config=True, lev
     try:
         with contextlib.suppress(Exception):
             info = await client.device_info()
+        if debug:
+            try:
+                turned_on = await debug_on(client)
+            except Exception as error:  # noqa: BLE001 - the log is still worth reading without it
+                LOG.info('Debug mode of %s could not be turned on (%s)', name, type(error).__name__)
         client.subscribe_logs(on_log, log_level=getattr(LogLevel, f'LOG_LEVEL_{level}'), dump_config=dump_config)
         with contextlib.suppress(asyncio.TimeoutError):
             await asyncio.wait_for(done.wait(), seconds)
     finally:
+        if turned_on is not None:
+            with contextlib.suppress(Exception):
+                await _maybe(client.switch_command(turned_on, False))
         with contextlib.suppress(Exception):
             await client.disconnect()
     LOG.info('Read %d log lines of %s in %.0f s', len(lines), name, time.monotonic() - started)
@@ -590,7 +639,7 @@ class Reports:
             'esphome': self._esphome_version(), 'addon': versions.get('addon_version') or self._addon_version(),
             'ha': info.get('homeassistant'), 'supervisor': info.get('supervisor'), 'os': info.get('hassos'),
             'machine': info.get('machine'), 'arch': info.get('arch'),
-            'plugins': [{'id': p.get('id'), 'version': p.get('version')} for p in running if isinstance(p, dict)],
+            'plugins': self._plugin_summary(running), 'plugins_source': 'hello' if running else None,
             'crash': None, 'online': bool(screen.get('online')), 'built_on': built_on, 'elf': elf is not None,
             'node': screen.get('node') or meta.get('node'), 'language': screen.get('language'), 'area_set': bool(screen.get('area')),
             'status': screen.get('status'), 'memory': memory, 'pages': _count(layout.get('pages')) if isinstance(layout, dict) else None,
@@ -629,7 +678,7 @@ class Reports:
         if screen.get('online') and host:
             self._set(report, 'screen_log', 0.25)
             try:
-                lines, device = await screen_log(host, key, CAPTURE_SECONDS, name=inbox)
+                lines, device = await screen_log(host, key, CAPTURE_SECONDS, name=inbox, debug=True)
             except Exception as error:  # noqa: BLE001 - the report says the log could not be read
                 LOG.info('Reading the log of %s failed (%s)', inbox, type(error).__name__)
                 warnings.append('screen_log_failed')
@@ -662,6 +711,16 @@ class Reports:
                      else '# Live log: none (the screen was offline or could not be reached)')
         parts.extend(lines)
         texts['screen.log'] = self._redact('\n'.join(parts), names)
+        # The screen's hello names what it runs, and the app forgets it when the screen goes (page_delivery). A screen
+        # that was restarting as the report began, the one a report is made for, had said none: it is asked once more
+        # now, after the log's 45 seconds, and failing that the plugins the app installed on it stand in, said so
+        # (TR-4EFBDE, 2026-10-23: a Tab5 with nine plugins, "Plugins running: none").
+        if not summary['plugins'] and hasattr(m, 'plugins'):
+            summary['plugins'] = self._plugin_summary(m.plugins.running().get(inbox, []))
+            summary['plugins_source'] = 'hello' if summary['plugins'] else None
+        if not summary['plugins'] and summary.get('plugins_installed'):
+            summary['plugins'] = self._plugin_summary(summary['plugins_installed'])
+            summary['plugins_source'] = 'installed'
 
         # 5. Home Assistant's log and diagnostics
         self._set(report, 'ha_log', 0.7)
@@ -713,6 +772,24 @@ class Reports:
         self._prune()
         self._save_index()
 
+    @staticmethod
+    def _plugin_summary(items):
+        """Plugins as the summary lists them, id and version only: from a hello's list or the store's records."""
+        return [{'id': p.get('id'), 'version': p.get('version')} for p in items or [] if isinstance(p, dict)]
+
+    @staticmethod
+    def _plugin_lines(s):
+        """The two lines of report.md about plugins: what the app installed on the screen (the store, with a record's
+        state when it is not active), and what the screen's own hello said it runs, or that none was heard and the
+        installed ones stand in for it in the summary."""
+        installed = ', '.join(f"{r.get('id')} {r.get('version')}" + (f" ({r['state']})" if r.get('state') not in (None, 'active') else '')
+                              for r in s.get('plugins_installed') or [] if isinstance(r, dict)) or 'none'
+        if s.get('plugins_source') == 'installed':
+            running = 'not heard (the screen said no hello while the report was made; the installed ones stand in)'
+        else:
+            running = ', '.join('%s %s' % (p.get('id'), p.get('version')) for p in s.get('plugins') or []) or 'none'
+        return [f'- Plugins installed: {installed}', f"- Plugins running (the screen's hello): {running}"]
+
     def _report_md(self, s, warnings, texts):
         crash = s.get('crash') or {}
         lines = [f"# Tessera troubleshooting report ({s.get('made_at')})", '',
@@ -720,7 +797,7 @@ class Reports:
                  f"- Firmware: {s.get('firmware') or s.get('firmware_raw')} on {s.get('channel') or '?'} ({s.get('ref') or 'ref unknown'}), ESPHome {s.get('esphome')}, built on {s.get('built_on')}, ELF here: {s.get('elf')}",
                  f"- App: {s.get('addon')}; Home Assistant {s.get('ha')}, Supervisor {s.get('supervisor')}, OS {s.get('os')}, {s.get('machine')} ({s.get('arch')})",
                  f"- Screen: online {s.get('online')}, status {s.get('status')}, language {s.get('language')}, pages {s.get('pages')}, tiles {s.get('tiles')}, cards {', '.join(s.get('cards') or [])}",
-                 '- Plugins running: ' + (', '.join('%s %s' % (p.get('id'), p.get('version')) for p in s.get('plugins') or []) or 'none'),
+                 *self._plugin_lines(s),
                  f"- Memory (hello): {s.get('memory')}", f"- Sensors: {s.get('sensors')}", f"- Device info: {s.get('device')}", '']
         if crash:
             lines += ['## Last crash', f"{crash.get('at')}: {crash.get('reason')}", *('  ' + d for d in crash.get('decoded') or []), '']
@@ -777,10 +854,11 @@ class Reports:
 
     def _device_sensors(self, screen):
         """The firmware's own diagnostic sensors of this screen as Home Assistant has them now: heap, PSRAM, Wi-Fi
-        signal, last boot, uptime."""
+        signal, last boot, uptime, and on an ESP32-P4 the firmware of its Wi-Fi co-processor (wifi_chip.h)."""
         device = screen.get('device_id')
         wanted = ('heap free', 'heap fragmentation', 'heap largest block', 'heap minimum free', 'psram free', 'psram largest block',
-                  'wifi signal', 'last boot', 'uptime', 'node status', 'screen firmware', 'screen board', 'screen flash', 'screen layout')
+                  'wifi signal', 'last boot', 'uptime', 'node status', 'screen firmware', 'screen board', 'screen flash', 'screen layout',
+                  'wi-fi co-processor')
         out = {}
         for item in getattr(self.manager.ha, 'registry', []) or []:
             if not isinstance(item, dict) or item.get('device_id') != device:

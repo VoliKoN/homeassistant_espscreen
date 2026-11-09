@@ -17,6 +17,7 @@ ESPHome Device Builder is optional:
 | CYD, 2.8 inch ILI9342 (experimental) | ESP32-2432S028 with an ILI9342 display controller, 320×240, XPT2046 |
 | Guition, 4 inch | ESP32-S3-4848S040, 480×480, ST7701S and GT911 |
 | Waveshare, 4.3 inch | ESP32-S3-Touch-LCD-4.3, 800×480, ST7262 and GT911, 16 MB or 8 MB flash (New screen asks which) |
+| Waveshare, 4.3 inch 4.3C (experimental) | ESP32-S3-Touch-LCD-4.3C (not the 4.3), 800×480, ST7262 and GT911, CH32V003 expander ([details](WAVESHARE43C.md)) |
 | Waveshare, 5 inch (new) | ESP32-S3-Touch-LCD-5 (not the 5B), 800×480, RGB and GT911 ([details](WAVESHARE5.md)) |
 | Guition, 5 inch (experimental) | JC8048W550C_I (the capacitive variant only), 800×480, ST7262 RGB and GT911 ([details](JC8048W550.md)) |
 | Waveshare, 7 inch (experimental) | ESP32-S3-Touch-LCD-7, 800×480, RGB and GT911 |
@@ -185,6 +186,16 @@ Tessera adds a screen by itself when it knows the screen's key: when the screen'
 reads. That is every screen made with **New screen**, and a screen of your own whose YAML sits in Home Assistant's
 ESPHome folder (`/config/esphome`, the folder ESPHome Device Builder uses too; with [Docker](DOCKER.md), the folder
 you mounted as the ESPHome folder).
+
+Home Assistant keeps one ESPHome device per board, keyed on the board's MAC address. A board that is already a screen
+in Home Assistant cannot be added again under a new name: flashed with a new profile, it would wait for Home Assistant
+for ever. Installing from this browser, **New screen** reads the board's MAC before it builds and, when Home Assistant
+has that board already, names the screen it is and offers to install that screen again or to replace it (app 0.4.96).
+Replacing writes the new firmware first; then the old screen goes the way Remove takes it (out of Home Assistant with
+its entities, its YAML out of the ESPHome folder, everything Tessera kept for it; app 0.4.97), and the new screen
+pairs by itself. Over the other ways (USB on the Home Assistant machine, a
+file) the board's MAC is not known before the build: remove the old device under **Settings → Devices & services →
+ESPHome** yourself, and the new screen pairs.
 
 ### Adding a screen by hand
 
@@ -397,7 +408,7 @@ that screen and says where it is set.
 | `GRID_MAX_COLUMNS`, `GRID_MAX_ROWS` | every board | the most columns and rows the editor offers lying down (`GRID_MAX_COLUMNS_PORTRAIT` and `GRID_MAX_ROWS_PORTRAIT` standing up), at most `8`; worked out from the glass (docs/RESPONSIVE.md, "The grid a screen is given") |
 | `GRID_MIN_COLUMNS`, `GRID_MIN_ROWS` | every board | the fewest columns and rows the editor offers (`1`) |
 | `GRID_CELL_MIN_W_MM`, `GRID_CELL_MIN_H_MM` | every board | the smallest cell the range is worked out from, in millimetres (`20` x `8` on the standard look, `15` x `6.5` on the compact one) |
-| `BACKLIGHT_FREQUENCY` | CYD, 4-inch Guition, 3.5-inch Guition, Waveshare 4B, Waveshare 3.5, Waveshare P4, Hosyond | the backlight's PWM frequency (the 4-inch Guition runs `150Hz` since firmware 0.3.5, the CYD and the Hosyond `1000Hz` since firmware 0.29.0, the Waveshare 4B `300000Hz` since firmware 0.39.0, the Waveshare P4 `100Hz`) |
+| `BACKLIGHT_FREQUENCY` | CYD, 4-inch Guition, 3.5-inch Guition, Waveshare 4B, Waveshare 3.5, Waveshare P4, Hosyond | the backlight's PWM frequency (the 4-inch Guition runs `150 Hz` since firmware 0.3.5, the CYD and the Hosyond `1000Hz` since firmware 0.29.0, the Waveshare 4B `300000Hz` since firmware 0.39.0, the Waveshare P4 `100Hz`). On the 4-inch Guition the **Backlight PWM** extra under Screen settings changes it without a build (150 Hz, 15 kHz or 20 kHz, kept over a restart), beside **Dimmest level** for a backlight that stays black or flickers at 1 % |
 
 The parts an override names stay the same on every board and in every update:
 `my_display` (the display), `ts_touch` (the touch panel), `gpio_backlight_pwm`
