@@ -108,6 +108,9 @@ jobs:
         id: esphome
         env:
           GH_TOKEN: ${{ github.token }}  # the newest release's tag comes from gh
+        # gh asks for a token even for a public repository inside Actions.
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "${{ matrix.esphome }}" = add-on ]; then
             version=$(sed -n 's|^FROM ghcr.io/esphome/esphome:||p' screen_manager/Dockerfile)
