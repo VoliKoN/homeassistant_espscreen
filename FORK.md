@@ -160,8 +160,7 @@ arm64 to `ghcr.io/volikon/homeassistant_espscreen` with four tags:
 It first checks the WASM preview is current. If it is stale, it publishes nothing and `preview.yml` restarts it
 after the rebuild.
 
-New GHCR packages start **private**. Either Nevo makes the package public (GitHub, Packages, package settings), or
-the Pi runs `docker login ghcr.io` with a token that has `read:packages`. Whether that was done is not recorded here.
+The package is **public** (made public by Nevo on 2026-11-23), so the Pi pulls it without logging in.
 
 Update on the Pi: `docker compose pull && docker compose up -d`.
 
@@ -203,7 +202,6 @@ environment quirk, and it passes in CI. Run the editor with `cd web && npm ci &&
 ## 7. Open items and ideas
 
 Still with Nevo:
-- **Image access**: make the GHCR package public, or `docker login` on the Pi.
 - **Old branches**: delete `ci-hebrew-long` and `ci-baseline-dev`.
 
 To do:
